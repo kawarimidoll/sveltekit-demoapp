@@ -77,6 +77,8 @@ sveltekit-demoapp
 └  You're all set!
 ```
 
+need to update deps by `bun update --latest`
+
 ```
 ❯  bunx @antfu/eslint-config@latest
 
