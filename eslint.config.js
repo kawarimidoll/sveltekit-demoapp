@@ -1,30 +1,25 @@
-import js from '@eslint/js';
-import svelte from 'eslint-plugin-svelte';
-import globals from 'globals';
-import ts from 'typescript-eslint';
+import antfu from '@antfu/eslint-config';
 
-export default ts.config(
-  js.configs.recommended,
-  ...ts.configs.recommended,
-  ...svelte.configs["flat/recommended"],
-  {
-    languageOptions: {
-	  globals: {
-	    ...globals.browser,
-	    ...globals.node
-	  }
-	}
-  },
-  {
-    files: ["**/*.svelte"],
+export default antfu({
+  /* options */
+  lessopinionated: true,
+  formatters: true,
+  svelte: true,
+  unocss: true,
+  yaml: true,
+  markdown: true,
 
-    languageOptions: {
-	  parserOptions: {
-	    parser: ts.parser
-	  }
-	}
+  /* general rules */
+  rules: {
+    'eqeqeq': ['error', 'always', { null: 'ignore' }],
+    'no-unexpected-multiline': 'error',
+    'no-unreachable': 'error',
+    'curly': ['error', 'all'],
+    'antfu/top-level-function': 'error',
   },
-  {
-    ignores: ["build/", ".svelte-kit/", "dist/"]
-  }
-);
+
+  /* style rules */
+  stylistic: {
+    semi: true,
+  },
+});

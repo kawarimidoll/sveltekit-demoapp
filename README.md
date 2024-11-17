@@ -76,3 +76,39 @@ sveltekit-demoapp
 │
 └  You're all set!
 ```
+
+```
+❯  bunx @antfu/eslint-config@latest
+
+┌  @antfu/eslint-config v3.8.0
+│
+◇  There are uncommitted changes in the current repository, are you sure to continue?
+│  Yes
+│
+◇  Select a framework:
+│  none
+│
+◇  Select a extra utils:
+│  UnoCSS
+│
+◇  Update .vscode/settings.json for better VS Code experience?
+│  No
+│
+◇  Bumping @antfu/eslint-config to v3.8.0
+│
+◇  Added packages ────────╮
+│                         │
+│  @unocss/eslint-plugin  │
+│                         │
+├─────────────────────────╯
+│
+◆  Changes wrote to package.json
+│
+◆  Created eslint.config.js
+│
+◆  Setup completed
+│
+└  Now you can update the dependencies and run eslint . --fix
+```
+
+need to fix `node/prefer-global/process` and `unused-imports/no-unused-vars`
