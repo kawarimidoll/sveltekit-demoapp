@@ -13,6 +13,7 @@
     "test:unit": "vitest",
     "test": "npm run test:unit -- --run",
     "db:push": "drizzle-kit push",
+    "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "prepare": "husky"
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.9.1",
+    "@electric-sql/pglite": "^0.2.13",
     "@sveltejs/adapter-auto": "^3.3.1",
     "@sveltejs/kit": "^2.8.1",
     "@sveltejs/vite-plugin-svelte": "^4.0.1",

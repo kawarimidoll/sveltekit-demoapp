@@ -1,4 +1,6 @@
 node_modules
+
+# Cache
 .eslintcache
 
 # Output
@@ -6,6 +8,9 @@ node_modules
 .vercel
 /.svelte-kit
 /build
+
+## drizzle db output
+/data
 
 # OS
 .DS_Store

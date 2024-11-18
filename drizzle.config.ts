@@ -1,12 +1,17 @@
 import { defineConfig } from 'drizzle-kit';
 
+// local .env
+// DATABASE_URL="./data"
+// DRIVER="pglite"
+
 // eslint-disable-next-line node/prefer-global/process
-const DATABASE_URL = process.env.DATABASE_URL;
+const { DATABASE_URL, DRIVER } = process.env;
 if (!DATABASE_URL) {
   throw new Error('DATABASE_URL is not set');
 }
 
-export default defineConfig({
+const config = {
+  out: './drizzle',
   schema: './src/lib/server/db/schema.ts',
 
   dbCredentials: {
@@ -16,4 +21,12 @@ export default defineConfig({
   verbose: true,
   strict: true,
   dialect: 'postgresql',
-});
+  casing: 'snake_case',
+};
+
+if (DRIVER) {
+  config.driver = DRIVER;
+}
+console.log(config);
+
+export default defineConfig(config);
