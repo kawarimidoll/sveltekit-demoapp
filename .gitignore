@@ -12,6 +12,11 @@ node_modules
 ## drizzle db output
 /data
 
+## paraglide
+# auto-generated files by inlang paraglide-js
+# for more info visit https://inlang.com/m/gerre34r/paraglide-js
+src/lib/paraglide
+
 # OS
 .DS_Store
 Thumbs.db
