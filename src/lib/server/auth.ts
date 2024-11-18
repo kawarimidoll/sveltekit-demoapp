@@ -6,6 +6,7 @@ import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
 import { eq } from 'drizzle-orm';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
+const EXPIRATION_DAYS = DAY_IN_MS * 30;
 
 export const sessionCookieName = 'auth-session';
 
@@ -20,7 +21,7 @@ export async function createSession(token: string, userId: string) {
   const session: table.Session = {
     id: sessionId,
     userId,
-    expiresAt: new Date(Date.now() + DAY_IN_MS * 30),
+    expiresAt: new Date(Date.now() + EXPIRATION_DAYS),
   };
   await db.insert(table.session).values(session);
   return session;
@@ -49,9 +50,9 @@ export async function validateSessionToken(token: string) {
     return { session: null, user: null };
   }
 
-  const renewSession = Date.now() >= session.expiresAt.getTime() - DAY_IN_MS * 15;
+  const renewSession = Date.now() >= session.expiresAt.getTime() - EXPIRATION_DAYS / 2;
   if (renewSession) {
-    session.expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
+    session.expiresAt = new Date(Date.now() + EXPIRATION_DAYS);
     await db
       .update(table.session)
       .set({ expiresAt: session.expiresAt })
@@ -68,7 +69,11 @@ export async function invalidateSession(sessionId: string) {
 }
 
 export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date) {
+  // the `secure` flag is not required here because
+  // SvelteKit automatically sets the flag when deployed to production
   event.cookies.set(sessionCookieName, token, {
+    httpOnly: true,
+    sameSite: 'lax',
     expires: expiresAt,
     path: '/',
   });
