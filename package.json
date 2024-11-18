@@ -16,6 +16,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
+    "start": "concurrently 'bun dev' 'bun db:studio'",
     "prepare": "husky"
   },
   "dependencies": {
@@ -33,6 +34,7 @@
     "@sveltejs/kit": "^2.8.1",
     "@sveltejs/vite-plugin-svelte": "^4.0.1",
     "@unocss/eslint-plugin": "^0.64.1",
+    "concurrently": "^9.1.0",
     "drizzle-kit": "^0.28.1",
     "eslint": "^9.15.0",
     "eslint-plugin-format": "^0.1.2",
