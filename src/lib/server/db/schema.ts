@@ -1,9 +1,13 @@
 import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
-const timestampOptions = { withTimezone: true, mode: 'date', precision: 3 };
+// wrapper function for timestamp with zone
+function tsz() {
+  return timestamp({ withTimezone: true, mode: 'date', precision: 3 }).notNull();
+}
+
 const timestamps = {
-  createdAt: timestamp(timestampOptions).notNull().$default(() => new Date()),
-  updatedAt: timestamp(timestampOptions).notNull().$onUpdate(() => new Date()),
+  createdAt: tsz().$default(() => new Date()),
+  updatedAt: tsz().$onUpdate(() => new Date()),
 };
 
 export const user = pgTable('user', {
@@ -17,7 +21,7 @@ export const user = pgTable('user', {
 export const session = pgTable('session', {
   encodedToken: text().primaryKey(),
   userId: uuid().notNull().references(() => user.id),
-  expiresAt: timestamp({ withTimezone: true, mode: 'date' }).notNull(),
+  expiresAt: tsz(),
 });
 
 export type Session = typeof session.$inferSelect;
