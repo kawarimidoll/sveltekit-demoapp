@@ -1,4 +1,4 @@
-import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 
 // wrapper function for timestamp with zone
 function tsz() {
@@ -10,10 +10,11 @@ const timestamps = {
   updatedAt: tsz().$onUpdate(() => new Date()),
 };
 
+export const USERNAME_MAX_LENGTH = 31;
 export const user = pgTable('user', {
   id: uuid().defaultRandom().primaryKey(),
   age: integer(),
-  username: text().notNull().unique(),
+  username: varchar({ length: USERNAME_MAX_LENGTH }).notNull().unique(),
   passwordHash: text().notNull(),
   ...timestamps,
 });

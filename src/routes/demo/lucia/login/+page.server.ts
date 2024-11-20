@@ -6,6 +6,14 @@ import { hash, verify } from '@node-rs/argon2';
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
+// recommended minimum parameters
+const hashParams = {
+  memoryCost: 19456,
+  timeCost: 2,
+  outputLen: 32,
+  parallelism: 1,
+};
+
 export const load: PageServerLoad = async (event) => {
   if (event.locals.user) {
     return redirect(302, '/demo/lucia');
@@ -36,12 +44,7 @@ export const actions: Actions = {
       return fail(400, { message: 'Incorrect username or password' });
     }
 
-    const validPassword = await verify(existingUser.passwordHash, password, {
-      memoryCost: 19456,
-      timeCost: 2,
-      outputLen: 32,
-      parallelism: 1,
-    });
+    const validPassword = await verify(existingUser.passwordHash, password, hashParams);
     if (!validPassword) {
       return fail(400, { message: 'Incorrect username or password' });
     }
@@ -64,13 +67,7 @@ export const actions: Actions = {
       return fail(400, { message: 'Invalid password' });
     }
 
-    const passwordHash = await hash(password, {
-      // recommended minimum parameters
-      memoryCost: 19456,
-      timeCost: 2,
-      outputLen: 32,
-      parallelism: 1,
-    });
+    const passwordHash = await hash(password, hashParams);
 
     try {
       // return value of db.insert() is array
@@ -92,10 +89,12 @@ export const actions: Actions = {
 };
 
 function validateUsername(username: unknown): username is string {
+  // note: Checking length in regexp is simple but potentially vulnerable to a super long string.
+  // /^[a-z0-9_-]{3,31}$/.test(username);
   return (
     typeof username === 'string'
     && username.length >= 3
-    && username.length <= 31
+    && username.length <= table.USERNAME_MAX_LENGTH
     && /^[a-z0-9_-]+$/.test(username)
   );
 }
