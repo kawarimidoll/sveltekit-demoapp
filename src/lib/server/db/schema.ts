@@ -1,4 +1,4 @@
-import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 const timestampOptions = { withTimezone: true, mode: 'date', precision: 3 };
 const timestamps = {
@@ -7,7 +7,7 @@ const timestamps = {
 };
 
 export const user = pgTable('user', {
-  id: text().primaryKey(),
+  id: uuid().defaultRandom().primaryKey(),
   age: integer(),
   username: text().notNull().unique(),
   passwordHash: text().notNull(),
@@ -16,7 +16,7 @@ export const user = pgTable('user', {
 
 export const session = pgTable('session', {
   encodedToken: text().primaryKey(),
-  userId: text().notNull().references(() => user.id),
+  userId: uuid().notNull().references(() => user.id),
   expiresAt: timestamp({ withTimezone: true, mode: 'date' }).notNull(),
 });
 
