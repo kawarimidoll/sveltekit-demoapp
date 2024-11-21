@@ -18,7 +18,7 @@ const hashParams = {
 
 export const load: PageServerLoad = async (event) => {
   if (event.locals.user) {
-    return i18nRedirect(event.url, '/lucia');
+    return i18nRedirect(event.url, '/');
   }
   return {};
 };
@@ -55,7 +55,7 @@ export const actions: Actions = {
     const session = await auth.createSession(sessionToken, existingUser.id);
     auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
 
-    return i18nRedirect(event.url, '/lucia');
+    return i18nRedirect(event.url, '/');
   },
   register: async (event) => {
     const formData = await event.request.formData();
@@ -86,7 +86,7 @@ export const actions: Actions = {
       console.error(e);
       return fail(500, { message: 'An error has occurred' });
     }
-    return i18nRedirect(event.url, '/lucia');
+    return i18nRedirect(event.url, '/');
   },
 };
 

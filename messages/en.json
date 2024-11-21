@@ -2,8 +2,10 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "helloWorld": "Hello world!",
   "welcome": "Welcome, {name}!",
-  "login": "login",
-  "register": "register",
+  "yourId": "Your user ID is {id}.",
+  "login": "Login",
+  "logout": "Logout",
+  "register": "Register",
   "invalidUsername": "Invalid username",
   "invalidPassword": "Invalid password",
   "incorrectCredential": "Incorrect username or password"

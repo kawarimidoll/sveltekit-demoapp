@@ -4,9 +4,7 @@ import { i18nRedirect } from '$lib/server/utils';
 import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async (event) => {
-  if (!event.locals.user) {
-    return i18nRedirect(event.url, '/lucia/login');
-  }
+  // if user is not logged in, this value will be undefined
   return { user: event.locals.user };
 };
 
@@ -18,6 +16,6 @@ export const actions: Actions = {
     await auth.invalidateSession(event.locals.session.encodedToken);
     auth.deleteSessionTokenCookie(event);
 
-    return i18nRedirect(event.url, '/lucia/login');
+    return i18nRedirect(event.url, '/');
   },
 };

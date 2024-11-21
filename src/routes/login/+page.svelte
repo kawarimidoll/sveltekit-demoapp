@@ -4,9 +4,10 @@
   import * as m from '$lib/paraglide/messages.js';
 
   const { form }: { form: ActionData } = $props();
+
 </script>
 
-<h1>Login/Register</h1>
+<h1>{m.login()}/{m.register()}</h1>
 <form method='post' action='?/login' use:enhance>
   <label>
     Username
