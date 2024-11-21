@@ -16,7 +16,7 @@ export function generateSessionToken() {
   return token;
 }
 
-export function encodeSessionToken(token: string) {
+function encodeSessionToken(token: string) {
   return encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 }
 
