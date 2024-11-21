@@ -3,9 +3,9 @@ import * as m from '$lib/paraglide/messages.js';
 import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
+import { i18nRedirect } from '$lib/server/utils';
 import { hash, verify } from '@node-rs/argon2';
-import { fail, redirect } from '@sveltejs/kit';
-
+import { fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
 // recommended minimum parameters
@@ -18,7 +18,7 @@ const hashParams = {
 
 export const load: PageServerLoad = async (event) => {
   if (event.locals.user) {
-    return redirect(302, '/lucia');
+    return i18nRedirect(event.url, '/lucia');
   }
   return {};
 };
@@ -55,7 +55,7 @@ export const actions: Actions = {
     const session = await auth.createSession(sessionToken, existingUser.id);
     auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
 
-    return redirect(302, '/lucia');
+    return i18nRedirect(event.url, '/lucia');
   },
   register: async (event) => {
     const formData = await event.request.formData();
@@ -86,7 +86,7 @@ export const actions: Actions = {
       console.error(e);
       return fail(500, { message: 'An error has occurred' });
     }
-    return redirect(302, '/lucia');
+    return i18nRedirect(event.url, '/lucia');
   },
 };
 

@@ -1,10 +1,11 @@
 import type { Actions, PageServerLoad } from './$types';
 import * as auth from '$lib/server/auth';
-import { fail, redirect } from '@sveltejs/kit';
+import { i18nRedirect } from '$lib/server/utils';
+import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.user) {
-    return redirect(302, '/lucia/login');
+    return i18nRedirect(event.url, '/lucia/login');
   }
   return { user: event.locals.user };
 };
@@ -17,6 +18,6 @@ export const actions: Actions = {
     await auth.invalidateSession(event.locals.session.encodedToken);
     auth.deleteSessionTokenCookie(event);
 
-    return redirect(302, '/lucia/login');
+    return i18nRedirect(event.url, '/lucia/login');
   },
 };
