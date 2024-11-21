@@ -22,4 +22,9 @@ export default antfu({
   stylistic: {
     semi: true,
   },
+}, {
+  files: ['messages/*.json'],
+  rules: {
+    'jsonc/key-name-casing': 'error',
+  },
 });

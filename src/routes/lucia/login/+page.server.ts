@@ -1,9 +1,11 @@
 import type { Actions, PageServerLoad } from './$types';
+import * as m from '$lib/paraglide/messages.js';
 import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { hash, verify } from '@node-rs/argon2';
 import { fail, redirect } from '@sveltejs/kit';
+
 import { eq } from 'drizzle-orm';
 
 // recommended minimum parameters
@@ -28,10 +30,10 @@ export const actions: Actions = {
     const password = formData.get('password');
 
     if (!validateUsername(username)) {
-      return fail(400, { message: 'Invalid username' });
+      return fail(400, { message: m.invalidUsername() });
     }
     if (!validatePassword(password)) {
-      return fail(400, { message: 'Invalid password' });
+      return fail(400, { message: m.invalidPassword() });
     }
 
     const results = await db
@@ -41,12 +43,12 @@ export const actions: Actions = {
 
     const existingUser = results.at(0);
     if (!existingUser) {
-      return fail(400, { message: 'Incorrect username or password' });
+      return fail(400, { message: m.incorrectCredential() });
     }
 
     const validPassword = await verify(existingUser.passwordHash, password, hashParams);
     if (!validPassword) {
-      return fail(400, { message: 'Incorrect username or password' });
+      return fail(400, { message: m.incorrectCredential() });
     }
 
     const sessionToken = auth.generateSessionToken();
@@ -61,10 +63,10 @@ export const actions: Actions = {
     const password = formData.get('password');
 
     if (!validateUsername(username)) {
-      return fail(400, { message: 'Invalid username' });
+      return fail(400, { message: m.invalidUsername() });
     }
     if (!validatePassword(password)) {
-      return fail(400, { message: 'Invalid password' });
+      return fail(400, { message: m.invalidPassword() });
     }
 
     const passwordHash = await hash(password, hashParams);

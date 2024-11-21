@@ -1,6 +1,7 @@
 <script lang='ts'>
   import type { ActionData } from './$types';
   import { enhance } from '$app/forms';
+  import * as m from '$lib/paraglide/messages.js';
 
   const { form }: { form: ActionData } = $props();
 </script>
@@ -15,7 +16,7 @@
     Password
     <input type='password' name='password' />
   </label>
-  <button>Login</button>
-  <button formaction='?/register'>Register</button>
+  <button>{m.login()}</button>
+  <button formaction='?/register'>{m.register()}</button>
 </form>
 <p style='color: red'>{form?.message ?? ''}</p>
