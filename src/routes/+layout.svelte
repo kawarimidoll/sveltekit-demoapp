@@ -5,6 +5,7 @@
   import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 
   import 'uno.css';
+  import '@unocss/reset/tailwind-compat.css';
 
   const { children } = $props();
 </script>
