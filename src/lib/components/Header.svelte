@@ -3,6 +3,7 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { i18n } from '$lib/i18n';
+  import { availableLanguageTags, languageTag as currentLanguageTag } from '$lib/paraglide/runtime';
 
   function switchToLanguage(newLanguage: AvailableLanguageTag) {
     const canonicalPath = i18n.route($page.url.pathname);
@@ -13,6 +14,13 @@
 
 <div>
   <a href='/'>TOP</a>
-  <button onclick={() => switchToLanguage('en')}>en</button>
-  <button onclick={() => switchToLanguage('ja')}>ja</button>
+
+  {#each availableLanguageTags as languageTag}
+    <button onclick={() => switchToLanguage(languageTag)}>
+      {#if languageTag === currentLanguageTag()}
+        *
+      {/if}
+      {languageTag}
+    </button>
+  {/each}
 </div>
