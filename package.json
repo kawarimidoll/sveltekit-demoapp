@@ -30,6 +30,8 @@
   "devDependencies": {
     "@antfu/eslint-config": "^3.9.1",
     "@electric-sql/pglite": "^0.2.13",
+    "@melt-ui/pp": "^0.3.2",
+    "@melt-ui/svelte": "^0.86.1",
     "@sveltejs/adapter-auto": "^3.3.1",
     "@sveltejs/kit": "^2.8.1",
     "@sveltejs/vite-plugin-svelte": "^4.0.1",
