@@ -12,15 +12,17 @@
   }
 </script>
 
-<div>
-  <a href='/'>TOP</a>
+<header class='bg-background/75 border-border sticky top-0 z-50 border-b backdrop-blur -mb-px'>
+  <div class='max-w-8xl mx-auto h-16 flex items-center justify-between container'>
+    <a href='/'>TOP</a>
 
-  {#each availableLanguageTags as languageTag}
-    <button onclick={() => switchToLanguage(languageTag)}>
-      {#if languageTag === currentLanguageTag()}
-        *
-      {/if}
-      {languageTag}
-    </button>
-  {/each}
-</div>
+    {#each availableLanguageTags as languageTag}
+      <button onclick={() => switchToLanguage(languageTag)}>
+        {#if languageTag === currentLanguageTag()}
+          *
+        {/if}
+        {languageTag}
+      </button>
+    {/each}
+  </div>
+</header>
