@@ -1,5 +1,5 @@
 import type { Actions, PageServerLoad } from './$types';
-import * as auth from '$lib/server/auth';
+import * as auth from '$lib/server/user-auth';
 import { i18nRedirect } from '$lib/server/utils';
 import { fail } from '@sveltejs/kit';
 

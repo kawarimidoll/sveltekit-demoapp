@@ -1,8 +1,8 @@
 import type { Actions, PageServerLoad } from './$types';
 import * as m from '$lib/paraglide/messages.js';
-import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
+import * as auth from '$lib/server/user-auth';
 import { i18nRedirect } from '$lib/server/utils';
 import { hash, verify } from '@node-rs/argon2';
 import { fail } from '@sveltejs/kit';

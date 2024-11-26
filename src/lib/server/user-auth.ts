@@ -8,7 +8,7 @@ import { eq } from 'drizzle-orm';
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 const EXPIRATION_DAYS = DAY_IN_MS * 30;
 
-export const sessionCookieName = 'auth-session';
+export const sessionCookieName = 'demo-user-auth-session';
 
 export function generateSessionToken() {
   const bytes = crypto.getRandomValues(new Uint8Array(18));
