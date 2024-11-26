@@ -35,3 +35,20 @@ export const userSession = pgTable('user_session', {
   expiresAt: tsz(),
 });
 export type UserSession = typeof userSession.$inferSelect;
+
+export const ADMIN_NAME_MAX_LENGTH = 64;
+export const admin = pgTable('admin', {
+  id: cuid({ needGenerate: true }).primaryKey(),
+  name: varchar({ length: ADMIN_NAME_MAX_LENGTH }).notNull(),
+  email: text().notNull().unique(),
+  passwordHash: text().notNull(),
+  ...timestamps,
+});
+export type Admin = typeof admin.$inferSelect;
+
+export const adminSession = pgTable('admin_session', {
+  encodedToken: text().primaryKey(),
+  adminId: cuid().notNull().references(() => admin.id),
+  expiresAt: tsz(),
+});
+export type AdminSession = typeof adminSession.$inferSelect;

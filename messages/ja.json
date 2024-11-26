@@ -2,10 +2,11 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "helloWorld": "こんにちは世界！",
   "welcome": "ようこそ、{name}!",
-  "yourId": "あなたのユーザーIDは{id}です。",
+  "yourId": "あなたのIDは{id}です。",
   "login": "ログイン",
   "logout": "ログアウト",
   "register": "登録",
+  "invalidEmail": "emailが不正です",
   "invalidUsername": "usernameが不正です",
   "invalidPassword": "passwordが不正です",
   "incorrectCredential": "usernameまたはpasswordが間違っています"
