@@ -16,6 +16,8 @@ export default antfu({
     'no-unreachable': 'error',
     'curly': ['error', 'all'],
     'antfu/top-level-function': 'error',
+    // apply 'no-console' only '.svelte' files below
+    'no-console': 'off',
   },
 
   /* style rules */
@@ -27,4 +29,8 @@ export default antfu({
   rules: {
     'jsonc/key-name-casing': 'error',
   },
+}, {
+  // apply 'no-console' only '.svelte' files
+  files: ['**/*.svelte'],
+  rules: { 'no-console': 'error' },
 });
