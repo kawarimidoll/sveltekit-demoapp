@@ -1,4 +1,13 @@
-import { integer, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { createId } from '@paralleldrive/cuid2';
+import { char, integer, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+
+// wrapper function for cuid2
+function cuid(opts?: { needGenerate: boolean }) {
+  if (opts?.needGenerate) {
+    return char({ length: 24 }).$defaultFn(() => createId());
+  }
+  return char({ length: 24 });
+}
 
 // wrapper function for timestamp with zone
 function tsz() {
@@ -12,19 +21,17 @@ const timestamps = {
 
 export const USERNAME_MAX_LENGTH = 31;
 export const user = pgTable('user', {
-  id: uuid().defaultRandom().primaryKey(),
+  id: cuid({ needGenerate: true }).primaryKey(),
   age: integer(),
   username: varchar({ length: USERNAME_MAX_LENGTH }).notNull().unique(),
   passwordHash: text().notNull(),
   ...timestamps,
 });
+export type User = typeof user.$inferSelect;
 
 export const session = pgTable('session', {
   encodedToken: text().primaryKey(),
-  userId: uuid().notNull().references(() => user.id),
+  userId: cuid().notNull().references(() => user.id),
   expiresAt: tsz(),
 });
-
 export type Session = typeof session.$inferSelect;
-
-export type User = typeof user.$inferSelect;

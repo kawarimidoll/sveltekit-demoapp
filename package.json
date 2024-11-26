@@ -24,6 +24,7 @@
     "@node-rs/argon2": "^2.0.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
+    "@paralleldrive/cuid2": "^2.2.2",
     "drizzle-orm": "^0.36.3",
     "mode-watcher": "^0.5.0",
     "postgres": "^3.4.5"
