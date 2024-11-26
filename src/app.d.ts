@@ -4,7 +4,7 @@ declare global {
   namespace App {
     interface Locals {
       user: import('$lib/server/user-auth').SessionValidationResult['user'];
-      session: import('$lib/server/user-auth').SessionValidationResult['session'];
+      userSession: import('$lib/server/user-auth').SessionValidationResult['userSession'];
     }
   }
 }

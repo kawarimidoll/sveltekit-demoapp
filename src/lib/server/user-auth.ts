@@ -22,12 +22,12 @@ function encodeSessionToken(token: string) {
 
 export async function createSession(token: string, userId: string) {
   const encodedToken = encodeSessionToken(token);
-  const session: table.Session = {
+  const session: table.UserSession = {
     encodedToken,
     userId,
     expiresAt: new Date(Date.now() + EXPIRATION_DAYS),
   };
-  await db.insert(table.session).values(session);
+  await db.insert(table.userSession).values(session);
   return session;
 }
 
@@ -37,11 +37,11 @@ export async function validateSessionToken(token: string) {
     .select({
       // Adjust user table here to tweak returned data
       user: { id: table.user.id, username: table.user.username },
-      session: table.session,
+      session: table.userSession,
     })
-    .from(table.session)
-    .innerJoin(table.user, eq(table.session.userId, table.user.id))
-    .where(eq(table.session.encodedToken, encodedToken));
+    .from(table.userSession)
+    .innerJoin(table.user, eq(table.userSession.userId, table.user.id))
+    .where(eq(table.userSession.encodedToken, encodedToken));
 
   if (!result) {
     return { session: null, user: null };
@@ -50,7 +50,7 @@ export async function validateSessionToken(token: string) {
 
   const sessionExpired = Date.now() >= session.expiresAt.getTime();
   if (sessionExpired) {
-    await db.delete(table.session).where(eq(table.session.encodedToken, session.encodedToken));
+    await db.delete(table.userSession).where(eq(table.userSession.encodedToken, session.encodedToken));
     return { session: null, user: null };
   }
 
@@ -58,9 +58,9 @@ export async function validateSessionToken(token: string) {
   if (renewSession) {
     session.expiresAt = new Date(Date.now() + EXPIRATION_DAYS);
     await db
-      .update(table.session)
+      .update(table.userSession)
       .set({ expiresAt: session.expiresAt })
-      .where(eq(table.session.encodedToken, session.encodedToken));
+      .where(eq(table.userSession.encodedToken, session.encodedToken));
   }
 
   return { session, user };
@@ -69,7 +69,7 @@ export async function validateSessionToken(token: string) {
 export type SessionValidationResult = Awaited<ReturnType<typeof validateSessionToken>>;
 
 export async function invalidateSession(encodedToken: string) {
-  await db.delete(table.session).where(eq(table.session.encodedToken, encodedToken));
+  await db.delete(table.userSession).where(eq(table.userSession.encodedToken, encodedToken));
 }
 
 export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date) {

@@ -10,10 +10,10 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
   logout: async (event) => {
-    if (!event.locals.session) {
+    if (!event.locals.userSession) {
       return fail(401);
     }
-    await auth.invalidateSession(event.locals.session.encodedToken);
+    await auth.invalidateSession(event.locals.userSession.encodedToken);
     auth.deleteSessionTokenCookie(event);
 
     return i18nRedirect(event.url, '/');

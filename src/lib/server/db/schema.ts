@@ -29,9 +29,9 @@ export const user = pgTable('user', {
 });
 export type User = typeof user.$inferSelect;
 
-export const session = pgTable('session', {
+export const userSession = pgTable('user_session', {
   encodedToken: text().primaryKey(),
   userId: cuid().notNull().references(() => user.id),
   expiresAt: tsz(),
 });
-export type Session = typeof session.$inferSelect;
+export type UserSession = typeof userSession.$inferSelect;
