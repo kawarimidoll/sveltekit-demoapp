@@ -2,6 +2,7 @@ import presetDaisy from '@vsilk/unocss-preset-daisyui';
 import {
   defineConfig,
   presetAttributify,
+  presetIcons,
   presetUno,
   transformerDirectives,
   transformerVariantGroup,
@@ -15,6 +16,7 @@ export default defineConfig({
   ],
   presets: [
     presetUno(),
+    presetIcons({ autoInstall: true }),
     presetAttributify({ prefix: 'uno-', prefixedOnly: true }),
     presetAnimations(),
     presetDaisy(),
