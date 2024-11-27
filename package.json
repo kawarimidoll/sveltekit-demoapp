@@ -32,6 +32,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^3.9.1",
     "@electric-sql/pglite": "^0.2.13",
+    "@iconify-json/fluent": "^1.2.8",
     "@iconify-json/octicon": "^1.2.1",
     "@melt-ui/pp": "^0.3.2",
     "@melt-ui/svelte": "^0.86.1",
