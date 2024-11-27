@@ -3,6 +3,7 @@
   import { page } from '$app/stores';
   import { i18n } from '$lib/i18n';
   import { languageTag } from '$lib/paraglide/runtime';
+  import Input from './Input.svelte';
   import LangSelect from './LangSelect.svelte';
 
   const isAdmin = i18n.route($page.url.pathname).startsWith('/admin');
@@ -51,14 +52,8 @@
       <h3 class='text-lg font-bold'>{m.login()}</h3>
     </div>
     <form class='space-y-2' method='post' action='?/login' use:enhance>
-      <label class='flex items-center gap-2 input input-bordered'>
-        <div class='i-octicon-person-fill-16'></div>
-        <input type='text' name='username' placeholder='username' class='grow' />
-      </label>
-      <label class='flex items-center gap-2 input input-bordered'>
-        <div class='i-octicon-key'></div>
-        <input type='password' name='password' placeholder='password' class='grow' />
-      </label>
+      <Input type='text' name='username' placeholder='username' icon='i-octicon-person-fill-16' />
+      <Input type='password' name='password' placeholder='password' icon='i-octicon-key' />
       <button class='w-full btn btn-primary'>{m.login()}</button>
       <p style='color: red'>{form?.message ?? ''}</p>
     </form>
