@@ -46,7 +46,7 @@
         </ul>
       {/snippet}
     </Dropdown>
-    <Dropdown>
+    <Dropdown triggerClass='btn-circle avatar'>
       {#snippet trigger()}
         <div class='i-teenyicons-user-circle-solid size-8'></div>
       {/snippet}
