@@ -4,6 +4,7 @@
   import { page } from '$app/stores';
   import { i18n } from '$lib/i18n';
   import { availableLanguageTags, languageTag } from '$lib/paraglide/runtime';
+  import Dropdown from './Dropdown.svelte';
 
   function isAdmin() {
     const canonicalPath = i18n.route($page.url.pathname);
@@ -23,37 +24,41 @@
     </a>
   </div>
   <div class='flex-none'>
-    <div class='dropdown dropdown-end'>
-      <div tabindex='0' role='button' class='m-1 btn btn-ghost'>
+    <Dropdown>
+      {#snippet trigger()}
         <span class='i-fluent-translate-16-regular size-6'></span>
         <span class='i-fluent-chevron-down-12-regular'></span>
-      </div>
-      <ul class='z-[1] w-26 gap-2 rounded-box bg-base-100 p-2 shadow menu dropdown-content'>
-        {#each availableLanguageTags as item}
-          <li>
-            <button
-              class='btn btn-sm'
-              class:btn-neutral={item === languageTag()}
-              class:btn-outline={item !== languageTag()}
-              onclick={() => switchToLanguage(item)}
-            >
-              {item}
-            </button>
-          </li>
-        {/each}
-      </ul>
-    </div>
-    <div class='dropdown dropdown-end'>
-      <div tabindex='0' role='button' class='m-1 btn btn-ghost'>
+      {/snippet}
+      {#snippet main()}
+        <ul class='gap-1 menu menu-sm'>
+          {#each availableLanguageTags as item}
+            <li>
+              <button
+                class='btn btn-sm'
+                class:btn-neutral={item === languageTag()}
+                class:btn-outline={item !== languageTag()}
+                onclick={() => switchToLanguage(item)}
+              >
+                {item}
+              </button>
+            </li>
+          {/each}
+        </ul>
+      {/snippet}
+    </Dropdown>
+    <Dropdown>
+      {#snippet trigger()}
         <span class='i-octicon-person-fill-16 size-6'></span>
         <span class='i-fluent-chevron-down-12-regular'></span>
-      </div>
-      <ul class='z-[1] w-26 gap-2 rounded-box bg-base-100 p-2 shadow menu dropdown-content'>
-        <li>
-          <a class='link' href='/'>Top</a>
-          <a class='link' href='/admin'>Admin</a>
-        </li>
-      </ul>
-    </div>
+      {/snippet}
+      {#snippet main()}
+        <ul>
+          <li>
+            <a class='link' href='/'>Top</a>
+            <a class='link' href='/admin'>Admin</a>
+          </li>
+        </ul>
+      {/snippet}
+    </Dropdown>
   </div>
 </div>
