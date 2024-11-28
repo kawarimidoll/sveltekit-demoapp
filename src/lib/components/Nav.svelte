@@ -23,33 +23,37 @@
     </a>
   </div>
   <div class='flex-none'>
-    <ul class='px-1 menu menu-horizontal'>
-      <li>
-        <details>
-          <summary><span class='i-fluent-translate-16-regular size-6'></span></summary>
-          <ul class='rounded-t-none bg-base-100 p-2'>
-            {#each availableLanguageTags as item}
-              <li>
-                <button
-                  class={item === languageTag() ? 'btn btn-neutral' : 'btn btn-ghost'}
-                  onclick={() => switchToLanguage(item)}
-                >
-                  {item}
-                </button>
-              </li>
-            {/each}
-          </ul>
-        </details>
-      </li>
-      <li>
-        <details>
-          <summary><span class='i-octicon-person-fill-16 size-6'></span></summary>
-          <ul class='rounded-t-none bg-base-100 p-2'>
-            <li>User menu 1</li>
-            <li>User menu 2</li>
-          </ul>
-        </details>
-      </li>
-    </ul>
+    <div class='dropdown dropdown-end'>
+      <div tabindex='0' role='button' class='m-1 btn btn-ghost'>
+        <span class='i-fluent-translate-16-regular size-6'></span>
+        <span class='i-fluent-chevron-down-12-regular'></span>
+      </div>
+      <ul class='z-[1] w-26 gap-2 rounded-box bg-base-100 p-2 shadow menu dropdown-content'>
+        {#each availableLanguageTags as item}
+          <li>
+            <button
+              class='btn btn-sm'
+              class:btn-neutral={item === languageTag()}
+              class:btn-outline={item !== languageTag()}
+              onclick={() => switchToLanguage(item)}
+            >
+              {item}
+            </button>
+          </li>
+        {/each}
+      </ul>
+    </div>
+    <div class='dropdown dropdown-end'>
+      <div tabindex='0' role='button' class='m-1 btn btn-ghost'>
+        <span class='i-octicon-person-fill-16 size-6'></span>
+        <span class='i-fluent-chevron-down-12-regular'></span>
+      </div>
+      <ul class='z-[1] w-26 gap-2 rounded-box bg-base-100 p-2 shadow menu dropdown-content'>
+        <li>
+          <a class='link' href='/'>Top</a>
+          <a class='link' href='/admin'>Admin</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
