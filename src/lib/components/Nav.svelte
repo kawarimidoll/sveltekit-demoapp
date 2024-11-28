@@ -5,6 +5,7 @@
   import TwIndicator from '$lib/components/dev/tw-indicator.svelte';
   import { i18n } from '$lib/i18n';
   import { availableLanguageTags, languageTag } from '$lib/paraglide/runtime';
+  import { setMode, userPrefersMode } from 'mode-watcher';
   import Dropdown from './Dropdown.svelte';
 
   function isAdmin() {
@@ -16,6 +17,14 @@
     const localisedPath = i18n.resolveRoute(canonicalPath, newLanguage);
     goto(localisedPath);
   }
+
+  type Mode = 'light' | 'dark' | 'system';
+  const modes: { name: Mode; icon: string }[] = [
+    { name: 'light', icon: 'i-octicon-sun-16' },
+    { name: 'dark', icon: 'i-octicon-moon-16' },
+    { name: 'system', icon: 'i-octicon-device-desktop-16' },
+  ];
+
 </script>
 
 <div class='bg-base-100 navbar'>
@@ -26,6 +35,31 @@
     <TwIndicator />
   </div>
   <div class='flex-none'>
+    <Dropdown mainClass='w-36'>
+      {#snippet trigger()}
+        <div class='grid size-6'>
+          <div class='i-octicon-sun-16 col-start-1 row-start-1'></div>
+          <div class='i-octicon-moon-16 col-start-2 row-start-2 -ml-1 -mt-2'></div>
+        </div>
+      {/snippet}
+      {#snippet main()}
+        <ul class='gap-1 menu menu-sm'>
+          {#each modes as item}
+            <li>
+              <button
+                class='btn btn-sm'
+                class:btn-neutral={item.name === $userPrefersMode}
+                class:btn-outline={item.name !== $userPrefersMode}
+                onclick={() => setMode(item.name)}
+              >
+                <span class={`inline ${item.icon}`}></span>
+                {item.name}
+              </button>
+            </li>
+          {/each}
+        </ul>
+      {/snippet}
+    </Dropdown>
     <Dropdown>
       {#snippet trigger()}
         <span class='i-fluent-translate-16-regular size-6'></span>
