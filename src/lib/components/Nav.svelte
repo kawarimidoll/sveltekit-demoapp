@@ -48,8 +48,7 @@
     </Dropdown>
     <Dropdown>
       {#snippet trigger()}
-        <span class='i-octicon-person-fill-16 size-6'></span>
-        <span class='i-fluent-chevron-down-12-regular'></span>
+        <div class='i-teenyicons-user-circle-solid size-8'></div>
       {/snippet}
       {#snippet main()}
         <ul>

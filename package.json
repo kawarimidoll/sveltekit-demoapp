@@ -34,6 +34,7 @@
     "@electric-sql/pglite": "^0.2.13",
     "@iconify-json/fluent": "^1.2.8",
     "@iconify-json/octicon": "^1.2.1",
+    "@iconify-json/teenyicons": "^1.2.1",
     "@melt-ui/pp": "^0.3.2",
     "@melt-ui/svelte": "^0.86.1",
     "@sveltejs/adapter-auto": "^3.3.1",
