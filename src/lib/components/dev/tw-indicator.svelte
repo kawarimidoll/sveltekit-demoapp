@@ -5,12 +5,12 @@
 </script>
 
 {#if dev}
-  <div class='pointer-events-none fixed bottom-1 left-1 z-50 grid place-items-center rounded-full bg-gray-800 p-3 text-xs text-white font-mono opacity-60'>
-    <div class='block sm:hidden'>xs</div>
-    <div class='hidden sm:block md:hidden'>sm</div>
-    <div class='hidden md:block lg:hidden'>md</div>
-    <div class='hidden lg:block xl:hidden'>lg</div>
-    <div class='hidden xl:block 2xl:hidden'>xl</div>
-    <div class='hidden 2xl:block'>2xl</div>
+  <div class='pointer-events-none font-mono badge badge-accent'>
+    <span class='inline-block sm:hidden'>xs</span>
+    <span class='hidden sm:inline-block md:hidden'>sm</span>
+    <span class='hidden md:inline-block lg:hidden'>md</span>
+    <span class='hidden lg:inline-block xl:hidden'>lg</span>
+    <span class='hidden xl:inline-block 2xl:hidden'>xl</span>
+    <span class='hidden 2xl:inline-block'>2xl</span>
   </div>
 {/if}
