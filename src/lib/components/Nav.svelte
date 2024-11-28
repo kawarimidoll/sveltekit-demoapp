@@ -5,9 +5,10 @@
   import { i18n } from '$lib/i18n';
   import { availableLanguageTags, languageTag } from '$lib/paraglide/runtime';
 
-  const canonicalPath = i18n.route($page.url.pathname);
-  const isAdmin = canonicalPath.startsWith('/admin');
-
+  function isAdmin() {
+    const canonicalPath = i18n.route($page.url.pathname);
+    return canonicalPath.startsWith('/admin');
+  }
   function switchToLanguage(newLanguage: AvailableLanguageTag) {
     const canonicalPath = i18n.route($page.url.pathname);
     const localisedPath = i18n.resolveRoute(canonicalPath, newLanguage);
@@ -17,8 +18,8 @@
 
 <div class='bg-base-100 navbar'>
   <div class='flex-1'>
-    <a class='text-xl btn btn-ghost' href={isAdmin ? '/admin' : '/'}>
-      {isAdmin ? 'Admin' : 'Top'}
+    <a class='text-xl btn btn-ghost' href={isAdmin() ? '/admin' : '/'}>
+      {isAdmin() ? 'Admin' : 'Top'}
     </a>
   </div>
   <div class='flex-none'>
