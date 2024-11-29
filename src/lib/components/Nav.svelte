@@ -35,7 +35,7 @@
     <TwIndicator />
   </div>
   <div class='flex-none'>
-    <Dropdown mainClass='w-36'>
+    <Dropdown mainClass='w-36' triggerClass='btn-circle'>
       {#snippet trigger()}
         <div class='grid size-6'>
           <div class='i-octicon-sun-16 col-start-1 row-start-1'></div>
@@ -60,10 +60,9 @@
         </ul>
       {/snippet}
     </Dropdown>
-    <Dropdown>
+    <Dropdown triggerClass='btn-circle'>
       {#snippet trigger()}
         <span class='i-fluent-translate-16-regular size-6'></span>
-        <span class='i-fluent-chevron-down-12-regular'></span>
       {/snippet}
       {#snippet main()}
         <ul class='gap-1 menu menu-sm'>
