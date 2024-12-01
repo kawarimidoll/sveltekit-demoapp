@@ -1,4 +1,5 @@
 import presetDaisy from '@vsilk/unocss-preset-daisyui';
+import { isDevelopment } from 'std-env';
 import {
   defineConfig,
   presetAttributify,
@@ -16,7 +17,7 @@ export default defineConfig({
   ],
   presets: [
     presetUno(),
-    presetIcons({ autoInstall: true }),
+    presetIcons({ autoInstall: isDevelopment }),
     presetAttributify({ prefix: 'uno-', prefixedOnly: true }),
     presetAnimations(),
     presetDaisy(),
