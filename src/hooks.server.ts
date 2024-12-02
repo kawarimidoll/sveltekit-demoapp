@@ -54,12 +54,13 @@ async function handleAdminSession(event: RequestEvent): Promise<AdminLocale> {
 }
 
 const handleAuth: Handle = async ({ event, resolve }) => {
-  console.log('main hook');
+  console.log('main hook handleAuth');
   event.locals = {
     ...event.locals,
     ...(await handleUserSession(event)),
     ...(await handleAdminSession(event)),
   };
+  console.log(event.locals);
 
   return resolve(event);
 };

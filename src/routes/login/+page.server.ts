@@ -18,8 +18,10 @@ const hashParams = {
 
 export const load: PageServerLoad = async (event) => {
   if (event.locals.user) {
+    console.log('login/load user is logged in');
     return i18nRedirect(event.url, '/');
   }
+  console.log('login/load user is not logged in');
   return {};
 };
 
