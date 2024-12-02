@@ -15,7 +15,8 @@
       <h3 class='text-lg font-bold'>1st Admin {m.register()}</h3>
     </div>
     <Input type='email' name='email' placeholder='email' icon='i-octicon-mail-16' />
-    <Input type='password' name='password' placeholder='password' icon='i-octicon-key' />
+    <!-- NOTE: password should be more than 16 characters, but here we use 3 because it's a demo -->
+    <Input type='password' name='password' placeholder='password' minlength='3' icon='i-octicon-key' />
     <button class='w-full btn btn-primary'>{m.register()}</button>
     <p style='color: red'>{form?.message ?? ''}</p>
   </form>
