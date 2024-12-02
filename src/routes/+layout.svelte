@@ -7,12 +7,12 @@
   import 'uno.css';
   import '@unocss/reset/tailwind-compat.css';
 
-  const { children } = $props();
+  const { data, children } = $props();
 </script>
 
 <ModeWatcher />
 
 <ParaglideJS {i18n}>
-  <Nav />
+  <Nav {data} />
   {@render children()}
 </ParaglideJS>

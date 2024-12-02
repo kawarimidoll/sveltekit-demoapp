@@ -25,6 +25,7 @@
     { name: 'system', icon: 'i-octicon-device-desktop-16' },
   ];
 
+  const { data } = $props();
 </script>
 
 <div class='bg-base-100 navbar'>
@@ -89,6 +90,17 @@
         <ul>
           <li>
             <a class='link' href='/'>Top</a>
+          </li>
+          <li>
+            {#if data?.user == null}
+              <a class='link' href='/login'>Login</a>
+            {:else}
+              <form method='post' action='?/logout'>
+                <button class='link'>Logout</button>
+              </form>
+            {/if}
+          </li>
+          <li>
             <a class='link' href='/admin'>Admin</a>
           </li>
         </ul>
