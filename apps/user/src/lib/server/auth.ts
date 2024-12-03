@@ -6,6 +6,7 @@ import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
 import { eq } from 'drizzle-orm';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
+const EXPIRATION_DAYS = DAY_IN_MS * 30;
 
 export const sessionCookieName = 'user-auth-session';
 
@@ -15,19 +16,23 @@ export function generateSessionToken() {
   return token;
 }
 
+function encodeSessionToken(token: string) {
+  return encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+}
+
 export async function createSession(token: string, userId: string) {
-  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+  const encodedToken = encodeSessionToken(token);
   const session: table.UserSession = {
-    id: sessionId,
+    encodedToken,
     userId,
-    expiresAt: new Date(Date.now() + DAY_IN_MS * 30),
+    expiresAt: new Date(Date.now() + EXPIRATION_DAYS),
   };
   await db.insert(table.userSession).values(session);
   return session;
 }
 
 export async function validateSessionToken(token: string) {
-  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+  const encodedToken = encodeSessionToken(token);
   const [result] = await db
     .select({
       // Adjust user table here to tweak returned data
@@ -36,7 +41,7 @@ export async function validateSessionToken(token: string) {
     })
     .from(table.userSession)
     .innerJoin(table.user, eq(table.userSession.userId, table.user.id))
-    .where(eq(table.userSession.id, sessionId));
+    .where(eq(table.userSession.encodedToken, encodedToken));
 
   if (!result) {
     return { session: null, user: null };
@@ -45,17 +50,17 @@ export async function validateSessionToken(token: string) {
 
   const sessionExpired = Date.now() >= session.expiresAt.getTime();
   if (sessionExpired) {
-    await db.delete(table.userSession).where(eq(table.userSession.id, session.id));
+    await db.delete(table.userSession).where(eq(table.userSession.encodedToken, encodedToken));
     return { session: null, user: null };
   }
 
-  const renewSession = Date.now() >= session.expiresAt.getTime() - DAY_IN_MS * 15;
+  const renewSession = Date.now() >= session.expiresAt.getTime() - EXPIRATION_DAYS / 2;
   if (renewSession) {
-    session.expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
+    session.expiresAt = new Date(Date.now() + EXPIRATION_DAYS);
     await db
       .update(table.userSession)
       .set({ expiresAt: session.expiresAt })
-      .where(eq(table.userSession.id, session.id));
+      .where(eq(table.userSession.encodedToken, encodedToken));
   }
 
   return { session, user };
@@ -63,12 +68,16 @@ export async function validateSessionToken(token: string) {
 
 export type SessionValidationResult = Awaited<ReturnType<typeof validateSessionToken>>;
 
-export async function invalidateSession(sessionId: string) {
-  await db.delete(table.userSession).where(eq(table.userSession.id, sessionId));
+export async function invalidateSession(encodedToken: string) {
+  await db.delete(table.userSession).where(eq(table.userSession.encodedToken, encodedToken));
 }
 
 export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date) {
+  // the `secure` flag is not required here because
+  // SvelteKit automatically sets the flag when deployed to production
   event.cookies.set(sessionCookieName, token, {
+    httpOnly: true,
+    sameSite: 'lax',
     expires: expiresAt,
     path: '/',
   });
