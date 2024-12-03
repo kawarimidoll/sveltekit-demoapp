@@ -17,3 +17,7 @@
   <button onclick={() => switchToLanguage('en')}>en</button>
   <button onclick={() => switchToLanguage('ja')}>ja</button>
 </div>
+
+<div>
+  <a href='/'>top</a>
+</div>
