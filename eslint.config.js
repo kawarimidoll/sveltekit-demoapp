@@ -24,6 +24,9 @@ export default antfu({
   stylistic: {
     semi: true,
   },
+
+  /* workaround: eslint doesn't follow .gitignore for some reason */
+  ignores: ['**/src/lib/paraglide'],
 }, {
   files: ['messages/*.json'],
   rules: {
