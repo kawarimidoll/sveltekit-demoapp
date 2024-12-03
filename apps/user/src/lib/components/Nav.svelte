@@ -4,6 +4,7 @@
   import { page } from '$app/stores';
   import { i18n } from '$lib/i18n';
   import * as m from '$lib/paraglide/messages.js';
+  import { availableLanguageTags, languageTag } from '$lib/paraglide/runtime';
 
   function switchToLanguage(newLanguage: AvailableLanguageTag) {
     const canonicalPath = i18n.route($page.url.pathname);
@@ -12,8 +13,14 @@
   }
 </script>
 
-<h1>{m.hello_world({ name: 'SvelteKit User' })}</h1>
 <div>
-  <button onclick={() => switchToLanguage('en')}>en</button>
-  <button onclick={() => switchToLanguage('ja')}>ja</button>
+  <a href='/'>top</a>
+</div>
+<div>{m.hello_world({ name: 'SvelteKit User' })}</div>
+<div>
+  {#each availableLanguageTags as item}
+    <button onclick={() => switchToLanguage(item)}>
+      {item === languageTag() ? '*' : ''}{item}
+    </button>
+  {/each}
 </div>
