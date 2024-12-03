@@ -10,7 +10,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "eslint --cache . --fix"
+    "format": "eslint --cache . --fix",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.11.2",
@@ -18,7 +19,12 @@
     "eslint": "^9.16.0",
     "eslint-plugin-format": "^0.1.3",
     "eslint-plugin-svelte": "^2.46.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.10",
     "turbo": "^2.3.3"
+  },
+  "lint-staged": {
+    "*.{js,ts,json,html,svelte}": "bun format"
   },
   "workspaces": [
     "apps/*",
