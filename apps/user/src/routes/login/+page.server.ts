@@ -2,17 +2,9 @@ import type { Actions, PageServerLoad } from './$types';
 import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
-import { verify } from '@node-rs/argon2';
+import { verifyPasswordHash } from '$lib/server/password';
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-
-// recommended minimum parameters
-const hashParams = {
-  memoryCost: 19456,
-  timeCost: 2,
-  outputLen: 32,
-  parallelism: 1,
-};
 
 export const load: PageServerLoad = async (event) => {
   if (event.locals.user) {
@@ -44,7 +36,7 @@ export const actions: Actions = {
       return fail(400, { message: 'Incorrect username or password' });
     }
 
-    const validPassword = await verify(existingUser.passwordHash, password, hashParams);
+    const validPassword = await verifyPasswordHash(existingUser.passwordHash, password);
     if (!validPassword) {
       return fail(400, { message: 'Incorrect username or password' });
     }

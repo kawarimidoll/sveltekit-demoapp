@@ -22,3 +22,9 @@
 <div>
   Already have an account? <a href='/login'>Sign in</a>
 </div>
+
+<div>
+  <p>What's 'Weak password'?</p>
+  <p>We validate your password strength in an anonymized form.</p>
+  <p><a href='https://haveibeenpwned.com/API/v2#SearchingPwnedPasswordsByRange'>The validation API</a>  is run by <a href='https://haveibeenpwned.com/'>Have I been Pwned</a>.</p>
+</div>
