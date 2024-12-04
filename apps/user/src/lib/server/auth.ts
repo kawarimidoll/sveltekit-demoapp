@@ -10,6 +10,10 @@ const EXPIRATION_DAYS = DAY_IN_MS * 30;
 
 export const sessionCookieName = 'user-auth-session';
 
+export function isAuth(event: RequestEvent) {
+  return event.locals.session && event.locals.user;
+}
+
 export function generateSessionToken() {
   const bytes = crypto.getRandomValues(new Uint8Array(18));
   const token = encodeBase64url(bytes);
@@ -36,7 +40,8 @@ export async function validateSessionToken(token: string) {
   const [result] = await db
     .select({
       // Adjust user table here to tweak returned data
-      user: { id: table.user.id, username: table.user.username },
+      // user: { id: table.user.id, username: table.user.username },
+      user: table.user,
       session: table.userSession,
     })
     .from(table.userSession)
