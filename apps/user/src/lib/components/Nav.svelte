@@ -29,6 +29,8 @@
   {/each}
 </div>
 {#if data.user != null}
+  <a href='/mypage'>mypage</a>
+  <a href='/settings'>settings</a>
   <form method='post' action='/logout' use:enhance>
     <button>Sign out</button>
   </form>

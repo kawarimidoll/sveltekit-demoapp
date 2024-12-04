@@ -9,15 +9,15 @@
 <form method='post' action='?/register' use:enhance>
   <label>
     Email
-    <input type='email' name='email' />
+    <input type='email' name='email' required />
   </label>
   <label>
     Username
-    <input type='text' name='username' />
+    <input type='text' name='username' required />
   </label>
   <label>
     Password
-    <input type='password' name='password' />
+    <input type='password' name='password' required />
   </label>
   <button>Register</button>
 </form>
