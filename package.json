@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --filter=./apps/*",
     "lint": "turbo run lint",
     "format": "eslint --cache . --fix",
     "prepare": "husky"
