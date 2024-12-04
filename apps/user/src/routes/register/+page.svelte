@@ -5,8 +5,8 @@
   const { form }: { form: ActionData } = $props();
 </script>
 
-<h1>Login</h1>
-<form method='post' action='?/login' use:enhance>
+<h1>Register</h1>
+<form method='post' action='?/register' use:enhance>
   <label>
     Username
     <input name='username' />
@@ -15,10 +15,10 @@
     Password
     <input type='password' name='password' />
   </label>
-  <button>Login</button>
+  <button>Register</button>
 </form>
 <p style='color: red'>{form?.message ?? ''}</p>
 
 <div>
-  Don't have an account? <a href='/register'>Create account</a>
+  Already have an account? <a href='/login'>Sign in</a>
 </div>
