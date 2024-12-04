@@ -32,4 +32,6 @@
   <form method='post' action='/logout' use:enhance>
     <button>Sign out</button>
   </form>
+{:else}
+  <a href='/login'>login</a>
 {/if}
