@@ -2,6 +2,7 @@ import type { Actions, PageServerLoad } from './$types';
 import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
+import { checkEmailAvailability, verifyEmailInput } from '$lib/server/email';
 import { hashPassword, verifyPasswordStrength } from '$lib/server/password';
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
@@ -16,8 +17,17 @@ export const load: PageServerLoad = async (event) => {
 export const actions: Actions = {
   register: async (event) => {
     const formData = await event.request.formData();
+    const email = formData.get('email');
     const username = formData.get('username');
     const password = formData.get('password');
+
+    if (!verifyEmailInput(email)) {
+      return fail(400, { message: 'Invalid email' });
+    }
+    const emailAvailable = await checkEmailAvailability(email);
+    if (!emailAvailable) {
+      return fail(400, { message: 'Email is already used' });
+    }
 
     if (!validateUsername(username)) {
       return fail(400, { message: 'Invalid username' });
@@ -42,7 +52,7 @@ export const actions: Actions = {
       // return value of db.insert() is array
       const [insertedUser] = await db
         .insert(table.user)
-        .values({ username, passwordHash })
+        .values({ username, email, passwordHash })
         .returning({ id: table.user.id });
 
       const sessionToken = auth.generateSessionToken();

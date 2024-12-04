@@ -25,6 +25,7 @@ export const USERNAME_MAX_LENGTH = 31;
 export const user = pgTable('user', {
   id: cuid({ needGenerate: true }).primaryKey(),
   age: integer(),
+  email: text().notNull().unique(),
   username: varchar({ length: USERNAME_MAX_LENGTH }).notNull().unique(),
   passwordHash: text().notNull(),
   ...timestamps,

@@ -8,8 +8,12 @@
 <h1>Register</h1>
 <form method='post' action='?/register' use:enhance>
   <label>
+    Email
+    <input type='email' name='email' />
+  </label>
+  <label>
     Username
-    <input name='username' />
+    <input type='text' name='username' />
   </label>
   <label>
     Password
