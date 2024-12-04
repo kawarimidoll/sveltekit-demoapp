@@ -19,10 +19,15 @@ export async function verifyPasswordHash(hash: string, password: string): Promis
   return await verify(hash, password, hashParams);
 }
 
+export function verifyPasswordInput(password: unknown): password is string {
+  return (
+    typeof password === 'string'
+    && password.length > 6
+    && password.length < 256
+  );
+}
+
 export async function verifyPasswordStrength(password: string): Promise<boolean> {
-  if (password.length < 6 || password.length > 255) {
-    return false;
-  }
   // bypass strength check in development
   if (dev) {
     return true;

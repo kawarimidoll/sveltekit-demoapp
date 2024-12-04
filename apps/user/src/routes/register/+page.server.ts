@@ -3,7 +3,7 @@ import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { checkEmailAvailability, verifyEmailInput } from '$lib/server/email';
-import { hashPassword, verifyPasswordStrength } from '$lib/server/password';
+import { hashPassword, verifyPasswordInput, verifyPasswordStrength } from '$lib/server/password';
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
@@ -21,6 +21,7 @@ export const actions: Actions = {
     const username = formData.get('username');
     const password = formData.get('password');
 
+    // check email
     if (!verifyEmailInput(email)) {
       return fail(400, { message: 'Invalid email' });
     }
@@ -29,21 +30,25 @@ export const actions: Actions = {
       return fail(400, { message: 'Email is already used' });
     }
 
+    // check username
     if (!validateUsername(username)) {
       return fail(400, { message: 'Invalid username' });
     }
-
-    const isStrongPassword = await verifyPasswordStrength(password);
-    if (!isStrongPassword) {
-      return fail(400, { message: 'Weak password' });
-    }
-
     const [existingUser] = await db
       .select()
       .from(table.user)
       .where(eq(table.user.username, username));
     if (existingUser) {
       return fail(400, { message: 'Username is already used' });
+    }
+
+    // check password
+    if (!verifyPasswordInput(password)) {
+      return fail(400, { message: 'Invalid password' });
+    }
+    const isStrongPassword = await verifyPasswordStrength(password);
+    if (!isStrongPassword) {
+      return fail(400, { message: 'Weak password' });
     }
 
     const passwordHash = await hashPassword(password);
