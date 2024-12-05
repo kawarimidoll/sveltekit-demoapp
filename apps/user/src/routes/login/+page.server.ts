@@ -26,12 +26,10 @@ export const actions: Actions = {
       return fail(400, { message: 'Invalid password' });
     }
 
-    const results = await db
+    const [existingUser] = await db
       .select()
       .from(table.user)
       .where(eq(table.user.username, username));
-
-    const existingUser = results.at(0);
     if (!existingUser) {
       return fail(400, { message: 'Incorrect username or password' });
     }
@@ -55,7 +53,7 @@ function validateUsername(username: unknown): username is string {
   return (
     typeof username === 'string'
     && username.length >= 3
-    && username.length <= 31
+    && username.length <= table.user.username.length
     && /^[a-z0-9_-]+$/.test(username)
   );
 }

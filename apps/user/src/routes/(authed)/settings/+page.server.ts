@@ -127,7 +127,7 @@ function validateUsername(username: unknown): username is string {
   return (
     typeof username === 'string'
     && username.length >= 3
-    && username.length <= 31
+    && username.length <= table.user.username.length
     && /^[a-z0-9_-]+$/.test(username)
   );
 }

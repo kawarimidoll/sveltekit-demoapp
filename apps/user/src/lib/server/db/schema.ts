@@ -21,16 +21,17 @@ const timestamps = {
 
 // the table name (the first argument of `pgTable()`) must be snake_case
 
-export const USERNAME_MAX_LENGTH = 31;
 export const user = pgTable('user', {
   id: cuid({ needGenerate: true }).primaryKey(),
   age: integer(),
   email: text().notNull().unique(),
-  username: varchar({ length: USERNAME_MAX_LENGTH }).notNull().unique(),
+  username: varchar({ length: 31 }).notNull().unique(),
   passwordHash: text().notNull(),
   ...timestamps,
 });
 export type User = typeof user.$inferSelect;
+// to get max length:
+//   user.username.length
 
 export const userSession = pgTable('user_session', {
   encodedToken: text().primaryKey(),
