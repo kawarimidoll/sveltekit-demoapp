@@ -77,6 +77,10 @@ export async function invalidateSession(encodedToken: string) {
   await db.delete(table.userSession).where(eq(table.userSession.encodedToken, encodedToken));
 }
 
+export async function invalidateAllSession(userId: string) {
+  await db.delete(table.userSession).where(eq(table.userSession.userId, userId));
+}
+
 export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date) {
   setCookie(event, sessionCookieName, token, expiresAt);
 }

@@ -74,3 +74,6 @@
     <p>{form?.password?.message ?? ''}</p>
   </form>
 </section>
+
+<hr>
+<a href='/unregister'>Delete account</a>
