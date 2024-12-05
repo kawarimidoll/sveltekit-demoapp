@@ -8,12 +8,12 @@
 <h1>Login</h1>
 <form method='post' action='?/login' use:enhance>
   <label>
-    Username
-    <input name='username' />
+    Email
+    <input type='email' name='email' required />
   </label>
   <label>
     Password
-    <input type='password' name='password' />
+    <input type='password' name='password' required />
   </label>
   <button>Login</button>
 </form>
