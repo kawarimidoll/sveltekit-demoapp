@@ -23,10 +23,18 @@
 <section>
   <h2>Update email</h2>
   <p>Your email: {data.user.email}</p>
+  <form method='post' action='?/request_verify' use:enhance>
+    <input type='hidden' name='target' value='email' />
+    <button>Send verification code</button>
+  </form>
   <form method='post' use:enhance action='?/update_email'>
     <label>
       New email
       <input type='email' name='email' required />
+    </label>
+    <label>
+      Verification code
+      <input type='text' name='code' required />
     </label>
     <button>Update</button>
     <p>{form?.email?.message ?? ''}</p>
@@ -35,6 +43,10 @@
 
 <section>
   <h2>Update password</h2>
+  <form method='post' action='?/request_verify' use:enhance>
+    <input type='hidden' name='target' value='password' />
+    <button>Send verification code</button>
+  </form>
   <form method='post' use:enhance action='?/update_password'>
     <label>
       Current password
@@ -53,6 +65,10 @@
         autocomplete='new-password'
         required
       />
+    </label>
+    <label>
+      Verification code
+      <input type='text' name='code' required />
     </label>
     <button>Update</button>
     <p>{form?.password?.message ?? ''}</p>

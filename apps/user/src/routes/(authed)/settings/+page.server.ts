@@ -3,6 +3,7 @@ import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { checkEmailAvailability, verifyEmailInput } from '$lib/server/email';
+import * as ev from '$lib/server/email-verification';
 import {
   hashPassword,
   verifyPasswordHash,
@@ -13,10 +14,33 @@ import { fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
 export const actions: Actions = {
+  request_verify: requestVerifyAction,
   update_password: updatePasswordAction,
   update_email: updateEmailAction,
   update_username: updateUsernameAction,
 };
+
+async function requestVerifyAction(event: RequestEvent) {
+  const formData = await event.request.formData();
+  const target = formData.get('target') as string;
+
+  if (!auth.isAuth(event) || event.locals.user === null) {
+    return fail(401, {
+      [target]: {
+        message: 'Not authenticated',
+      },
+    });
+  }
+
+  const { email } = event.locals.user;
+  const emailVerification = await ev.createEmailVerification(email);
+  ev.sendVerificationEmail(emailVerification.email, emailVerification.code);
+  return {
+    [target]: {
+      message: 'Sent verification code to email',
+    },
+  };
+}
 
 async function updatePasswordAction(event: RequestEvent) {
   if (!auth.isAuth(event) || event.locals.user === null) {
@@ -30,6 +54,7 @@ async function updatePasswordAction(event: RequestEvent) {
   const formData = await event.request.formData();
   const currentPassword = formData.get('current_password') as string;
   const newPassword = formData.get('new_password');
+  const code = formData.get('code');
   if (!verifyPasswordInput(newPassword)) {
     return fail(400, {
       password: {
@@ -58,6 +83,21 @@ async function updatePasswordAction(event: RequestEvent) {
       },
     });
   }
+
+  // check code
+  if (!validateCode(code)) {
+    return fail(400, { password: { message: 'Invalid code' } });
+  }
+  const emalVerification = await ev.getEmailVerification(event.locals.user.email, code);
+  if (!emalVerification) {
+    return fail(400, { password: { message: 'Invalid code' } });
+  }
+  const codeExpired = Date.now() >= emalVerification.expiresAt.getTime();
+  if (codeExpired) {
+    return fail(400, { password: { message: 'Code expired' } });
+  }
+  await ev.deleteEmailVerification(event.locals.user.email);
+
   await auth.invalidateSession(event.locals.session.id);
 
   const passwordHash = await hashPassword(newPassword);
@@ -90,6 +130,8 @@ async function updateEmailAction(event: RequestEvent) {
 
   const formData = await event.request.formData();
   const email = formData.get('email');
+  const code = formData.get('code') as string;
+
   if (!verifyEmailInput(email)) {
     return fail(400, {
       email: {
@@ -106,8 +148,19 @@ async function updateEmailAction(event: RequestEvent) {
     });
   }
 
-  // TODO verify email
-  // return redirect(302, "/verify-email");
+  // check code
+  if (!validateCode(code)) {
+    return fail(400, { email: { message: 'Invalid code' } });
+  }
+  const emalVerification = await ev.getEmailVerification(event.locals.user.email, code);
+  if (!emalVerification) {
+    return fail(400, { email: { message: 'Invalid code' } });
+  }
+  const codeExpired = Date.now() >= emalVerification.expiresAt.getTime();
+  if (codeExpired) {
+    return fail(400, { email: { message: 'Code expired' } });
+  }
+  await ev.deleteEmailVerification(event.locals.user.email);
 
   await db
     .update(table.user)
@@ -172,4 +225,11 @@ async function updateUsernameAction(event: RequestEvent) {
       message: 'Updated username',
     },
   };
+}
+
+function validateCode(code: unknown): code is string {
+  return (
+    typeof code === 'string'
+    && code.length === table.emailVerification.code.length
+  );
 }
