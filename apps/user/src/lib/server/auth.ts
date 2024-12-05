@@ -1,4 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
+import { deleteCookie, setCookie } from '$lib/server/cookie';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { sha256 } from '@oslojs/crypto/sha2';
@@ -78,18 +79,9 @@ export async function invalidateSession(encodedToken: string) {
 }
 
 export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date) {
-  // the `secure` flag is not required here because
-  // SvelteKit automatically sets the flag when deployed to production
-  event.cookies.set(sessionCookieName, token, {
-    httpOnly: true,
-    sameSite: 'lax',
-    expires: expiresAt,
-    path: '/',
-  });
+  setCookie(event, sessionCookieName, token, expiresAt);
 }
 
 export function deleteSessionTokenCookie(event: RequestEvent) {
-  event.cookies.delete(sessionCookieName, {
-    path: '/',
-  });
+  deleteCookie(event, sessionCookieName);
 }
