@@ -1,11 +1,12 @@
 import type { Actions, PageServerLoad } from './$types';
+import { i18n } from '$lib/i18n';
 import { checkEmailAvailability, verifyEmailInput } from '$lib/server/email';
 import * as ev from '$lib/server/email-verification';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async (event) => {
   if (event.locals.user) {
-    return redirect(302, '/');
+    return redirect(302, i18n.resolveRoute('/'));
   }
 
   return {};
@@ -34,6 +35,6 @@ export const actions: Actions = {
       console.error(e);
       return fail(500, { message: 'An error has occurred' });
     }
-    return redirect(302, '/register');
+    return redirect(302, i18n.resolveRoute('/register'));
   },
 };

@@ -1,4 +1,5 @@
 import type { Actions, PageServerLoad } from './$types';
+import { i18n } from '$lib/i18n';
 import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
@@ -9,11 +10,11 @@ import { fail, redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async (event) => {
   if (event.locals.user) {
-    return redirect(302, '/');
+    return redirect(302, i18n.resolveRoute('/'));
   }
   const email = ev.getEmailVerificationCookie(event);
   if (!email) {
-    return redirect(302, '/verify-email');
+    return redirect(302, i18n.resolveRoute('/verify-email'));
   }
   return { email };
 };
@@ -74,7 +75,7 @@ export const actions: Actions = {
       console.error(e);
       return fail(500, { message: 'An error has occurred' });
     }
-    return redirect(302, '/');
+    return redirect(302, i18n.resolveRoute('/'));
   },
 };
 

@@ -1,4 +1,5 @@
 import type { Actions, RequestEvent } from './$types';
+import { i18n } from '$lib/i18n';
 import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
@@ -76,7 +77,7 @@ async function unregisterAction(event: RequestEvent) {
 
   await db.delete(table.user).where(eq(table.user.id, event.locals.user.id));
 
-  return redirect(302, '/');
+  return redirect(302, i18n.resolveRoute('/'));
 }
 
 function validateCode(code: unknown): code is string {

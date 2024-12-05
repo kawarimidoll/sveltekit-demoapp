@@ -1,4 +1,5 @@
 import type { Actions, PageServerLoad } from './$types';
+import { i18n } from '$lib/i18n';
 import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
@@ -9,7 +10,7 @@ import { eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async (event) => {
   if (event.locals.user) {
-    return redirect(302, '/');
+    return redirect(302, i18n.resolveRoute('/'));
   }
   return {};
 };
@@ -47,6 +48,6 @@ export const actions: Actions = {
     const session = await auth.createSession(sessionToken, existingUser.id);
     auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
 
-    return redirect(302, '/');
+    return redirect(302, i18n.resolveRoute('/'));
   },
 };
