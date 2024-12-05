@@ -3,6 +3,9 @@
   import { i18n } from '$lib/i18n';
   import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 
+  import 'uno.css';
+  import '@unocss/reset/tailwind-compat.css';
+
   const { data, children } = $props();
 </script>
 
