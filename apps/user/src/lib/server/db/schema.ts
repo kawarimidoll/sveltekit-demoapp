@@ -25,7 +25,7 @@ export const user = pgTable('user', {
   id: cuid({ needGenerate: true }).primaryKey(),
   age: integer(),
   email: text().notNull().unique(),
-  username: varchar({ length: 31 }).notNull().unique(),
+  username: varchar({ length: 31 }).notNull().unique().$defaultFn(() => createId()),
   passwordHash: text().notNull(),
   ...timestamps,
 });
