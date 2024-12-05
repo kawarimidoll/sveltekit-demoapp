@@ -8,4 +8,4 @@ if (!env.DATABASE_URL) {
 
 const client = new PGlite(env.DATABASE_URL);
 const casing = 'snake_case';
-export const db = drizzle({ client, casing });
+export const db = drizzle({ client, casing, logger: true });
