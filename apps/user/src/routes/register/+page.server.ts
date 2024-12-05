@@ -3,6 +3,7 @@ import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { checkEmailAvailability, verifyEmailInput } from '$lib/server/email';
+import * as ev from '$lib/server/email-verification';
 import { hashPassword, verifyPasswordInput, verifyPasswordStrength } from '$lib/server/password';
 import { fail, redirect } from '@sveltejs/kit';
 
@@ -10,13 +11,18 @@ export const load: PageServerLoad = async (event) => {
   if (event.locals.user) {
     return redirect(302, '/');
   }
-  return {};
+  const email = ev.getEmailVerificationCookie(event);
+  if (!email) {
+    return redirect(302, '/verify-email');
+  }
+  return { email };
 };
 
 export const actions: Actions = {
   register: async (event) => {
     const formData = await event.request.formData();
     const email = formData.get('email');
+    const code = formData.get('code');
     const password = formData.get('password');
 
     // check email
@@ -26,6 +32,19 @@ export const actions: Actions = {
     const emailAvailable = await checkEmailAvailability(email);
     if (!emailAvailable) {
       return fail(400, { message: 'Email is already used' });
+    }
+
+    // check code
+    if (!validateCode(code)) {
+      return fail(400, { message: 'Invalid code' });
+    }
+    const emalVerification = await ev.getEmailVerification(email, code);
+    if (!emalVerification) {
+      return fail(400, { message: 'Invalid code' });
+    }
+    const codeExpired = Date.now() >= emalVerification.expiresAt.getTime();
+    if (codeExpired) {
+      return fail(400, { message: 'Code expired' });
     }
 
     // check password
@@ -57,3 +76,10 @@ export const actions: Actions = {
     return redirect(302, '/');
   },
 };
+
+function validateCode(code: unknown): code is string {
+  return (
+    typeof code === 'string'
+    && code.length === table.emailVerification.code.length
+  );
+}

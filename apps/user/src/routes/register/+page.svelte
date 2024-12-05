@@ -1,19 +1,20 @@
 <script lang='ts'>
-  import type { ActionData } from './$types';
+  import type { ActionData, PageServerData } from './$types';
   import { enhance } from '$app/forms';
 
-  const { form }: { form: ActionData } = $props();
+  const { data, form }: { data: PageServerData;form: ActionData } = $props();
 </script>
 
 <h1>Register</h1>
 <form method='post' action='?/register' use:enhance>
   <label>
     Email
-    <input type='email' name='email' required />
+    <input type='hidden' name='email' value={data.email} />
+    {data.email}
   </label>
   <label>
-    Username
-    <input type='text' name='username' required />
+    Verification code
+    <input type='text' name='code' required />
   </label>
   <label>
     Password
@@ -23,6 +24,13 @@
 </form>
 <p style='color: red'>{form?.message ?? ''}</p>
 
+<div>
+  <a href='/verify-email'>Change email?</a>
+</div>
+<form method='post' action='/verify-email?/request_verify' use:enhance>
+  <input type='hidden' name='email' value={data.email} />
+  Code expired? <button>Resend code</button>
+</form>
 <div>
   Already have an account? <a href='/login'>Sign in</a>
 </div>
