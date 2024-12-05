@@ -40,7 +40,8 @@ export async function deleteEmailVerification(email: string): Promise<void> {
 export function sendVerificationEmail(email: string, code: string): void {
   // NOTE: use send mail api in production
   console.log('--- Verification Email ---');
-  console.log(`To ${email}: Your verification code is ${code}.`);
+  console.log(`To ${email}:`);
+  console.log(`Your verification code is: ${code}`);
   console.log('This will be expired in 10 minutes.');
   console.log('--------------------------');
 }

@@ -14,13 +14,12 @@
   }
 
   const { data } = $props();
-  const name = data.user?.username || 'SvelteKit User';
 </script>
 
 <div>
   <a href='/'>top</a>
 </div>
-<div>{m.hello_world({ name })}</div>
+<div>{m.hello_world({ name: data.user?.username || 'SvelteKit User' })}</div>
 <div>
   {#each availableLanguageTags as item}
     <button onclick={() => switchToLanguage(item)}>
