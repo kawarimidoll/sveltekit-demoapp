@@ -6,6 +6,7 @@
   import { i18n } from '$lib/i18n';
   import * as m from '$lib/paraglide/messages.js';
   import { availableLanguageTags, languageTag } from '$lib/paraglide/runtime';
+  import { AvatarBeam } from 'svelte-boring-avatars';
 
   function switchToLanguage(newLanguage: AvailableLanguageTag) {
     const canonicalPath = i18n.route($page.url.pathname);
@@ -30,6 +31,8 @@
 {#if data.user != null}
   <a href='/mypage'>mypage</a>
   <a href='/settings'>settings</a>
+  <AvatarBeam name={data.user.id} />
+
   <form method='post' action='/logout' use:enhance>
     <button>Sign out</button>
   </form>
