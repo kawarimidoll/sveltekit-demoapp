@@ -39,3 +39,10 @@ export const userSession = pgTable('user_session', {
   expiresAt: tsz(),
 });
 export type UserSession = typeof userSession.$inferSelect;
+
+export const emailVerification = pgTable('email_verification', {
+  email: text().primaryKey(),
+  code: char({ length: 12 }).notNull(),
+  expiresAt: tsz(),
+});
+export type EmailVerification = typeof emailVerification.$inferSelect;
