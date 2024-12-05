@@ -98,7 +98,7 @@ async function updatePasswordAction(event: RequestEvent) {
   }
   await ev.deleteEmailVerification(event.locals.user.email);
 
-  await auth.invalidateSession(event.locals.session.id);
+  await auth.invalidateSession(event.locals.session.encodedToken);
 
   const passwordHash = await hashPassword(newPassword);
 
