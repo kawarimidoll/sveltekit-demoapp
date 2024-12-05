@@ -8,6 +8,11 @@ export default defineConfig({
     outdir: './src/lib/paraglide',
   })],
 
+  // https://github.com/electric-sql/pglite/issues/199#issuecomment-2290527070
+  optimizeDeps: {
+    exclude: ['@electric-sql/pglite'],
+  },
+
   test: {
     include: ['src/**/*.{test,spec}.{js,ts}'],
   },

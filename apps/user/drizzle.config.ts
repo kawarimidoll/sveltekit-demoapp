@@ -1,6 +1,6 @@
+import { process } from 'node:process';
 import { defineConfig } from 'drizzle-kit';
 
-// eslint-disable-next-line node/prefer-global/process
 const { DATABASE_URL, DRIVER } = process.env;
 if (!DATABASE_URL) {
   throw new Error('DATABASE_URL is not set');
@@ -16,13 +16,11 @@ const config = {
 
   verbose: true,
   strict: true,
-  dialect: 'postgresql',
-  casing: 'snake_case',
+  dialect: 'postgresql' as const,
+  casing: 'snake_case' as const,
+  driver: DRIVER,
 };
 
-if (DRIVER) {
-  config.driver = DRIVER;
-}
 console.log({ userDB: config });
 
 export default defineConfig(config);
