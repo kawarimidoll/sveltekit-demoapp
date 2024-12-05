@@ -20,7 +20,7 @@ export async function getEmailVerification(email: string, code: string): Promise
 }
 
 export async function createEmailVerification(email: string): Promise<table.EmailVerification> {
-  deleteEmailVerification(email);
+  await deleteEmailVerification(email);
 
   const code = generateRandomCode(12);
   const expiresAt = new Date(Date.now() + 1000 * 60 * 10);

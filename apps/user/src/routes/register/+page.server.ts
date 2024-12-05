@@ -46,6 +46,7 @@ export const actions: Actions = {
     if (codeExpired) {
       return fail(400, { message: 'Code expired' });
     }
+    await ev.deleteEmailVerification(email);
 
     // check password
     if (!verifyPasswordInput(password)) {
