@@ -16,6 +16,7 @@ export const load: PageServerLoad = async (event) => {
   if (!email) {
     return redirect(302, i18n.resolveRoute('/verify-email'));
   }
+  ev.deleteEmailVerificationCookie(event);
   return { email };
 };
 

@@ -26,7 +26,7 @@
   <form class='space-y-2' method='post' action='?/request_verify' use:enhance>
     <p>To update below, you need to verify your identity.</p>
     <button class='w-full btn btn-primary'>Send verification code</button>
-    <p style='color: red'>{form?.message ?? ''}</p>
+    <p style='color: red'>{form?.code?.message ?? ''}</p>
   </form>
 </section>
 

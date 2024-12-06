@@ -55,7 +55,7 @@
         {#if data.user != null}
           <AvatarBeam name={data.user.id} />
         {:else}
-          <div class='size-40'>L</div>
+          <span class='i-octicon-person-add-16 size-6'></span>
         {/if}
       </div>
       <div class='rounded-box bg-base-100 z-[1] w-26 p-2 shadow menu dropdown-content'>
