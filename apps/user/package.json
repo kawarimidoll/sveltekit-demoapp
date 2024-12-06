@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.2.14",
+    "@iconify-json/fluent": "^1.2.8",
     "@playwright/test": "^1.49.0",
     "@sveltejs/adapter-auto": "^3.3.1",
     "@sveltejs/kit": "^2.9.0",
