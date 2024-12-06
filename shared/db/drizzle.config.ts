@@ -1,6 +1,6 @@
-import { process } from 'node:process';
 import { defineConfig } from 'drizzle-kit';
 
+// eslint-disable-next-line node/prefer-global/process
 const { DATABASE_URL, DRIVER } = process.env;
 if (!DATABASE_URL) {
   throw new Error('DATABASE_URL is not set');
@@ -8,7 +8,7 @@ if (!DATABASE_URL) {
 
 const config = {
   out: './drizzle',
-  schema: './src/lib/server/db/schema.ts',
+  schema: './schema.ts',
 
   dbCredentials: {
     url: DATABASE_URL,

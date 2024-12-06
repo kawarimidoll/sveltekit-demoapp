@@ -1,10 +1,10 @@
 import type { Actions, PageServerLoad } from './$types';
 import { i18n } from '$lib/i18n';
 import * as auth from '$lib/server/auth';
-import { db } from '$lib/server/db';
-import * as table from '$lib/server/db/schema';
 import { verifyEmailInput } from '$lib/server/email';
 import { verifyPasswordHash, verifyPasswordInput } from '$lib/server/password';
+import { db } from '@shared/db';
+import * as table from '@shared/db/schema';
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 

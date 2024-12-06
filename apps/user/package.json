@@ -12,10 +12,7 @@
     "test": "npm run test:unit -- --run && npm run test:e2e",
     "test:e2e": "playwright test",
     "format": "eslint --cache . --fix",
-    "lint": "eslint --cache .",
-    "db:push": "drizzle-kit push",
-    "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "lint": "eslint --cache ."
   },
   "dependencies": {
     "@inlang/paraglide-sveltekit": "^0.12.1",
@@ -36,7 +33,6 @@
     "@unocss/extractor-svelte": "^0.65.1",
     "@vsilk/unocss-preset-daisyui": "^0.0.4",
     "daisyui": "^4.12.14",
-    "drizzle-kit": "^0.28.1",
     "mdsvex": "^0.12.3",
     "svelte": "^5.4.0",
     "svelte-check": "^4.1.0",

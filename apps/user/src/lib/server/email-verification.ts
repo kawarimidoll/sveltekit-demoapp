@@ -1,8 +1,8 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { deleteCookie, setCookie } from '$lib/server/cookie';
+import { db } from '@shared/db';
+import * as table from '@shared/db/schema';
 import { and, eq } from 'drizzle-orm';
-import { db } from './db';
-import * as table from './db/schema';
 import { generateRandomCode } from './utils';
 
 export async function getEmailVerification(email: string, code: string): Promise<table.EmailVerification | null> {

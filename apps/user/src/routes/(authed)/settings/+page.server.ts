@@ -1,7 +1,5 @@
 import type { Actions, RequestEvent } from './$types';
 import * as auth from '$lib/server/auth';
-import { db } from '$lib/server/db';
-import * as table from '$lib/server/db/schema';
 import { checkEmailAvailability, verifyEmailInput } from '$lib/server/email';
 import * as ev from '$lib/server/email-verification';
 import {
@@ -10,6 +8,8 @@ import {
   verifyPasswordInput,
   verifyPasswordStrength,
 } from '$lib/server/password';
+import { db } from '@shared/db';
+import * as table from '@shared/db/schema';
 import { fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 

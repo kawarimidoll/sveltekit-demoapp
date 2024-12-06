@@ -1,11 +1,11 @@
 import type { Actions, PageServerLoad } from './$types';
 import { i18n } from '$lib/i18n';
 import * as auth from '$lib/server/auth';
-import { db } from '$lib/server/db';
-import * as table from '$lib/server/db/schema';
 import { checkEmailAvailability, verifyEmailInput } from '$lib/server/email';
 import * as ev from '$lib/server/email-verification';
 import { hashPassword, verifyPasswordInput, verifyPasswordStrength } from '$lib/server/password';
+import { db } from '@shared/db';
+import * as table from '@shared/db/schema';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async (event) => {

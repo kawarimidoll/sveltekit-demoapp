@@ -1,6 +1,6 @@
+import { db } from '@shared/db';
+import * as table from '@shared/db/schema';
 import { eq } from 'drizzle-orm';
-import { db } from './db';
-import * as table from './db/schema';
 
 export function verifyEmailInput(email: unknown): email is string {
   return (
