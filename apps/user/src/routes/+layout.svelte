@@ -11,5 +11,7 @@
 
 <ParaglideJS {i18n}>
   <Nav {data} />
-  {@render children()}
+  <div class='mx-auto prose container'>
+    {@render children()}
+  </div>
 </ParaglideJS>

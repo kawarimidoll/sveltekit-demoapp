@@ -1,13 +1,13 @@
-import presetDaisy from '@vsilk/unocss-preset-daisyui';
+import { presetDaisy } from '@ameinhardt/unocss-preset-daisy';
 import {
   defineConfig,
   presetAttributify,
   presetIcons,
+  presetTypography,
   presetUno,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss';
-import presetAnimations from 'unocss-preset-animations';
 
 export default defineConfig({
   transformers: [
@@ -18,7 +18,9 @@ export default defineConfig({
     presetUno(),
     presetIcons(),
     presetAttributify({ prefix: 'uno-', prefixedOnly: true }),
-    presetAnimations(),
+    presetTypography(),
     presetDaisy(),
   ],
+
+  safelist: ['prose'],
 });
