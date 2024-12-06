@@ -18,15 +18,13 @@ export const actions: Actions = {
   update_password: updatePasswordAction,
   update_email: updateEmailAction,
   update_username: updateUsernameAction,
+  unregister: unregisterAction,
 };
 
 async function requestVerifyAction(event: RequestEvent) {
-  const formData = await event.request.formData();
-  const target = formData.get('target') as string;
-
-  if (!auth.isAuth(event) || event.locals.user === null) {
+  if (event.locals.user === null) {
     return fail(401, {
-      [target]: {
+      code: {
         message: 'Not authenticated',
       },
     });
@@ -36,7 +34,7 @@ async function requestVerifyAction(event: RequestEvent) {
   const emailVerification = await ev.createEmailVerification(email);
   ev.sendVerificationEmail(emailVerification.email, emailVerification.code);
   return {
-    [target]: {
+    code: {
       message: 'Sent verification code to email',
     },
   };
@@ -225,6 +223,58 @@ async function updateUsernameAction(event: RequestEvent) {
       message: 'Updated username',
     },
   };
+}
+
+async function unregisterAction(event: RequestEvent) {
+  if (!auth.isAuth(event) || event.locals.user === null) {
+    return fail(401, {
+      password: {
+        message: 'Not authenticated',
+      },
+    });
+  }
+
+  const formData = await event.request.formData();
+  const agree = formData.get('agree');
+  const password = formData.get('password') as string;
+  const code = formData.get('code');
+
+  if (!agree) {
+    return fail(400, {
+      message: 'Need to agree',
+    });
+  }
+
+  const [existingUser] = await db
+    .select()
+    .from(table.user)
+    .where(eq(table.user.id, event.locals.user.id));
+  const validPassword = await verifyPasswordHash(existingUser.passwordHash, password);
+  if (!validPassword) {
+    return fail(400, { delete: { message: 'Incorrect password' } });
+  }
+
+  // check code
+  if (!validateCode(code)) {
+    return fail(400, { delete: { message: 'Invalid code' } });
+  }
+  const emalVerification = await ev.getEmailVerification(event.locals.user.email, code);
+  if (!emalVerification) {
+    return fail(400, { delete: { message: 'Invalid code' } });
+  }
+  const codeExpired = Date.now() >= emalVerification.expiresAt.getTime();
+  if (codeExpired) {
+    return fail(400, { delete: { message: 'Code expired' } });
+  }
+  await ev.deleteEmailVerification(event.locals.user.email);
+
+  // logout
+  await auth.invalidateAllSession(event.locals.user.id);
+  auth.deleteSessionTokenCookie(event);
+
+  await db.delete(table.user).where(eq(table.user.id, event.locals.user.id));
+
+  return redirect(302, i18n.resolveRoute('/'));
 }
 
 function validateCode(code: unknown): code is string {

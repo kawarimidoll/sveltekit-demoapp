@@ -61,5 +61,22 @@
   </form>
 </section>
 
-<hr>
-<a href='/unregister'>Delete account</a>
+<div class='divider divider-error'>Danger zone</div>
+
+<section class='m-auto w-full sm:max-w-md'>
+
+  <h3>Delete account</h3>
+  <p>
+    Deleting your account will permanently remove all your data from the server.
+  </p>
+  <form class='space-y-2' method='post' action='?/unregister' use:enhance>
+    <label class='cursor-pointer label'>
+      <span class='label-text'>Agreement: I understand that this action is irreversible.</span>
+      <input type='checkbox' class='checkbox-error checkbox' name='agree' required />
+    </label>
+    <Input required placeholder='Password' type='password' name='password' icon='i-octicon-key' />
+    <Input required type='text' name='code' placeholder='Verification code' icon='i-octicon-shield-lock-16' />
+    <button class='w-full btn btn-error'>Delete account</button>
+    <p>{form?.delete?.message ?? ''}</p>
+  </form>
+</section>
