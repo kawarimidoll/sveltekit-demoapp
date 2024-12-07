@@ -22,5 +22,6 @@ export default defineConfig({
     presetDaisy(),
   ],
 
+  // https://github.com/unocss/unocss/blob/8aa8d3c90aeca7ccb1b33134d3aab001d7b15db3/examples/sveltekit-scoped/src/routes/Prose.svelte
   safelist: ['prose'],
 });
