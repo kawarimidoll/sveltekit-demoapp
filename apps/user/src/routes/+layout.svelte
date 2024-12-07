@@ -1,5 +1,6 @@
 <script lang='ts'>
-  import { Nav } from '$lib/components';
+  import { page } from '$app/stores';
+  import { Hero, Nav } from '$lib/components';
   import { i18n } from '$lib/i18n';
   import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 
@@ -11,7 +12,12 @@
 
 <ParaglideJS {i18n}>
   <Nav {data} />
-  <div class='mx-auto prose container'>
-    {@render children()}
-  </div>
+  {#if data.user == null && i18n.route($page.url.pathname) === '/'}
+    <!-- show hero only on the top page -->
+    <Hero />
+  {:else}
+    <div class='mx-auto prose container'>
+      {@render children()}
+    </div>
+  {/if}
 </ParaglideJS>
