@@ -4,6 +4,7 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { i18n } from '$lib/i18n';
+  import * as m from '$lib/paraglide/messages.js';
   import { availableLanguageTags, languageTag } from '$lib/paraglide/runtime';
   import { AvatarBeam } from 'svelte-boring-avatars';
 
@@ -19,7 +20,8 @@
 <div class='bg-base-100 navbar'>
   <div class='flex-1'>
     <a class='text-xl btn btn-ghost' href='/'>
-      Top
+      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+      {@html m.navTitle()}
     </a>
   </div>
 
