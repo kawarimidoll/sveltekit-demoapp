@@ -1,7 +1,10 @@
 import { PGlite } from '@electric-sql/pglite';
 import { resolve } from '@std/path/resolve';
+import { config } from 'dotenv';
 import { drizzle } from 'drizzle-orm/pglite';
 import { env } from 'std-env';
+
+config({ path: resolve(import.meta.dirname, '.env') });
 
 const { DATABASE_URL } = env;
 
