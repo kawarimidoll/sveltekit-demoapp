@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
-    "drizzle-orm": "^0.37.0"
+    "drizzle-orm": "^0.37.0",
+    "std-env": "^3.8.0"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.2.14",

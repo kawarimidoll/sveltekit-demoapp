@@ -1,7 +1,7 @@
-import { dev } from '$app/environment';
 import { hash, verify } from '@node-rs/argon2';
 import { sha1 } from '@oslojs/crypto/sha1';
 import { encodeHexLowerCase } from '@oslojs/encoding';
+import { isDevelopment } from 'std-env';
 
 // recommended minimum parameters
 const hashParams = {
@@ -29,7 +29,7 @@ export function verifyPasswordInput(password: unknown): password is string {
 
 export async function verifyPasswordStrength(password: string): Promise<boolean> {
   // bypass strength check in development
-  if (dev) {
+  if (isDevelopment) {
     return true;
   }
   const hash = encodeHexLowerCase(sha1(new TextEncoder().encode(password)));

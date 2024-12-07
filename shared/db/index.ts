@@ -1,9 +1,9 @@
 import { PGlite } from '@electric-sql/pglite';
 import { resolve } from '@std/path/resolve';
 import { drizzle } from 'drizzle-orm/pglite';
+import { env } from 'std-env';
 
-// eslint-disable-next-line node/prefer-global/process
-const { DATABASE_URL } = process.env;
+const { DATABASE_URL } = env;
 
 if (!DATABASE_URL) {
   throw new Error('DATABASE_URL is not set');

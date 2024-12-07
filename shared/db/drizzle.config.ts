@@ -1,7 +1,7 @@
 import { defineConfig } from 'drizzle-kit';
+import { env } from 'std-env';
 
-// eslint-disable-next-line node/prefer-global/process
-const { DATABASE_URL, DRIVER } = process.env;
+const { DATABASE_URL, DRIVER } = env;
 if (!DATABASE_URL) {
   throw new Error('DATABASE_URL is not set');
 }
