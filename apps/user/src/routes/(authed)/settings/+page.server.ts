@@ -50,7 +50,6 @@ async function updatePasswordAction(event: RequestEvent) {
   }
 
   const formData = await event.request.formData();
-  const currentPassword = formData.get('current_password') as string;
   const newPassword = formData.get('new_password');
   const code = formData.get('code');
   if (!verifyPasswordInput(newPassword)) {
@@ -65,19 +64,6 @@ async function updatePasswordAction(event: RequestEvent) {
     return fail(400, {
       password: {
         message: 'Weak password',
-      },
-    });
-  }
-
-  const [existingUser] = await db
-    .select()
-    .from(table.user)
-    .where(eq(table.user.id, event.locals.user.id));
-  const validPassword = await verifyPasswordHash(existingUser.passwordHash, currentPassword);
-  if (!validPassword) {
-    return fail(400, {
-      password: {
-        message: 'Incorrect password',
       },
     });
   }

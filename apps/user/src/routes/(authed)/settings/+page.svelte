@@ -44,12 +44,6 @@
   <h3>Update password</h3>
   <form class='space-y-2' method='post' action='?/update_password' use:enhance>
     <Input required
-           placeholder='Current password'
-           type='password'
-           name='current_password'
-           autocomplete='current-password'
-           icon='i-octicon-key' />
-    <Input required
            placeholder='New password'
            type='password'
            name='new_password'
