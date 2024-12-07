@@ -6,6 +6,7 @@
   "scripts": {
     "format": "eslint --cache . --fix",
     "lint": "eslint --cache .",
+    "seed": "bun run seed.ts",
     "push": "drizzle-kit push",
     "migrate": "drizzle-kit migrate",
     "studio": "drizzle-kit studio"
@@ -16,6 +17,8 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.2.14",
-    "drizzle-kit": "^0.29.1"
+    "@std/path": "npm:@jsr/std__path",
+    "drizzle-kit": "^0.29.1",
+    "drizzle-seed": "^0.1.2"
   }
 }
