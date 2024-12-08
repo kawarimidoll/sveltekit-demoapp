@@ -1,10 +1,11 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { sha256 } from '@oslojs/crypto/sha2';
-import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
 import { db } from '@shared/db';
 import * as table from '@shared/db/schema';
 import { deleteCookie, setCookie } from '@shared/logic/cookie';
+import { encodeSessionToken } from '@shared/logic/session-token';
 import { eq } from 'drizzle-orm';
+
+export { generateSessionToken } from '@shared/logic/session-token';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 const EXPIRATION_DAYS = DAY_IN_MS * 30;
@@ -15,24 +16,13 @@ export function isAuth(event: RequestEvent) {
   return event.locals.session && event.locals.user;
 }
 
-export function generateSessionToken() {
-  const bytes = crypto.getRandomValues(new Uint8Array(18));
-  const token = encodeBase64url(bytes);
-  return token;
-}
-
-function encodeSessionToken(token: string) {
-  return encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-}
-
 export async function createSession(token: string, userId: string) {
   const encodedToken = encodeSessionToken(token);
-  const session: typeof table.userSession.$inferInsert = {
+  await db.insert(table.userSession).values({
     encodedToken,
     userId,
     expiresAt: new Date(Date.now() + EXPIRATION_DAYS),
-  };
-  await db.insert(table.userSession).values(session);
+  });
   return session;
 }
 
