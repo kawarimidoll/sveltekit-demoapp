@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad } from './$types';
 import { i18n } from '$lib/i18n';
-import { checkEmailAvailability, verifyEmailInput } from '$lib/server/email';
+import { checkUserEmailAvailability, verifyEmailInput } from '$lib/server/email';
 import * as ev from '$lib/server/email-verification';
 import { fail, redirect } from '@sveltejs/kit';
 
@@ -21,7 +21,7 @@ export const actions: Actions = {
     if (!verifyEmailInput(email)) {
       return fail(400, { message: 'Invalid email' });
     }
-    const emailAvailable = await checkEmailAvailability(email);
+    const emailAvailable = await checkUserEmailAvailability(email);
     if (!emailAvailable) {
       return fail(400, { message: 'Email is already used' });
     }

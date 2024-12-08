@@ -1,7 +1,7 @@
 import type { Actions, PageServerLoad } from './$types';
 import { i18n } from '$lib/i18n';
 import * as auth from '$lib/server/auth';
-import { checkEmailAvailability, verifyEmailInput } from '$lib/server/email';
+import { checkUserEmailAvailability, verifyEmailInput } from '$lib/server/email';
 import * as ev from '$lib/server/email-verification';
 import { hashPassword, verifyPasswordInput, verifyPasswordStrength } from '$lib/server/password';
 import { db } from '@shared/db';
@@ -31,7 +31,7 @@ export const actions: Actions = {
     if (!verifyEmailInput(email)) {
       return fail(400, { message: 'Invalid email' });
     }
-    const emailAvailable = await checkEmailAvailability(email);
+    const emailAvailable = await checkUserEmailAvailability(email);
     if (!emailAvailable) {
       return fail(400, { message: 'Email is already used' });
     }

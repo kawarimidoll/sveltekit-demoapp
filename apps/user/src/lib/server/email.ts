@@ -10,7 +10,7 @@ export function verifyEmailInput(email: unknown): email is string {
   );
 }
 
-export async function checkEmailAvailability(email: string): Promise<boolean> {
+export async function checkUserEmailAvailability(email: string): Promise<boolean> {
   const [user] = await db.select()
     .from(table.user)
     .where(eq(table.user.email, email))

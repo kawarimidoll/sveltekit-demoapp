@@ -1,7 +1,7 @@
 import type { Actions, RequestEvent } from './$types';
 import { i18n } from '$lib/i18n';
 import * as auth from '$lib/server/auth';
-import { checkEmailAvailability, verifyEmailInput } from '$lib/server/email';
+import { checkUserEmailAvailability, verifyEmailInput } from '$lib/server/email';
 import * as ev from '$lib/server/email-verification';
 import {
   hashPassword,
@@ -131,7 +131,7 @@ async function updateEmailAction(event: RequestEvent) {
       },
     });
   }
-  const emailAvailable = checkEmailAvailability(email);
+  const emailAvailable = checkUserEmailAvailability(email);
   if (!emailAvailable) {
     return fail(400, {
       email: {
