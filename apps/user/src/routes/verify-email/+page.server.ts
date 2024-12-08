@@ -1,7 +1,7 @@
 import type { Actions, PageServerLoad } from './$types';
 import { i18n } from '$lib/i18n';
-import { checkUserEmailAvailability, verifyEmailInput } from '$lib/server/email';
-import * as ev from '$lib/server/email-verification';
+import { checkUserEmailAvailability, verifyEmailInput } from '@shared/logic/email';
+import * as ev from '@shared/logic/email-verification';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async (event) => {

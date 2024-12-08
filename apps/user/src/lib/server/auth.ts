@@ -1,9 +1,9 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deleteCookie, setCookie } from '$lib/server/cookie';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
 import { db } from '@shared/db';
 import * as table from '@shared/db/schema';
+import { deleteCookie, setCookie } from '@shared/logic/cookie';
 import { eq } from 'drizzle-orm';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;

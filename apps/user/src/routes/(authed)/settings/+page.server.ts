@@ -1,16 +1,16 @@
 import type { Actions, RequestEvent } from './$types';
 import { i18n } from '$lib/i18n';
 import * as auth from '$lib/server/auth';
-import { checkUserEmailAvailability, verifyEmailInput } from '$lib/server/email';
-import * as ev from '$lib/server/email-verification';
+import { db } from '@shared/db';
+import * as table from '@shared/db/schema';
+import { checkUserEmailAvailability, verifyEmailInput } from '@shared/logic/email';
+import * as ev from '@shared/logic/email-verification';
 import {
   hashPassword,
   verifyPasswordHash,
   verifyPasswordInput,
   verifyPasswordStrength,
-} from '$lib/server/password';
-import { db } from '@shared/db';
-import * as table from '@shared/db/schema';
+} from '@shared/logic/password';
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
