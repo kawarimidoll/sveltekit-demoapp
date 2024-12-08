@@ -1,11 +1,11 @@
 import antfu from '@antfu/eslint-config';
-import { plugin as drizzlePlugin } from './shared/eslint-rules/drizzle-table-name-snake-case.js';
 
 export default antfu({
   /* options */
   lessopinionated: true,
   formatters: true,
   svelte: true,
+  unocss: true,
   yaml: true,
   markdown: true,
 
@@ -36,9 +36,4 @@ export default antfu({
   // apply 'no-console' only '.svelte' files
   files: ['**/*.svelte'],
   rules: { 'no-console': 'error' },
-}, {
-  plugins: { drizzlePlugin },
-  rules: {
-    'drizzlePlugin/drizzle-table-name-snake-case': 'error',
-  },
 });

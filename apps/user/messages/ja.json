@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "hello_world": "こんにちは、{name}！",
   "navTitle": "䨩図<br>書館",
   "heroTitle": "䨩図書館",
   "heroDescription": "䨩図書館オフィシャルサイトへようこそ。ここで、あなたに必要な情報が見つかります。"
