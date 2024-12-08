@@ -27,7 +27,7 @@ function encodeSessionToken(token: string) {
 
 export async function createSession(token: string, userId: string) {
   const encodedToken = encodeSessionToken(token);
-  const session: table.UserSession = {
+  const session: typeof table.userSession.$inferInsert = {
     encodedToken,
     userId,
     expiresAt: new Date(Date.now() + EXPIRATION_DAYS),
