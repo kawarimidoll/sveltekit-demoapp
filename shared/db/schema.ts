@@ -70,6 +70,12 @@ export const admin = pgTable('admin', {
   ...timestamps,
 });
 
+export const adminSession = pgTable('admin_session', {
+  encodedToken: text().primaryKey(),
+  adminId: cuid().notNull().references(() => admin.id),
+  expiresAt: tsz(),
+});
+
 export const publisher = pgTable('publisher', {
   id: cuid({ needGenerate: true }).primaryKey(),
   name: text().notNull(),

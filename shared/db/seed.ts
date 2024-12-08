@@ -13,6 +13,16 @@ async function insertUser(email: string) {
     .insert(schema.user)
     .values({ email, passwordHash, username });
 }
+async function insertAdmin(email: string, level: string) {
+  // super easy password for dev
+  const password = 'hello123';
+  const passwordHash = await hashPassword(password);
+  const name = email.replace(/@.+$/, '');
+
+  await db
+    .insert(schema.admin)
+    .values({ email, passwordHash, name, level });
+}
 async function main() {
   console.log('seed start');
 
@@ -31,7 +41,13 @@ async function main() {
     'user8@example.com',
     'user9@example.com',
   ];
-  await Promise.all(userEmails.map(email => insertUser(email)));
+  await Promise.all([
+    ...userEmails.map(email => insertUser(email)),
+    insertAdmin('admin@example.com', 'super'),
+    insertAdmin('staff1@example.com', 'normal'),
+    insertAdmin('staff2@example.com', 'normal'),
+    insertAdmin('staff3@example.com', 'limited'),
+  ]);
 
   console.log('seed completed');
 }
