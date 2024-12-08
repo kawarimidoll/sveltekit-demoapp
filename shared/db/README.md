@@ -14,14 +14,14 @@ To work around it:
 
 ```ts
 // update.ts
-import { db } from "@shared/db";
-import * as table from "@shared/db/schema";
+import { db } from '@shared/db';
+import * as table from '@shared/db/schema';
 
 async function main() {
-  console.log("update");
-  console.log("start");
+  console.log('update');
+  console.log('start');
   await db.update(table.updateTarget).set({ newColumn: DEFAULT_VALUE });
-  console.log("end");
+  console.log('end');
 }
 
 main();
