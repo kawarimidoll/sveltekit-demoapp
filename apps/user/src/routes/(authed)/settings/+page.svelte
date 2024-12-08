@@ -11,7 +11,7 @@
 </div>
 
 <section class='m-auto w-full sm:max-w-md'>
-  <h3>Update username</h3>
+  <h3 id='update-username'>Update username</h3>
   <p>Current username: {data.user.username}</p>
   <form class='space-y-2' method='post' use:enhance action='?/update_username'>
     <Input required type='text' name='username' placeholder='New username' icon='i-octicon-person-16' />
@@ -20,7 +20,7 @@
   </form>
 </section>
 
-<div class='divider divider-accent'>Important zone</div>
+<div id='important-zone' class='divider divider-accent'>Important zone</div>
 
 <section class='m-auto w-full sm:max-w-md'>
   <form class='space-y-2' method='post' action='?/request_verify' use:enhance>
@@ -31,7 +31,7 @@
 </section>
 
 <section class='m-auto w-full sm:max-w-md'>
-  <h3>Update email</h3>
+  <h3 id='update-email'>Update email</h3>
   <form class='space-y-2' method='post' action='?/update_email' use:enhance>
     <Input required type='email' name='email' placeholder='New email' icon='i-octicon-mail-16' />
     <Input required type='text' name='code' placeholder='Verification code' icon='i-octicon-shield-lock-16' />
@@ -41,7 +41,7 @@
 </section>
 
 <section class='m-auto w-full sm:max-w-md'>
-  <h3>Update password</h3>
+  <h3 id='update-password'>Update password</h3>
   <form class='space-y-2' method='post' action='?/update_password' use:enhance>
     <Input required
            placeholder='New password'
@@ -59,17 +59,17 @@
 
 <section class='m-auto w-full sm:max-w-md'>
 
-  <h3>Delete account</h3>
+  <h3 id='delete-account'>Delete account</h3>
   <p>
     Deleting your account will permanently remove all your data from the server.
   </p>
   <form class='space-y-2' method='post' action='?/unregister' use:enhance>
-    <label class='cursor-pointer label'>
-      <span class='label-text'>Agreement: I understand that this action is irreversible.</span>
-      <input type='checkbox' class='checkbox-error checkbox' name='agree' required />
-    </label>
     <Input required placeholder='Password' type='password' name='password' icon='i-octicon-key' />
     <Input required type='text' name='code' placeholder='Verification code' icon='i-octicon-shield-lock-16' />
+    <label class='cursor-pointer label'>
+      <span class='label-text'>FINAL CHECK: I understand that this action is irreversible.</span>
+      <input type='checkbox' class='checkbox-error checkbox' name='agree' required />
+    </label>
     <button class='w-full btn btn-error'>Delete account</button>
     <p>{form?.delete?.message ?? ''}</p>
   </form>
