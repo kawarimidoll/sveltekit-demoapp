@@ -1,5 +1,5 @@
 {
-  "name": "user",
+  "name": "@apps/user",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
