@@ -11,6 +11,7 @@
 <ParaglideJS {i18n}>
   <div class='h-12 w-full border-b'>
     <a class='text-xl btn btn-ghost' href='/'>Admin Top</a>
+    <a class='link' href='/admins'>Admins</a>
   </div>
   <div class='mx-auto prose container'>
     {@render children()}
