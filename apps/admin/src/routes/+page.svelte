@@ -1,2 +1,12 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href='https://svelte.dev/docs/kit'>svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang='ts'>
+  import type { PageServerData } from './$types';
+  import { enhance } from '$app/forms';
+
+  const { data }: { data: PageServerData } = $props();
+</script>
+
+<h1>Hi, {data.admin.name}!</h1>
+<p>Your admin ID is {data.admin.id}.</p>
+<form method='post' action='/logout' use:enhance>
+  <button>Sign out</button>
+</form>
