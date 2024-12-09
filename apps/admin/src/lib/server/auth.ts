@@ -18,12 +18,15 @@ export function isAuth(event: RequestEvent) {
 
 export async function createSession(token: string, adminId: string) {
   const encodedToken = encodeSessionToken(token);
-  await db.insert(table.adminSession).values({
-    encodedToken,
-    adminId,
-    expiresAt: new Date(Date.now() + EXPIRATION_DAYS),
-  });
-  return session;
+  const [insertedSession] = await db
+    .insert(table.adminSession)
+    .values({
+      encodedToken,
+      adminId,
+      expiresAt: new Date(Date.now() + EXPIRATION_DAYS),
+    })
+    .returning();
+  return insertedSession;
 }
 
 export async function validateSessionToken(token: string) {
