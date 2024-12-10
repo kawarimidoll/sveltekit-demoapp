@@ -1,6 +1,6 @@
 <script lang='ts'>
   // https://daisyui.com/components/select/#select-with-border
-  let { placeholder, label, value = $bindable(), options, ...attr } = $props();
+  let { placeholder = '', label, value = $bindable(), options, ...attr } = $props();
 
   if (!value) {
     value = options?.at(0);

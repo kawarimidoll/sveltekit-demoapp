@@ -14,7 +14,7 @@ export async function checkUserEmailAvailability(email: string): Promise<boolean
   const [user] = await db.select()
     .from(table.user)
     .where(eq(table.user.email, email))
-    .limit(10);
+    .limit(1);
 
   // blank user means email isn't used
   return user == null;
@@ -24,7 +24,7 @@ export async function checkAdminEmailAvailability(email: string): Promise<boolea
   const [admin] = await db.select()
     .from(table.admin)
     .where(eq(table.admin.email, email))
-    .limit(10);
+    .limit(1);
 
   // blank admin means email isn't used
   return admin == null;
