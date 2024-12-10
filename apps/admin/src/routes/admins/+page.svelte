@@ -7,18 +7,75 @@
   import Table from './Table.svelte';
 
   const { data, form }: { data: PageServerData;form: ActionData } = $props();
-  const adminAttrs = {
+  const adminAttrs: {
+    id?: string;
+    name: string;
+    email: string;
+    level?: string;
+    status?: string;
+  } = $state({
+    id: undefined,
     name: '',
     email: '',
     level: undefined,
     status: undefined,
-  };
+  });
+  let isUpdate = $state(false);
+  let checked = $state(false);
+  function drawerOpen(admin: Partial<typeof data.admins[number]>) {
+    checked = true;
+    isUpdate = !!admin.id;
+    adminAttrs.id = admin.id;
+    adminAttrs.name = admin.name ?? '';
+    adminAttrs.email = admin.email ?? '';
+    adminAttrs.level = admin.level ?? 'limited';
+    adminAttrs.status = admin.status ?? 'active';
+  }
 </script>
 
 <div class='drawer drawer-end'>
-  <input id='drawer' type='checkbox' class='drawer-toggle' />
+  <input id='drawer' type='checkbox' class='drawer-toggle' bind:checked={checked} />
   <div class='drawer-content'>
-    <label for='drawer' class='btn btn-primary drawer-button'>Create Admin</label>
+    <button class='btn btn-primary drawer-button' onclick={() => {
+      drawerOpen({});
+    }}>Create admin</button>
+
+    <section class='m-auto w-full'>
+      <Table title='Admins'>
+        {#snippet thead()}
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Level</th>
+            <th>Status</th>
+            <th>Created at</th>
+            <th>Action</th>
+          </tr>
+        {/snippet}
+        {#snippet tbody()}
+          {#each data.admins as admin}
+            <tr class='hover:bg-gray-100 dark:hover:bg-neutral-700'>
+              <td>{admin.id}</td>
+              <td>{admin.name}</td>
+              <td>{admin.email}</td>
+              <td>{admin.level}</td>
+              <td>{admin.status}</td>
+              <td>{format(admin.createdAt, 'yyyy-MM-dd HH:mm:ss')}</td>
+              <td>
+                <button class='btn btn-primary drawer-button' onclick={() => {
+                  drawerOpen(admin);
+                }}>Edit</button>
+              </td>
+            </tr>
+          {/each}
+        {/snippet}
+      </Table>
+      <div>
+        'Create at' is local time
+      </div>
+    </section>
+
   </div>
   <div class='drawer-side'>
     <label for='drawer' aria-label='close drawer' class='drawer-overlay'></label>
@@ -27,54 +84,27 @@
         <label for='drawer' class='btn btn-outline drawer-button'>close</label>
       </div>
       <div>
-        <form class='space-y-2' method='post' action='?/create' use:enhance>
+        <form class='space-y-2' method='post' action={isUpdate ? '?/update' : '?/create'} use:enhance>
           <div class='mb-4 text-center'>
-            <h2>Create Admin</h2>
+            <h2>{isUpdate ? 'Update Admin' : 'Create Admin'}</h2>
           </div>
-          <Input required type='text' name='name' placeholder='Name' icon='i-octicon-person-16' />
-          <Input required type='email' name='email' placeholder='Email' icon='i-octicon-mail-16' />
+          <input type='hidden' name='id' bind:value={adminAttrs.id} />
+          <Input required type='text' name='name' bind:value={adminAttrs.name} placeholder='Name' icon='i-octicon-person-16' />
+          <Input required type='email' name='email' bind:value={adminAttrs.email} placeholder='Email' icon='i-octicon-mail-16' />
           <Select required name='level' bind:value={adminAttrs.level} options={table.adminLevel.enumValues} label='Level' />
           <Select required name='status' bind:value={adminAttrs.status} options={table.adminStatus.enumValues} label='Status' />
           <div>
-            Initial password will be generated and sent to the email address.
+            {#if isUpdate}
+              Notification email will be sent to the email address if the email address is changed.
+            {:else}
+              Initial password will be generated and sent to the email address.
+            {/if}
             Please double check the email address.
           </div>
-          <button class='w-full btn btn-primary'>Create Admin</button>
+          <button class='w-full btn btn-primary'>{isUpdate ? 'Update Admin' : 'Create Admin'}</button>
           <p style='color: red'>{form?.message ?? ''}</p>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-<section class='m-auto w-full'>
-  <Table title='Admins'>
-    {#snippet thead()}
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Level</th>
-        <th>Status</th>
-        <th>Created at</th>
-        <th>Action</th>
-      </tr>
-    {/snippet}
-    {#snippet tbody()}
-      {#each data.admins as admin}
-        <tr class='hover:bg-gray-100 dark:hover:bg-neutral-700'>
-          <td>{admin.id}</td>
-          <td>{admin.name}</td>
-          <td>{admin.email}</td>
-          <td>{admin.level}</td>
-          <td>{admin.status}</td>
-          <td>{format(admin.createdAt, 'yyyy-MM-dd HH:mm:ss')}</td>
-          <td></td>
-        </tr>
-      {/each}
-    {/snippet}
-  </Table>
-  <div>
-    'Create at' is local time
-  </div>
-</section>

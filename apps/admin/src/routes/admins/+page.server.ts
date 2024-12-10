@@ -6,6 +6,7 @@ import { checkAdminEmailAvailability, verifyEmailInput } from '@shared/logic/ema
 import { hashPassword } from '@shared/logic/password';
 import { generateRandomCode } from '@shared/logic/utils';
 import { fail } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async (_event: RequestEvent) => {
   const admins = await db.select().from(table.admin);
@@ -60,6 +61,71 @@ export const actions: Actions = {
       return fail(500, { message: 'An error has occurred' });
     }
     return { message: 'Admin created!' };
+  },
+  update: async (event) => {
+    const formData = await event.request.formData();
+    const id = formData.get('id');
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const level = formData.get('level');
+    const status = formData.get('status');
+
+    // check id
+    if (typeof id !== 'string' || !id) {
+      return fail(400, { message: 'Invalid id' });
+    }
+    const [currentAdmin] = await db.select()
+      .from(table.admin)
+      .where(eq(table.admin.id, id))
+      .limit(1);
+
+    if (!currentAdmin) {
+      return fail(400, { message: 'Invalid id' });
+    }
+
+    // check name
+    if (typeof name !== 'string' || !name) {
+      return fail(400, { message: 'Invalid name' });
+    }
+
+    // check email
+    if (!verifyEmailInput(email)) {
+      return fail(400, { message: 'Invalid email' });
+    }
+    const currentEmail = currentAdmin.email;
+    if (email !== currentEmail) {
+      const emailAvailable = await checkAdminEmailAvailability(email);
+      if (!emailAvailable) {
+        return fail(400, { message: 'Email is already used' });
+      }
+    }
+
+    // check level
+    if (!verifyLevelInput(level)) {
+      return fail(400, { message: 'Invalid level' });
+    }
+
+    // check status
+    if (!verifyStatusInput(status)) {
+      return fail(400, { message: 'Invalid status' });
+    }
+
+    try {
+      await db
+        .update(table.admin)
+        .set({ name, email, level, status })
+        .where(eq(table.admin.id, id));
+
+      if (email !== currentEmail) {
+        sendEmail(currentEmail, `Your email has been changed. ${currentEmail} -> ${email}`);
+        sendEmail(email, `Your email has been changed. ${currentEmail} -> ${email}`);
+      }
+    }
+    catch (e) {
+      console.error(e);
+      return fail(500, { message: 'An error has occurred' });
+    }
+    return { message: 'Admin updated!' };
   },
 };
 
