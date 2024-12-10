@@ -19,3 +19,13 @@ export async function checkUserEmailAvailability(email: string): Promise<boolean
   // blank user means email isn't used
   return user == null;
 }
+
+export async function checkAdminEmailAvailability(email: string): Promise<boolean> {
+  const [admin] = await db.select()
+    .from(table.admin)
+    .where(eq(table.admin.email, email))
+    .limit(10);
+
+  // blank admin means email isn't used
+  return admin == null;
+}
