@@ -36,32 +36,44 @@
 <div class='drawer drawer-end'>
   <input id='drawer' type='checkbox' class='drawer-toggle' bind:checked={checked} />
   <div class='drawer-content'>
-    <button class='btn btn-primary drawer-button' onclick={() => {
-      drawerOpen({});
-    }}>Create admin</button>
 
     <section class='m-auto w-full'>
-      <Table title='Admins'>
+      <div class='mb-4 mt-8 flex'>
+        <h2 class='my-0 mr-8 block'>Admins</h2>
+        <button class='block btn btn-primary drawer-button' onclick={() => {
+          drawerOpen({});
+        }}>Create admin</button>
+      </div>
+
+      <Table>
         {#snippet thead()}
           <tr>
-            <th>ID</th>
+            <!-- <th>ID</th> -->
             <th>Name</th>
             <th>Email</th>
             <th>Level</th>
             <th>Status</th>
             <th>Created at</th>
+            <th>Updated at</th>
             <th>Action</th>
           </tr>
         {/snippet}
         {#snippet tbody()}
           {#each data.admins as admin}
             <tr class='hover:bg-gray-100 dark:hover:bg-neutral-700'>
-              <td>{admin.id}</td>
+              <!-- <td>{admin.id}</td> -->
               <td>{admin.name}</td>
               <td>{admin.email}</td>
               <td>{admin.level}</td>
               <td>{admin.status}</td>
-              <td>{format(admin.createdAt, 'yyyy-MM-dd HH:mm:ss')}</td>
+              <td>
+                {format(admin.createdAt, 'yyyy-MM-dd')}<br>
+                {format(admin.createdAt, 'HH:mm:ss')}
+              </td>
+              <td>
+                {format(admin.updatedAt, 'yyyy-MM-dd')}<br>
+                {format(admin.updatedAt, 'HH:mm:ss')}
+              </td>
               <td>
                 <button class='btn btn-primary drawer-button' onclick={() => {
                   drawerOpen(admin);
