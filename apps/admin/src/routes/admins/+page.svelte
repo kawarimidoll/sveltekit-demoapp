@@ -45,6 +45,12 @@
         }}>Create admin</button>
       </div>
 
+      <div>
+        <p class='text-sm'>Total: {data.count}</p>
+      </div>
+
+      <label for='modal' class='btn'>Filter</label>
+
       <Table>
         {#snippet thead()}
           <tr>
@@ -136,4 +142,40 @@
       </div>
     </div>
   </div>
+</div>
+
+<input type='checkbox' id='modal' class='modal-toggle' />
+<div class='modal' role='dialog'>
+  <div class='modal-box'>
+    <h3 class='text-lg font-bold'>Filter</h3>
+    <!-- filters -->
+    <form class='space-y-2' method='get' action='?'>
+      <div class='space x-2 flex'>
+        <Input type='search' name='search' placeholder='Search by Name or Email' />
+      </div>
+      <div class='space x-2 flex'>
+        <h5>Level</h5>
+        {#each table.adminLevel.enumValues as value}
+          <label>
+            <input type='checkbox' name='levels' {value} checked={data.levels.includes(value)} />
+            {value}
+          </label>
+        {/each}
+      </div>
+      <div class='space x-2 flex'>
+        <h5>Status</h5>
+        {#each table.adminStatus.enumValues as value}
+          <label>
+            <input type='checkbox' name='statuses' {value} checked={data.statuses.includes(value)} />
+            {value}
+          </label>
+        {/each}
+      </div>
+      <div class='modal-action'>
+        <label for='modal' class='btn'>Close</label>
+        <button class='btn btn-primary'>Search</button>
+      </div>
+    </form>
+  </div>
+  <label class='modal-backdrop' for='modal'>Close</label>
 </div>

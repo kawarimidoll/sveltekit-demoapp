@@ -1,4 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
+import type { SQL } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '@shared/db';
 import * as table from '@shared/db/schema';
@@ -6,7 +7,7 @@ import { checkAdminEmailAvailability, verifyEmailInput } from '@shared/logic/ema
 import { hashPassword } from '@shared/logic/password';
 import { generateRandomCode } from '@shared/logic/utils';
 import { fail } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { and, eq, ilike, inArray, or } from 'drizzle-orm';
 
 function getValidPageParam(params: URLSearchParams): number {
   const page = Number.parseInt(params.get('page') || '1', 10);
@@ -19,9 +20,29 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 
   const page = getValidPageParam(params);
 
+  const search = params.get('search') || '';
+  const levels = params.has('levels') ? params.getAll('levels') : table.adminLevel.enumValues;
+  const statuses = params.has('statuses') ? params.getAll('statuses') : ['active'];
+
+  const filters: SQL[] = [];
+  filters.push(inArray(table.admin.level, levels));
+  filters.push(inArray(table.admin.status, statuses));
+  if (search) {
+    filters.push(or(
+      // TODO: sanitize search input
+      ilike(table.admin.name, `%${search}%`),
+      ilike(table.admin.email, `%${search}%`),
+    )!,
+    );
+  }
+
   const per = 10;
-  const admins = await db.select().from(table.admin).limit(per).offset((page - 1) * per);
-  const count = await db.$count(table.admin);
+  const admins = await db.select()
+    .from(table.admin)
+    .where(and(...filters))
+    .limit(per)
+    .offset((page - 1) * per);
+  const count = await db.$count(table.admin, and(...filters));
   const maxPage = Math.ceil(count / per);
 
   let prevUrl: string | null = null;
@@ -58,6 +79,9 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     firstUrl,
     nextUrl,
     lastUrl,
+    search,
+    levels,
+    statuses,
   };
 };
 
