@@ -1,5 +1,6 @@
+import { rangeIterator } from '@hugoalh/range-iterator';
+import { hashPassword } from '@shared/logic/password';
 import { reset } from 'drizzle-seed';
-import { hashPassword } from '../../apps/user/src/lib/server/password';
 import { db } from './index';
 import * as schema from './schema';
 
@@ -26,27 +27,19 @@ async function insertAdmin(email: string, level: string) {
 async function main() {
   console.log('seed start');
 
+  console.log('reset local db');
   await reset(db, schema);
 
-  const userEmails = [
-    'hello@example.com',
-    'user0@example.com',
-    'user1@example.com',
-    'user2@example.com',
-    'user3@example.com',
-    'user4@example.com',
-    'user5@example.com',
-    'user6@example.com',
-    'user7@example.com',
-    'user8@example.com',
-    'user9@example.com',
-  ];
+  console.log('insert data');
   await Promise.all([
-    ...userEmails.map(email => insertUser(email)),
+    insertUser('hello@example.com'),
+    ...Array.from(rangeIterator(1, 40))
+      .map(e => insertUser(`user${e}@example.com`)),
     insertAdmin('admin@example.com', 'super'),
-    insertAdmin('staff1@example.com', 'normal'),
-    insertAdmin('staff2@example.com', 'normal'),
-    insertAdmin('staff3@example.com', 'limited'),
+    ...Array.from(rangeIterator(1, 20))
+      .map(e => insertAdmin(`member${e}@example.com`, 'normal')),
+    ...Array.from(rangeIterator(1, 20))
+      .map(e => insertAdmin(`supporter${e}@example.com`, 'limited')),
   ]);
 
   console.log('seed completed');

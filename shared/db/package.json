@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.2.14",
+    "@hugoalh/range-iterator": "^2.1.0",
     "@std/path": "npm:@jsr/std__path",
     "drizzle-kit": "^0.29.1",
     "drizzle-seed": "^0.1.2"
