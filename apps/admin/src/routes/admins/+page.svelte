@@ -71,6 +71,23 @@
           {/each}
         {/snippet}
       </Table>
+      <div class='join'>
+        {#if data.prevUrl}
+          <a href={data.firstUrl} title='first page' class='btn join-item'>«</a>
+          <a href={data.prevUrl} title='previous page' class='btn join-item'>«</a>
+        {:else}
+          <button class='btn join-item' disabled>«</button>
+          <button class='btn join-item' disabled>«</button>
+        {/if}
+        <button class='btn join-item'>Page {data.page}</button>
+        {#if data.nextUrl}
+          <a href={data.nextUrl} title='next page' class='btn join-item'>»</a>
+          <a href={data.lastUrl} title='last page' class='btn join-item'>»</a>
+        {:else}
+          <button class='btn join-item' disabled>»</button>
+          <button class='btn join-item' disabled>»</button>
+        {/if}
+      </div>
       <div>
         'Create at' is local time
       </div>

@@ -8,9 +8,57 @@ import { generateRandomCode } from '@shared/logic/utils';
 import { fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
-export const load: PageServerLoad = async (_event: RequestEvent) => {
-  const admins = await db.select().from(table.admin);
-  return { admins };
+function getValidPageParam(params: URLSearchParams): number {
+  const page = Number.parseInt(params.get('page') || '1', 10);
+  return Number.isNaN(page) || page < 1 ? 1 : page;
+}
+
+export const load: PageServerLoad = async (event: RequestEvent) => {
+  const url = new URL(event.url);
+  const params = new URLSearchParams(event.url.search);
+
+  const page = getValidPageParam(params);
+
+  const per = 10;
+  const admins = await db.select().from(table.admin).limit(per).offset((page - 1) * per);
+  const count = await db.$count(table.admin);
+  const maxPage = Math.ceil(count / per);
+
+  let prevUrl: string | null = null;
+  let firstUrl: string | null = null;
+  if (page > 1) {
+    params.set('page', `${page - 1}`);
+    url.search = params.toString();
+    prevUrl = url.toString();
+
+    params.set('page', '1');
+    url.search = params.toString();
+    firstUrl = url.toString();
+  }
+
+  let nextUrl: string | null = null;
+  let lastUrl: string | null = null;
+  if (page < maxPage) {
+    params.set('page', `${page + 1}`);
+    url.search = params.toString();
+    nextUrl = url.toString();
+
+    params.set('page', `${maxPage}`);
+    url.search = params.toString();
+    lastUrl = url.toString();
+  }
+
+  return {
+    admins,
+    page,
+    per,
+    count,
+    maxPage,
+    prevUrl,
+    firstUrl,
+    nextUrl,
+    lastUrl,
+  };
 };
 
 export const actions: Actions = {
