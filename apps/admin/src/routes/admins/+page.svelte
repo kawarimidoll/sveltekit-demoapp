@@ -1,7 +1,6 @@
 <script lang='ts'>
   import type { ActionData, PageServerData } from './$types';
   import { enhance } from '$app/forms';
-  import { page } from '$app/stores';
   import { Input, Select } from '@shared/components';
   import * as table from '@shared/db/schema';
   import { format } from '@std/datetime';
@@ -32,39 +31,6 @@
     adminAttrs.level = admin.level ?? 'limited';
     adminAttrs.status = admin.status ?? 'active';
   }
-  function sort(name: string) {
-    const url = new URL($page.url);
-    // none -> asc -> desc
-    if (url.searchParams.has('sort', name)) {
-      if (!url.searchParams.has('order')) {
-        url.searchParams.set('order', 'asc');
-      }
-      else if (url.searchParams.get('order') === 'asc') {
-        url.searchParams.set('order', 'desc');
-      }
-      else {
-        url.searchParams.delete('sort');
-        url.searchParams.delete('order');
-      }
-    }
-    else {
-      url.searchParams.set('sort', name);
-      url.searchParams.set('order', 'asc');
-    }
-    return url.toString();
-  }
-
-  function orderIconClass(name: string) {
-    if ($page.url.searchParams.has('sort', name)) {
-      if ($page.url.searchParams.get('order') === 'desc') {
-        return 'i-octicon-arrow-down-16 inline-block';
-      }
-      else {
-        return 'i-octicon-arrow-up-16 inline-block';
-      }
-    }
-    return 'i-octicon-arrow-both-16 inline-block rotate-90';
-  }
 </script>
 
 <div class='drawer drawer-end'>
@@ -87,30 +53,18 @@
         </label>
       </div>
 
-      {#snippet tableHeader(display: string, key: string)}
-        <a href={sort(key)} class='not-prose block h-full w-full' data-sveltekit-preload-data='tap'>
-          {display}
-          <div class={orderIconClass(key)}></div>
-        </a>
-      {/snippet}
-
-      <Table>
-        {#snippet thead()}
-          <tr>
-            <!-- <th>ID</th> -->
-            <th>{@render tableHeader('Name', 'name')}</th>
-            <th>{@render tableHeader('Email', 'email')}</th>
-            <th>Level</th>
-            <th>Status</th>
-            <th>Created at</th>
-            <th>Updated at</th>
-            <th>Action</th>
-          </tr>
-        {/snippet}
+      <Table headers={[
+        { display: 'Name', sort: 'name' },
+        { display: 'Email', sort: 'email' },
+        { display: 'Level' },
+        { display: 'Status' },
+        { display: 'Created at' },
+        { display: 'Updated at' },
+        { display: 'Action' },
+      ]}>
         {#snippet tbody()}
           {#each data.admins as admin}
             <tr class='hover:bg-gray-100 dark:hover:bg-neutral-700'>
-              <!-- <td>{admin.id}</td> -->
               <td>{admin.name}</td>
               <td>{admin.email}</td>
               <td>{admin.level}</td>
