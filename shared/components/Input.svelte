@@ -1,9 +1,15 @@
 <script lang='ts'>
   // https://daisyui.com/components/input/#text-input-with-icon-inside
-  let { type = 'text', value = $bindable(), icon = '', ...attr } = $props();
+  let { type = 'text', value = $bindable(), icon = '', wrapperClass = '', ...attr } = $props();
+
+  // TODO: merge tailwind classes
+  wrapperClass = [
+    'flex items-center gap-2 input input-bordered',
+    wrapperClass,
+  ].join(' ');
 </script>
 
-<label class='flex items-center gap-2 input input-bordered'>
+<label class={wrapperClass}>
   {#if icon}
     <div class={icon}></div>
   {/if}

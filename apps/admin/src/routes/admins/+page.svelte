@@ -53,16 +53,17 @@
     }
     return url.toString();
   }
-  function orderIcon(name: string) {
+
+  function orderIconClass(name: string) {
     if ($page.url.searchParams.has('sort', name)) {
       if ($page.url.searchParams.get('order') === 'desc') {
-        return 'desc';
+        return 'i-octicon-arrow-down-16 inline-block';
       }
       else {
-        return 'asc';
+        return 'i-octicon-arrow-up-16 inline-block';
       }
     }
-    return 'none';
+    return 'i-octicon-arrow-both-16 inline-block rotate-90';
   }
 </script>
 
@@ -78,43 +79,27 @@
         }}>Create admin</button>
       </div>
 
-      <div>
-        <p class='text-sm'>Total: {data.count}</p>
+      <div class='flex space-x-2'>
+        <div class='text-sm'>Total: {data.count}</div>
+        <label for='modal' class='btn btn-sm'>
+          <span class='i-octicon-filter-16'></span>
+          Filter
+        </label>
       </div>
 
-      <label for='modal' class='btn'>
-        <span class='i-octicon-filter-16'></span>
-        Filter
-      </label>
+      {#snippet tableHeader(display: string, key: string)}
+        <a href={sort(key)} class='not-prose block h-full w-full' data-sveltekit-preload-data='tap'>
+          {display}
+          <div class={orderIconClass(key)}></div>
+        </a>
+      {/snippet}
 
       <Table>
         {#snippet thead()}
           <tr>
             <!-- <th>ID</th> -->
-            <th>
-              <a href={sort('name')} class='not-prose block h-full w-full' data-sveltekit-preload-data='tap'>
-                Name
-                {#if orderIcon('name') === 'asc'}
-                  <div class='i-octicon-arrow-up-16 inline-block'></div>
-                {:else if orderIcon('name') === 'desc'}
-                  <div class='i-octicon-arrow-down-16 inline-block'></div>
-                {:else}
-                  <div class='i-octicon-arrow-both-16 inline-block rotate-90'></div>
-                {/if}
-              </a>
-            </th>
-            <th>
-              <a href={sort('email')} class='not-prose block h-full w-full'>
-                Email <div class='i-octicon-arrow-both-16 inline-block rotate-90'></div>
-                {#if orderIcon('email') === 'asc'}
-                  <div class='i-octicon-arrow-up-16 inline-block'></div>
-                {:else if orderIcon('email') === 'desc'}
-                  <div class='i-octicon-arrow-down-16 inline-block'></div>
-                {:else}
-                  <div class='i-octicon-arrow-both-16 inline-block rotate-90'></div>
-                {/if}
-              </a>
-            </th>
+            <th>{@render tableHeader('Name', 'name')}</th>
+            <th>{@render tableHeader('Email', 'email')}</th>
             <th>Level</th>
             <th>Status</th>
             <th>Created at</th>
@@ -205,13 +190,14 @@
 <input type='checkbox' id='modal' class='modal-toggle' />
 <div class='modal' role='dialog'>
   <div class='modal-box'>
-    <h3 class='text-lg font-bold'>Filter</h3>
+    <h3 class='not-prose text-lg font-bold'>Filter</h3>
     <!-- filters -->
     <form class='space-y-2' method='get' action='?'>
-      <div class='space x-2 flex'>
-        <Input type='search' name='search' placeholder='Search by Name or Email' />
+      <div class='flex space-x-2'>
+        <Input type='search' name='search' wrapperClass='w-full'
+               placeholder='Search by Name or Email' />
       </div>
-      <div class='space x-2 flex'>
+      <div class='flex space-x-2'>
         <h5>Level</h5>
         {#each table.adminLevel.enumValues as value}
           <label>
@@ -220,7 +206,7 @@
           </label>
         {/each}
       </div>
-      <div class='space x-2 flex'>
+      <div class='flex space-x-2'>
         <h5>Status</h5>
         {#each table.adminStatus.enumValues as value}
           <label>
