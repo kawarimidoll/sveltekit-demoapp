@@ -24,6 +24,9 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
   const levels = params.has('levels') ? params.getAll('levels') : table.adminLevel.enumValues;
   const statuses = params.has('statuses') ? params.getAll('statuses') : ['active'];
 
+  const sort = params.has('sort') ? params.get('sort') : 'id';
+  const order = params.get('order') === 'desc' ? 'desc' : 'asc';
+
   const filters: SQL[] = [];
   filters.push(inArray(table.admin.level, levels));
   filters.push(inArray(table.admin.status, statuses));
@@ -37,11 +40,17 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
   }
 
   const per = 10;
-  const admins = await db.select()
-    .from(table.admin)
-    .where(and(...filters))
-    .limit(per)
-    .offset((page - 1) * per);
+
+  // NOTE: order param is confusing for some reason...
+  // console.log({ page, per, sort, order });
+
+  const admins = await db.query.admin.findMany({
+    where: and(...filters),
+    orderBy: (columns, { asc, desc }) =>
+      [order === 'desc' ? desc(columns[sort]) : asc(columns[sort])],
+    limit: per,
+    offset: (page - 1) * per,
+  });
   const count = await db.$count(table.admin, and(...filters));
   const maxPage = Math.ceil(count / per);
 

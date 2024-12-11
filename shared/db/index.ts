@@ -3,6 +3,7 @@ import { resolve } from '@std/path/resolve';
 import { config } from 'dotenv';
 import { drizzle } from 'drizzle-orm/pglite';
 import { env } from 'std-env';
+import * as schema from './schema';
 
 config({ path: resolve(import.meta.dirname, '.env') });
 
@@ -18,4 +19,5 @@ const url = DATABASE_URL.startsWith('.')
 console.log(`DB URL: ${url}`);
 const client = new PGlite(url);
 const casing = 'snake_case';
-export const db = drizzle({ client, casing, logger: true });
+const logger = true;
+export const db = drizzle({ schema, client, casing, logger });

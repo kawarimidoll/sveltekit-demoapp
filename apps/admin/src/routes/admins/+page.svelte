@@ -1,6 +1,7 @@
 <script lang='ts'>
   import type { ActionData, PageServerData } from './$types';
   import { enhance } from '$app/forms';
+  import { page } from '$app/stores';
   import { Input, Select } from '@shared/components';
   import * as table from '@shared/db/schema';
   import { format } from '@std/datetime';
@@ -31,6 +32,38 @@
     adminAttrs.level = admin.level ?? 'limited';
     adminAttrs.status = admin.status ?? 'active';
   }
+  function sort(name: string) {
+    const url = new URL($page.url);
+    // none -> asc -> desc
+    if (url.searchParams.has('sort', name)) {
+      if (!url.searchParams.has('order')) {
+        url.searchParams.set('order', 'asc');
+      }
+      else if (url.searchParams.get('order') === 'asc') {
+        url.searchParams.set('order', 'desc');
+      }
+      else {
+        url.searchParams.delete('sort');
+        url.searchParams.delete('order');
+      }
+    }
+    else {
+      url.searchParams.set('sort', name);
+      url.searchParams.set('order', 'asc');
+    }
+    return url.toString();
+  }
+  function orderIcon(name: string) {
+    if ($page.url.searchParams.has('sort', name)) {
+      if ($page.url.searchParams.get('order') === 'desc') {
+        return 'desc';
+      }
+      else {
+        return 'asc';
+      }
+    }
+    return 'none';
+  }
 </script>
 
 <div class='drawer drawer-end'>
@@ -49,14 +82,39 @@
         <p class='text-sm'>Total: {data.count}</p>
       </div>
 
-      <label for='modal' class='btn'>Filter</label>
+      <label for='modal' class='btn'>
+        <span class='i-octicon-filter-16'></span>
+        Filter
+      </label>
 
       <Table>
         {#snippet thead()}
           <tr>
             <!-- <th>ID</th> -->
-            <th>Name</th>
-            <th>Email</th>
+            <th>
+              <a href={sort('name')} class='not-prose block h-full w-full' data-sveltekit-preload-data='tap'>
+                Name
+                {#if orderIcon('name') === 'asc'}
+                  <div class='i-octicon-arrow-up-16 inline-block'></div>
+                {:else if orderIcon('name') === 'desc'}
+                  <div class='i-octicon-arrow-down-16 inline-block'></div>
+                {:else}
+                  <div class='i-octicon-arrow-both-16 inline-block rotate-90'></div>
+                {/if}
+              </a>
+            </th>
+            <th>
+              <a href={sort('email')} class='not-prose block h-full w-full'>
+                Email <div class='i-octicon-arrow-both-16 inline-block rotate-90'></div>
+                {#if orderIcon('email') === 'asc'}
+                  <div class='i-octicon-arrow-up-16 inline-block'></div>
+                {:else if orderIcon('email') === 'desc'}
+                  <div class='i-octicon-arrow-down-16 inline-block'></div>
+                {:else}
+                  <div class='i-octicon-arrow-both-16 inline-block rotate-90'></div>
+                {/if}
+              </a>
+            </th>
             <th>Level</th>
             <th>Status</th>
             <th>Created at</th>
