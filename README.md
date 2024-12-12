@@ -30,3 +30,17 @@ This Turborepo has some additional tools already setup for you:
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
 - [ESLint](https://eslint.org/) for code linting
 - [Prettier](https://prettier.io) for code formatting
+
+## develop
+
+### ndc_list.json
+
+data source: https://lib.nittento.or.jp/helpndc.html
+
+script:
+
+```js
+[...document.querySelectorAll('section:nth-of-type(3) tr')].map(e =>
+  [...e.children].map(c => `"${c.textContent.trim()}"`).join(':')
+).join(',');
+```

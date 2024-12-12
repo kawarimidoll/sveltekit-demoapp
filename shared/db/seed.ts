@@ -2,7 +2,14 @@ import { rangeIterator } from '@hugoalh/range-iterator';
 import { hashPassword } from '@shared/logic/password';
 import { reset } from 'drizzle-seed';
 import { db } from './index';
+import list from './ndc_list.json';
 import * as schema from './schema';
+
+async function insertGenre(code: string, description: string) {
+  await db
+    .insert(schema.genre)
+    .values({ code, description });
+}
 
 async function insertUser(email: string) {
   // super easy password for dev
@@ -32,6 +39,8 @@ async function main() {
 
   console.log('insert data');
   await Promise.all([
+    ...Object.entries(list)
+      .map(([code, description]) => insertGenre(code, description)),
     insertUser('hello@example.com'),
     ...Array.from(rangeIterator(1, 40))
       .map(e => insertUser(`user${e}@example.com`)),

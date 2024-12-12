@@ -88,6 +88,12 @@ export const author = pgTable('author', {
   ...timestamps,
 });
 
+export const genre = pgTable('genre', {
+  id: cuid({ needGenerate: true }).primaryKey(),
+  code: text().notNull(),
+  description: text().notNull().default(''),
+});
+
 export const book = pgTable('book', {
   id: cuid({ needGenerate: true }).primaryKey(),
   title: text().notNull(),
