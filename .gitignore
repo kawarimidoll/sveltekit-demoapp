@@ -7,11 +7,11 @@ node_modules
 # Output
 .output
 .vercel
-/.svelte-kit
-/build
+.svelte-kit
+build
 
 ## drizzle db output
-/data
+data
 
 ## paraglide
 # auto-generated files by inlang paraglide-js
@@ -34,5 +34,3 @@ vite.config.ts.timestamp-*
 
 # Turbo
 .turbo
-
-
