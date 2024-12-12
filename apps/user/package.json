@@ -18,6 +18,7 @@
     "@inlang/paraglide-sveltekit": "^0.12.1",
     "@paralleldrive/cuid2": "^2.2.2",
     "drizzle-orm": "^0.37.0",
+    "mode-watcher": "^0.5.0",
     "std-env": "^3.8.0",
     "svelte-boring-avatars": "^1.2.6"
   },

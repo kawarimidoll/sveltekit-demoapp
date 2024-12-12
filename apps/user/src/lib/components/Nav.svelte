@@ -7,6 +7,7 @@
   import * as m from '$lib/paraglide/messages.js';
   import { availableLanguageTags, languageTag } from '$lib/paraglide/runtime';
   import { TwIndicator } from '@shared/components';
+  import { setMode, userPrefersMode } from 'mode-watcher';
   import { AvatarBeam } from 'svelte-boring-avatars';
 
   function switchToLanguage(newLanguage: AvailableLanguageTag) {
@@ -14,6 +15,15 @@
     const localisedPath = i18n.resolveRoute(canonicalPath, newLanguage);
     goto(localisedPath);
   }
+
+  // TODO: color is changed by changing prefer-color-scheme,
+  // but not changed by changing the mode in the dropdown...
+  type Mode = 'light' | 'dark' | 'system';
+  const modes: { name: Mode; icon: string }[] = [
+    { name: 'light', icon: 'i-octicon-sun-16' },
+    { name: 'dark', icon: 'i-octicon-moon-16' },
+    { name: 'system', icon: 'i-octicon-device-desktop-16' },
+  ];
 
   const { data } = $props();
 </script>
@@ -30,6 +40,32 @@
   <div class='flex-none gap-2'>
     <div class='form-control'>
       <input type='text' placeholder='[WIP] Search' class='w-24 input input-bordered md:w-auto' />
+    </div>
+
+    <div class='dropdown dropdown-end'>
+      <div tabindex='0' role='button' class='m-1 btn btn-circle btn-ghost'>
+        <div class='grid size-6'>
+          <div class='i-octicon-sun-16 col-start-1 row-start-1'></div>
+          <div class='i-octicon-moon-16 col-start-2 row-start-2 -ml-1 -mt-2'></div>
+        </div>
+      </div>
+      <div class='rounded-box z-[1] w-36 bg-neutral-100 p-2 shadow menu dropdown-content'>
+        <ul class='gap-1 menu menu-sm'>
+          {#each modes as item}
+            <li>
+              <button
+                class='btn btn-sm'
+                class:btn-neutral={item.name === $userPrefersMode}
+                class:btn-outline={item.name !== $userPrefersMode}
+                onclick={() => setMode(item.name)}
+              >
+                <span class={`inline ${item.icon}`}></span>
+                {item.name}
+              </button>
+            </li>
+          {/each}
+        </ul>
+      </div>
     </div>
 
     <div class='dropdown dropdown-end'>

@@ -3,12 +3,15 @@
   import { Hero, Nav } from '$lib/components';
   import { i18n } from '$lib/i18n';
   import { ParaglideJS } from '@inlang/paraglide-sveltekit';
+  import { ModeWatcher } from 'mode-watcher';
 
   import 'uno.css';
   import '@unocss/reset/tailwind-compat.css';
 
   const { data, children } = $props();
 </script>
+
+<ModeWatcher />
 
 <ParaglideJS {i18n}>
   <Nav {data} />
