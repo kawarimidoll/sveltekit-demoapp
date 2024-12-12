@@ -1,7 +1,7 @@
 <script lang='ts'>
   import type { ActionData, PageServerData } from './$types';
   import { enhance } from '$app/forms';
-  import { Input } from '$lib/components';
+  import { Checkbox, Input } from '$lib/components';
 
   const { data, form }: { data: PageServerData;form: ActionData } = $props();
 </script>
@@ -58,7 +58,6 @@
 <div class='divider divider-error'>Danger zone</div>
 
 <section class='m-auto w-full sm:max-w-md'>
-
   <h3 id='delete-account'>Delete account</h3>
   <p>
     Deleting your account will permanently remove all your data from the server.
@@ -66,10 +65,7 @@
   <form class='space-y-2' method='post' action='?/unregister' use:enhance>
     <Input required placeholder='Password' type='password' name='password' icon='i-octicon-key' />
     <Input required type='text' name='code' placeholder='Verification code' icon='i-octicon-shield-lock-16' />
-    <label class='cursor-pointer label'>
-      <span class='label-text'>FINAL CHECK: I understand that this action is irreversible.</span>
-      <input type='checkbox' class='checkbox-error checkbox' name='agree' required />
-    </label>
+    <Checkbox required name='agree' type='error' label='FINAL CHECK: I understand that this action is irreversible.' />
     <button class='w-full btn btn-error'>Delete account</button>
     <p>{form?.delete?.message ?? ''}</p>
   </form>
