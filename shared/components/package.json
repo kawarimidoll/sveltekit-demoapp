@@ -1,0 +1,13 @@
+{
+  "name": "@shared/components",
+  "type": "module",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "format": "eslint --cache . --fix",
+    "lint": "eslint --cache ."
+  },
+  "devDependencies": {
+    "@sveltejs/kit": "^2.9.0"
+  }
+}

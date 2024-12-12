@@ -1,0 +1,27 @@
+{
+  "name": "@shared/db",
+  "type": "module",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "format": "eslint --cache . --fix",
+    "lint": "eslint --cache .",
+    "seed": "bun run seed.ts",
+    "push": "drizzle-kit push",
+    "migrate": "drizzle-kit migrate",
+    "studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.37.0",
+    "std-env": "^3.8.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.2.14",
+    "@hugoalh/range-iterator": "^2.1.0",
+    "@std/path": "npm:@jsr/std__path",
+    "drizzle-kit": "^0.29.1",
+    "drizzle-seed": "^0.1.2"
+  }
+}

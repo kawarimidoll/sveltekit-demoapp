@@ -1,11 +1,10 @@
 import antfu from '@antfu/eslint-config';
 
-export default antfu({
+export const rootConfig = {
   /* options */
   lessopinionated: true,
   formatters: true,
   svelte: true,
-  unocss: true,
   yaml: true,
   markdown: true,
 
@@ -16,7 +15,7 @@ export default antfu({
     'no-unreachable': 'error',
     'curly': ['error', 'all'],
     'antfu/top-level-function': 'error',
-    // apply 'no-console' only '.svelte' files below
+    // apply 'no-console' only '.svelte' files in each project
     'no-console': 'off',
   },
 
@@ -24,13 +23,9 @@ export default antfu({
   stylistic: {
     semi: true,
   },
-}, {
-  files: ['messages/*.json'],
-  rules: {
-    'jsonc/key-name-casing': 'error',
-  },
-}, {
-  // apply 'no-console' only '.svelte' files
-  files: ['**/*.svelte'],
-  rules: { 'no-console': 'error' },
-});
+
+  /* workaround: eslint doesn't follow .gitignore for some reason */
+  ignores: ['**/src/lib/paraglide'],
+};
+
+export default antfu(rootConfig);
