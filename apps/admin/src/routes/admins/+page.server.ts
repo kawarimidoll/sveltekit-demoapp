@@ -54,28 +54,28 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
   const count = await db.$count(table.admin, and(...filters));
   const maxPage = Math.ceil(count / per);
 
-  let prevUrl: string | null = null;
-  let firstUrl: string | null = null;
+  const pagination: Record<string, number | string> = {
+    current: page,
+    max: maxPage,
+  };
   if (page > 1) {
     params.set('page', `${page - 1}`);
     url.search = params.toString();
-    prevUrl = url.toString();
+    pagination.prev = url.toString();
 
     params.set('page', '1');
     url.search = params.toString();
-    firstUrl = url.toString();
+    pagination.first = url.toString();
   }
 
-  let nextUrl: string | null = null;
-  let lastUrl: string | null = null;
   if (page < maxPage) {
     params.set('page', `${page + 1}`);
     url.search = params.toString();
-    nextUrl = url.toString();
+    pagination.next = url.toString();
 
     params.set('page', `${maxPage}`);
     url.search = params.toString();
-    lastUrl = url.toString();
+    pagination.last = url.toString();
   }
 
   return {
@@ -83,11 +83,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     page,
     per,
     count,
-    maxPage,
-    prevUrl,
-    firstUrl,
-    nextUrl,
-    lastUrl,
+    pagination,
     search,
     levels,
     statuses,

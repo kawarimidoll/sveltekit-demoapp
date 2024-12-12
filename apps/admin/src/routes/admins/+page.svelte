@@ -61,7 +61,7 @@
         { display: 'Created at' },
         { display: 'Updated at' },
         { display: 'Action' },
-      ]}>
+      ]} pagination={data.pagination}>
         {#snippet tbody()}
           {#each data.admins as admin}
             <tr class='hover:bg-gray-100 dark:hover:bg-neutral-700'>
@@ -78,31 +78,16 @@
                 {format(admin.updatedAt, 'HH:mm:ss')}
               </td>
               <td>
-                <button class='btn btn-primary drawer-button' onclick={() => {
-                  drawerOpen(admin);
-                }}>Edit</button>
+                <button class='btn btn-circle btn-outline drawer-button'
+                        aria-label='edit admin'
+                        onclick={() => { drawerOpen(admin); }}>
+                  <span class='i-octicon-pencil'></span>
+                </button>
               </td>
             </tr>
           {/each}
         {/snippet}
       </Table>
-      <div class='join'>
-        {#if data.prevUrl}
-          <a href={data.firstUrl} title='first page' class='btn join-item'>«</a>
-          <a href={data.prevUrl} title='previous page' class='btn join-item'>«</a>
-        {:else}
-          <button class='btn join-item' disabled>«</button>
-          <button class='btn join-item' disabled>«</button>
-        {/if}
-        <button class='btn join-item'>Page {data.page}</button>
-        {#if data.nextUrl}
-          <a href={data.nextUrl} title='next page' class='btn join-item'>»</a>
-          <a href={data.lastUrl} title='last page' class='btn join-item'>»</a>
-        {:else}
-          <button class='btn join-item' disabled>»</button>
-          <button class='btn join-item' disabled>»</button>
-        {/if}
-      </div>
       <div>
         'Create at' is local time
       </div>

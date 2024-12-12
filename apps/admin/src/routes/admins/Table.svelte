@@ -1,7 +1,7 @@
 <script lang='ts'>
   import { page } from '$app/stores';
 
-  const { tbody, headers } = $props();
+  const { tbody, headers, pagination } = $props();
 
   function sort(name: string) {
     const url = new URL($page.url);
@@ -60,4 +60,22 @@
       {@render tbody()}
     </tbody>
   </table>
+</div>
+
+<div class='join'>
+  {#if pagination.prev}
+    <a href={pagination.first} title='first page' class='btn join-item'>««</a>
+    <a href={pagination.prev} title='previous page' class='btn join-item'>«</a>
+  {:else}
+    <button class='btn join-item' disabled>««</button>
+    <button class='btn join-item' disabled>«</button>
+  {/if}
+  <button class='btn join-item'>Page {pagination.current}</button>
+  {#if pagination.next}
+    <a href={pagination.next} title='next page' class='btn join-item'>»</a>
+    <a href={pagination.last} title='last page' class='btn join-item'>»»</a>
+  {:else}
+    <button class='btn join-item' disabled>»</button>
+    <button class='btn join-item' disabled>»»</button>
+  {/if}
 </div>
