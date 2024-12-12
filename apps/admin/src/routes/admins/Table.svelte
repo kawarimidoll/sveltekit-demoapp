@@ -43,16 +43,18 @@
     <thead class=''>
       <tr>
         {#each headers as header}
-          <th>
-            {#if header.sort}
-              <a href={sort(header.sort)} class='not-prose block h-full w-full' data-sveltekit-preload-data='tap'>
+          {#if header.display}
+            <th>
+              {#if header.sort}
+                <a href={sort(header.sort)} class='not-prose block h-full w-full' data-sveltekit-preload-data='tap'>
+                  {header.display}
+                  <div class={orderIconClass(header.sort)}></div>
+                </a>
+              {:else}
                 {header.display}
-                <div class={orderIconClass(header.sort)}></div>
-              </a>
-            {:else}
-              {header.display}
-            {/if}
-          </th>
+              {/if}
+            </th>
+          {/if}
         {/each}
       </tr>
     </thead>

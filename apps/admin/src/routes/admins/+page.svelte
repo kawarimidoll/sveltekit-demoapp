@@ -40,9 +40,11 @@
     <section class='m-auto w-full'>
       <div class='mb-4 mt-8 flex'>
         <h2 class='my-0 mr-8 block'>Admins</h2>
-        <button class='block btn btn-primary drawer-button' onclick={() => {
-          drawerOpen({});
-        }}>Create admin</button>
+        {#if data.admin.level === 'super'}
+          <button class='block btn btn-primary drawer-button' onclick={() => {
+            drawerOpen({});
+          }}>Create admin</button>
+        {/if}
       </div>
 
       <div class='flex space-x-2'>
@@ -60,7 +62,7 @@
         { display: 'Status' },
         { display: 'Created at' },
         { display: 'Updated at' },
-        { display: 'Action' },
+        { display: data.admin.level === 'super' ? 'Action' : '' },
       ]} pagination={data.pagination}>
         {#snippet tbody()}
           {#each data.admins as admin}
@@ -77,13 +79,15 @@
                 {format(admin.updatedAt, 'yyyy-MM-dd')}<br>
                 {format(admin.updatedAt, 'HH:mm:ss')}
               </td>
-              <td>
-                <button class='btn btn-circle btn-outline drawer-button'
-                        aria-label='edit admin'
-                        onclick={() => { drawerOpen(admin); }}>
-                  <span class='i-octicon-pencil'></span>
-                </button>
-              </td>
+              {#if data.admin.level === 'super'}
+                <td>
+                  <button class='btn btn-circle btn-outline drawer-button'
+                          aria-label='edit admin'
+                          onclick={() => { drawerOpen(admin); }}>
+                    <span class='i-octicon-pencil'></span>
+                  </button>
+                </td>
+              {/if}
             </tr>
           {/each}
         {/snippet}
@@ -103,7 +107,7 @@
       <div>
         <form class='space-y-2' method='post' action={isUpdate ? '?/update' : '?/create'} use:enhance>
           <div class='mb-4 text-center'>
-            <h2>{isUpdate ? 'Update Admin' : 'Create Admin'}</h2>
+            <h2 class='my-0'>{isUpdate ? 'Update Admin' : 'Create Admin'}</h2>
           </div>
           <input type='hidden' name='id' bind:value={adminAttrs.id} />
           <Input required type='text' name='name' bind:value={adminAttrs.name} placeholder='Name' icon='i-octicon-person-16' />
@@ -122,6 +126,23 @@
           <p style='color: red'>{form?.message ?? ''}</p>
         </form>
       </div>
+      {#if isUpdate}
+        <div class='divider'></div>
+        <div>
+          <!-- TODO: implement force logout -->
+          <form class='space-y-2' method='post' action='/?force_logout' use:enhance>
+            <div class='mb-4 text-center'>
+              <h3 class='my-0'>Force logout</h3>
+            </div>
+            <input type='hidden' name='id' bind:value={adminAttrs.id} />
+            <div>
+              Force log out this admin from all devices.
+            </div>
+            <button class='w-full btn btn-primary'>Log out</button>
+            <p style='color: red'>{form?.message ?? ''}</p>
+          </form>
+        </div>
+      {/if}
     </div>
   </div>
 </div>

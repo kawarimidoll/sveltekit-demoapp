@@ -24,7 +24,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
   const levels = params.has('levels') ? params.getAll('levels') : table.adminLevel.enumValues;
   const statuses = params.has('statuses') ? params.getAll('statuses') : ['active'];
 
-  const sort = params.has('sort') ? params.get('sort') : 'id';
+  const sort = params.get('sort') || 'id';
   const order = params.get('order') === 'desc' ? 'desc' : 'asc';
 
   const filters: SQL[] = [];
