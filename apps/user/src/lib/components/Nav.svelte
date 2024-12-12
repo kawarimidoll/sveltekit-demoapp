@@ -6,6 +6,7 @@
   import { i18n } from '$lib/i18n';
   import * as m from '$lib/paraglide/messages.js';
   import { availableLanguageTags, languageTag } from '$lib/paraglide/runtime';
+  import { TwIndicator } from '@shared/components';
   import { AvatarBeam } from 'svelte-boring-avatars';
 
   function switchToLanguage(newLanguage: AvailableLanguageTag) {
@@ -23,6 +24,7 @@
       <!-- eslint-disable-next-line svelte/no-at-html-tags -->
       {@html m.navTitle()}
     </a>
+    <TwIndicator />
   </div>
 
   <div class='flex-none gap-2'>
