@@ -1,10 +1,10 @@
 <script lang='ts'>
   import type { ActionData, PageServerData } from './$types';
   import { enhance } from '$app/forms';
+  import { Table } from '$lib/components';
   import { Input, Select } from '@shared/components';
   import * as table from '@shared/db/schema';
   import { format } from '@std/datetime';
-  import Table from './Table.svelte';
 
   const { data, form }: { data: PageServerData;form: ActionData } = $props();
   const adminAttrs: {
