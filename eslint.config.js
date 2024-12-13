@@ -15,6 +15,8 @@ export const rootConfig = {
     'no-unreachable': 'error',
     'curly': ['error', 'all'],
     'antfu/top-level-function': 'error',
+    // this is not important because unused-imports/no-unused-vars is enabled
+    'no-unused-vars': 'off',
     // apply 'no-console' only '.svelte' files in each project
     'no-console': 'off',
   },
