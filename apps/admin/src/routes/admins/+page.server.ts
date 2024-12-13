@@ -4,6 +4,7 @@ import type { Actions, PageServerLoad } from './$types';
 import { db } from '@shared/db';
 import * as table from '@shared/db/schema';
 import { checkAdminEmailAvailability, verifyEmailInput } from '@shared/logic/email';
+import { genPagination } from '@shared/logic/pagination';
 import { hashPassword } from '@shared/logic/password';
 import { generateRandomCode } from '@shared/logic/utils';
 import { fail } from '@sveltejs/kit';
@@ -54,29 +55,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
   const count = await db.$count(table.admin, and(...filters));
   const maxPage = Math.ceil(count / per);
 
-  const pagination: Record<string, number | string> = {
-    current: page,
-    max: maxPage,
-  };
-  if (page > 1) {
-    params.set('page', `${page - 1}`);
-    url.search = params.toString();
-    pagination.prev = url.toString();
-
-    params.set('page', '1');
-    url.search = params.toString();
-    pagination.first = url.toString();
-  }
-
-  if (page < maxPage) {
-    params.set('page', `${page + 1}`);
-    url.search = params.toString();
-    pagination.next = url.toString();
-
-    params.set('page', `${maxPage}`);
-    url.search = params.toString();
-    pagination.last = url.toString();
-  }
+  const pagination = genPagination(url, page, maxPage);
 
   return {
     admins,
