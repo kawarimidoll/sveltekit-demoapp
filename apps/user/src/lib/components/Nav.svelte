@@ -49,7 +49,7 @@
           <div class='i-octicon-moon-16 col-start-2 row-start-2 -ml-1 -mt-2'></div>
         </div>
       </div>
-      <div class='rounded-box z-[1] w-36 bg-neutral-100 p-2 shadow menu dropdown-content'>
+      <div class='rounded-box bg-base-100 z-[1] w-36 p-2 shadow menu dropdown-content'>
         <ul class='gap-1 menu menu-sm'>
           {#each modes as item}
             <li>
@@ -72,7 +72,7 @@
       <div tabindex='0' role='button' class='m-1 btn btn-circle btn-ghost'>
         <span class='i-fluent-translate-16-regular size-6'></span>
       </div>
-      <div class='rounded-box z-[1] w-26 bg-neutral-100 p-2 shadow menu dropdown-content'>
+      <div class='rounded-box bg-base-100 z-[1] w-26 p-2 shadow menu dropdown-content'>
         <ul class='gap-1 menu menu-sm'>
           {#each availableLanguageTags as item}
             <li>

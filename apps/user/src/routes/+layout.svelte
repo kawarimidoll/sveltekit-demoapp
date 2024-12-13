@@ -24,3 +24,13 @@
     </div>
   {/if}
 </ParaglideJS>
+
+<style>
+/* NOTE: some styles don't work as expected, */
+/* so I have to define them in global scope */
+:global {
+  .bg-base-100 {
+    background-color: oklch(var(--b1));
+  }
+}
+</style>
