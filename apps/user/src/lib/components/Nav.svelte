@@ -7,7 +7,7 @@
   import * as m from '$lib/paraglide/messages.js';
   import { availableLanguageTags, languageTag } from '$lib/paraglide/runtime';
   import { TwIndicator } from '@shared/components';
-  import { setMode, userPrefersMode } from 'mode-watcher';
+  import { setTheme, theme } from 'mode-watcher';
   import { AvatarBeam } from 'svelte-boring-avatars';
 
   function switchToLanguage(newLanguage: AvailableLanguageTag) {
@@ -54,10 +54,10 @@
           {#each modes as item}
             <li>
               <button
-                class='btn btn-sm'
-                class:btn-neutral={item.name === $userPrefersMode}
-                class:btn-outline={item.name !== $userPrefersMode}
-                onclick={() => setMode(item.name)}
+                class='btn btn-sm hover:btn-accent'
+                class:btn-neutral={item.name === $theme}
+                class:btn-outline={item.name !== $theme}
+                onclick={() => setTheme(item.name)}
               >
                 <span class={`inline ${item.icon}`}></span>
                 {item.name}
