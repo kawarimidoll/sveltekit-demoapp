@@ -1,4 +1,5 @@
 import { createId } from '@paralleldrive/cuid2';
+import { relations } from 'drizzle-orm';
 import {
   char,
   date,
@@ -136,3 +137,46 @@ export const checkout = pgTable('checkout', {
   dueDate: tsz().$defaultFn(getTwoWeeksLater),
   returnedAt: tsz().$defaultFn(getFarFuture),
 });
+
+// relations
+
+export const userSessionRelations = relations(userSession, ({ one }) => ({
+  user: one(user, {
+    fields: [userSession.userId],
+    references: [user.id],
+  }),
+}));
+
+export const adminSessionRelations = relations(adminSession, ({ one }) => ({
+  admin: one(admin, {
+    fields: [adminSession.adminId],
+    references: [admin.id],
+  }),
+}));
+
+export const publisherRelations = relations(publisher, ({ many }) => ({
+  books: many(book),
+}));
+
+export const authorRelations = relations(author, ({ many }) => ({
+  bookAuthors: many(bookAuthor),
+}));
+
+export const bookRelations = relations(book, ({ one, many }) => ({
+  publisher: one(publisher, {
+    fields: [book.publisherId],
+    references: [publisher.id],
+  }),
+  bookAuthors: many(bookAuthor),
+}));
+
+export const bookAuthorRelations = relations(bookAuthor, ({ one }) => ({
+  author: one(author, {
+    fields: [bookAuthor.authorId],
+    references: [author.id],
+  }),
+  book: one(book, {
+    fields: [bookAuthor.bookId],
+    references: [book.id],
+  }),
+}));
