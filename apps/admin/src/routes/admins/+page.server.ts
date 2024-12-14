@@ -22,7 +22,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
   const page = getValidPageParam(params);
 
   const search = params.get('search') || '';
-  const levels = params.has('levels') ? params.getAll('levels') : table.adminLevel.enumValues;
+  const levels = params.has('levels') ? params.getAll('levels') : table.admin.level.enumValues;
   const statuses = params.has('statuses') ? params.getAll('statuses') : ['active'];
 
   const sort = params.get('sort') || 'id';
@@ -185,12 +185,12 @@ export const actions: Actions = {
   },
 };
 
-function verifyLevelInput(level: unknown): level is typeof table.adminLevel.enumValues[number] {
-  return typeof level === 'string' && (table.adminLevel.enumValues as string[]).includes(level);
+function verifyLevelInput(level: unknown): level is typeof table.admin.level.enumValues[number] {
+  return typeof level === 'string' && (table.admin.level.enumValues as string[]).includes(level);
 };
 
-function verifyStatusInput(status: unknown): status is typeof table.adminStatus.enumValues[number] {
-  return typeof status === 'string' && (table.adminStatus.enumValues as string[]).includes(status);
+function verifyStatusInput(status: unknown): status is typeof table.admin.status.enumValues[number] {
+  return typeof status === 'string' && (table.admin.status.enumValues as string[]).includes(status);
 }
 
 function sendEmail(email: string, text: string) {

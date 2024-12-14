@@ -1,7 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, text } from 'drizzle-orm/pg-core';
 import { cuid, tsz } from './_helper';
-import { admin } from './schema';
+import { admin } from './admin';
 
 export const adminSession = pgTable('admin_session', {
   encodedToken: text().primaryKey(),

@@ -112,8 +112,8 @@
           <input type='hidden' name='id' bind:value={adminAttrs.id} />
           <Input required type='text' name='name' bind:value={adminAttrs.name} placeholder='Name' icon='i-octicon-person-16' />
           <Input required type='email' name='email' bind:value={adminAttrs.email} placeholder='Email' icon='i-octicon-mail-16' />
-          <Select required name='level' bind:value={adminAttrs.level} options={table.adminLevel.enumValues} label='Level' />
-          <Select required name='status' bind:value={adminAttrs.status} options={table.adminStatus.enumValues} label='Status' />
+          <Select required name='level' bind:value={adminAttrs.level} options={table.admin.level.enumValues} label='Level' />
+          <Select required name='status' bind:value={adminAttrs.status} options={table.admin.status.enumValues} label='Status' />
           <div>
             {#if isUpdate}
               Notification email will be sent to the email address if the email address is changed.
@@ -159,7 +159,7 @@
       </div>
       <div class='flex space-x-2'>
         <h5>Level</h5>
-        {#each table.adminLevel.enumValues as value}
+        {#each table.admin.level.enumValues as value}
           <label>
             <input type='checkbox' name='levels' {value} checked={data.levels.includes(value)} />
             {value}
@@ -168,7 +168,7 @@
       </div>
       <div class='flex space-x-2'>
         <h5>Status</h5>
-        {#each table.adminStatus.enumValues as value}
+        {#each table.admin.status.enumValues as value}
           <label>
             <input type='checkbox' name='statuses' {value} checked={data.statuses.includes(value)} />
             {value}
