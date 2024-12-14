@@ -4,7 +4,6 @@ import { sample } from '@std/collections/sample';
 import { reset } from 'drizzle-seed';
 import { db } from './index';
 import list from './ndc_list.json';
-
 import * as schema from './schema';
 
 function nums(max: number) {

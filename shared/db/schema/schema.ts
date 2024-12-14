@@ -1,63 +1,21 @@
-import { createId } from '@paralleldrive/cuid2';
 import { relations } from 'drizzle-orm';
 import {
-  char,
   date,
-  integer,
   pgEnum,
   pgTable,
   primaryKey,
   text,
-  timestamp,
-  varchar,
 } from 'drizzle-orm/pg-core';
+import { cuid, timestamps, tsz } from './_helper';
+import { author } from './author';
+import { publisher } from './publisher';
+import { user } from './user';
 
 // // to get type:
 // type SelectUser = typeof user.$inferSelect;
 // type InsertUser = typeof user.$inferInsert;
 
-// wrapper function for cuid2
-function cuid(opts?: { needGenerate: boolean }) {
-  if (opts?.needGenerate) {
-    return char({ length: 24 }).$defaultFn(() => createId());
-  }
-  return char({ length: 24 });
-}
-
-// wrapper function for timestamp with zone
-function tsz() {
-  return timestamp({ withTimezone: true, mode: 'date', precision: 3 }).notNull();
-}
-
-const timestamps = {
-  createdAt: tsz().$defaultFn(() => new Date()),
-  updatedAt: tsz().$onUpdate(() => new Date()),
-};
-
 // the table name (the first argument of `pgTable()`) must be snake_case
-
-export const user = pgTable('user', {
-  id: cuid({ needGenerate: true }).primaryKey(),
-  borrowLimit: integer().notNull().default(5),
-  email: text().notNull().unique(),
-  username: varchar({ length: 31 }).notNull().unique().$defaultFn(() => createId()),
-  passwordHash: text().notNull(),
-  ...timestamps,
-});
-// to get max length:
-//   user.username.length
-
-export const userSession = pgTable('user_session', {
-  encodedToken: text().primaryKey(),
-  userId: cuid().notNull().references(() => user.id),
-  expiresAt: tsz(),
-});
-
-export const emailVerification = pgTable('email_verification', {
-  email: text().primaryKey(),
-  code: char({ length: 12 }).notNull(),
-  expiresAt: tsz(),
-});
 
 export const adminLevel = pgEnum('admin_level', ['limited', 'normal', 'super']);
 export const adminStatus = pgEnum('admin_status', ['active', 'inactive']);
@@ -69,30 +27,6 @@ export const admin = pgTable('admin', {
   status: adminStatus().notNull().default('active'),
   passwordHash: text().notNull(),
   ...timestamps,
-});
-
-export const adminSession = pgTable('admin_session', {
-  encodedToken: text().primaryKey(),
-  adminId: cuid().notNull().references(() => admin.id),
-  expiresAt: tsz(),
-});
-
-export const publisher = pgTable('publisher', {
-  id: cuid({ needGenerate: true }).primaryKey(),
-  name: text().notNull(),
-  ...timestamps,
-});
-
-export const author = pgTable('author', {
-  id: cuid({ needGenerate: true }).primaryKey(),
-  name: text().notNull(),
-  ...timestamps,
-});
-
-export const genre = pgTable('genre', {
-  id: cuid({ needGenerate: true }).primaryKey(),
-  code: text().notNull(),
-  description: text().notNull().default(''),
 });
 
 export const book = pgTable('book', {
@@ -139,28 +73,6 @@ export const checkout = pgTable('checkout', {
 });
 
 // relations
-
-export const userSessionRelations = relations(userSession, ({ one }) => ({
-  user: one(user, {
-    fields: [userSession.userId],
-    references: [user.id],
-  }),
-}));
-
-export const adminSessionRelations = relations(adminSession, ({ one }) => ({
-  admin: one(admin, {
-    fields: [adminSession.adminId],
-    references: [admin.id],
-  }),
-}));
-
-export const publisherRelations = relations(publisher, ({ many }) => ({
-  books: many(book),
-}));
-
-export const authorRelations = relations(author, ({ many }) => ({
-  bookAuthors: many(bookAuthor),
-}));
 
 export const bookRelations = relations(book, ({ one, many }) => ({
   publisher: one(publisher, {

@@ -8,7 +8,7 @@ if (!DATABASE_URL) {
 
 const config = {
   out: './drizzle',
-  schema: './schema.ts',
+  schema: './schema',
 
   dbCredentials: {
     url: DATABASE_URL,
