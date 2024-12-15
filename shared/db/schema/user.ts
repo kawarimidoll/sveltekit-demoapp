@@ -14,6 +14,6 @@ export const user = pgTable('user', {
 // to get max length:
 //   user.username.length
 
-relations(user, ({ many }) => ({
+export const userRelations = relations(user, ({ many }) => ({
   userSessions: many(userSession),
 }));

@@ -9,7 +9,7 @@ export const adminSession = pgTable('admin_session', {
   expiresAt: tsz(),
 });
 
-relations(adminSession, ({ one }) => ({
+export const adminSessionRelations = relations(adminSession, ({ one }) => ({
   admin: one(admin, {
     fields: [adminSession.adminId],
     references: [admin.id],

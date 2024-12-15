@@ -4,18 +4,21 @@ import { cuid, timestamps } from './_helper';
 import { book } from './book';
 import { checkout } from './checkout';
 
-const inventoryStatus = pgEnum('inventory_status', ['available', 'checked out', 'reserved', 'unavailable']);
-const inventoryBuilding = pgEnum('inventory_building', ['main', 'north', 'south']);
+const statuses = ['available', 'checked out', 'reserved', 'unavailable'];
+export const inventoryStatus = pgEnum('inventory_status', statuses);
+
+const buildings = ['main', 'north', 'south'];
+export const inventoryBuilding = pgEnum('inventory_building', buildings);
 
 export const inventory = pgTable('inventory', {
   id: cuid({ needGenerate: true }).primaryKey(),
   bookId: cuid().notNull().references(() => book.id),
-  status: inventoryStatus().notNull().default('available'),
-  building: inventoryBuilding().notNull().default('main'),
+  status: inventoryStatus().notNull().default(statuses[0]),
+  building: inventoryBuilding().notNull().default(buildings[0]),
   ...timestamps,
 });
 
-relations(inventory, ({ one, many }) => ({
+export const inventoryRelations = relations(inventory, ({ one, many }) => ({
   book: one(book, {
     fields: [inventory.bookId],
     references: [book.id],

@@ -9,6 +9,6 @@ export const publisher = pgTable('publisher', {
   ...timestamps,
 });
 
-relations(publisher, ({ many }) => ({
+export const publisherRelations = relations(publisher, ({ many }) => ({
   books: many(book),
 }));

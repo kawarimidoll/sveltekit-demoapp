@@ -22,7 +22,7 @@ export const checkout = pgTable('checkout', {
   returnedAt: tsz().$defaultFn(getFarFuture),
 });
 
-relations(checkout, ({ one }) => ({
+export const checkoutRelations = relations(checkout, ({ one }) => ({
   user: one(user, {
     fields: [checkout.userId],
     references: [user.id],
