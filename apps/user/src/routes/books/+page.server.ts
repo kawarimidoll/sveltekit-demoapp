@@ -75,16 +75,17 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
   //   .offset((page - 1) * per);
 
   // https://orm.drizzle.team/docs/joins#aggregating-results
-  type Book = typeof schema.book.$inferSelect;
-  type Publisher = typeof schema.publisher.$inferSelect;
-  type Author = typeof schema.author.$inferSelect;
   console.log(rows);
+  type BookWithRelation = typeof schema.book.$inferSelect & {
+    authors: typeof schema.author.$inferSelect[];
+    publisher: typeof schema.publisher.$inferSelect;
+  };
   const result = rows
-    .reduce<Record<string, { book: Book; publisher: Publisher; authors: Author[] }>>(
+    .reduce<Record<string, BookWithRelation>>(
       (acc, row) => {
         const { book, publisher, author } = row;
         if (!acc[book.id]) {
-          acc[book.id] = { book, publisher, authors: [] };
+          acc[book.id] = { ...book, publisher, authors: [] };
         }
         acc[book.id].authors.push(author);
         return acc;
@@ -101,7 +102,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
   const pagination = genPagination(url, page, maxPage);
 
   return {
-    items: Object.values(result),
+    books: Object.values(result),
     page,
     per,
     count,

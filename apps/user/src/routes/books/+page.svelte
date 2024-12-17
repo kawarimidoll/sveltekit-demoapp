@@ -18,12 +18,12 @@
 
   <div class='text-sm'>Total: {data.count}</div>
 
-  {#each data.items as item}
-    <h3>{item.book.title}</h3>
-    {#each item.authors as author}
+  {#each data.books as book}
+    <h3>{book.title}</h3>
+    {#each book.authors as author}
       <p>{author.name}</p>
     {/each}
-    <p>{item.publisher?.name || 'no publisher'}</p>
-    <p>{format(item.book.publishDate, 'yyyy-MM-dd')}</p>
+    <p>{book.publisher?.name || 'no publisher'}</p>
+    <p>{format(book.publishDate, 'yyyy-MM-dd')}</p>
   {/each}
 </section>
