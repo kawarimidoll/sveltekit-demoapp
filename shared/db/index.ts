@@ -21,3 +21,4 @@ const client = new PGlite(url);
 const casing = 'snake_case';
 const logger = true;
 export const db = drizzle({ schema, client, casing, logger });
+export { schema };
