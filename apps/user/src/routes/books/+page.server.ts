@@ -15,17 +15,19 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
   const page = getValidPageParam(params);
 
   const search = params.get('search') || '';
+  const target = params.get('target') || '';
 
   const sort = params.get('sort') || 'id';
   const order = params.get('order') === 'desc' ? 'desc' : 'asc';
 
-  const per = 20;
+  const per = 3;
 
   // NOTE: order param is confusing for some reason...
   // console.log({ page, per, sort, order });
 
   const books = await db.query.book.findMany({
-    where: (book, { ilike }) => search ? ilike(book.title, `%${search}%`) : undefined,
+    where: (book, { ilike }) =>
+      search && target === 'title' ? ilike(book.title, `%${search}%`) : undefined,
     orderBy: (columns, { asc, desc }) =>
       [order === 'desc' ? desc(columns[sort]) : asc(columns[sort])],
     limit: per,
@@ -36,14 +38,17 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     with: {
       bookAuthors: {
         with: {
-          author: true,
           // NOTE: this doesn't seem to work well
-          // author: {
-          //   where: (author, { ilike }) => search ? ilike(author.name, `%${search}%`) : undefined,
-          // },
+          author: {
+            where: (author, { ilike }) =>
+              search && target === 'author' ? ilike(author.name, `%${search}%`) : undefined,
+          },
         },
       },
-      publisher: true,
+      publisher: {
+        where: (publisher, { ilike }) =>
+          search && target === 'publisher' ? ilike(publisher.name, `%${search}%`) : undefined,
+      },
     },
   });
 
@@ -60,5 +65,6 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     count,
     pagination,
     search,
+    target,
   };
 };

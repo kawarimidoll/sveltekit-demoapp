@@ -1,9 +1,16 @@
 <script lang='ts'>
   import type { PageServerData } from './$types';
+  import { Tab } from '$lib/components';
   import { Input } from '@shared/components';
   import { format } from '@std/datetime';
 
   const { data }: { data: PageServerData } = $props();
+
+  const tabs = [
+    { label: 'Book title', value: 'title' },
+    { label: 'Author name', value: 'author' },
+    { label: 'Publisher name', value: 'publisher' },
+  ];
 </script>
 
 <section class='m-auto w-full'>
@@ -12,7 +19,8 @@
   </div>
 
   <form class='space-y-2' method='get' action='?'>
-    <Input type='search' name='search' placeholder='Search' />
+    <Tab name='target' {tabs} initialChecked={data.target} required />
+    <Input type='search' name='search' placeholder='Search' bind:value={data.search} required />
     <button class='btn btn-primary'>Search</button>
   </form>
 
