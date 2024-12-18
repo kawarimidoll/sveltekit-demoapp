@@ -3,6 +3,7 @@ import type { SQL } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { db, schema } from '@shared/db';
 import { genPagination } from '@shared/logic/pagination';
+import { error } from '@sveltejs/kit';
 import { and, asc, countDistinct, desc, eq, ilike, or, sql } from 'drizzle-orm';
 
 function getValidPageParam(params: URLSearchParams): number {
@@ -209,6 +210,10 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
   const count = rows[0]?.count || 0;
 
   const maxPage = Math.ceil(count / per);
+
+  if (page > maxPage) {
+    return error(404, 'Page not found');
+  }
 
   const pagination = genPagination(url, page, maxPage);
 
