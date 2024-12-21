@@ -10,5 +10,10 @@ export async function load(event: RequestEvent) {
     }
     return {};
   }
-  return { admin: event.locals.admin };
+
+  const { admin } = event.locals;
+  return {
+    admin,
+    isSuper: admin.level === 'super',
+  };
 }
