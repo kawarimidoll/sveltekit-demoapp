@@ -13,6 +13,7 @@
     <a class='text-xl btn btn-ghost' href='/'>Admin Top</a>
     <a class='link' href='/admins'>Admins</a>
     <a class='link' href='/users'>Users</a>
+    <a class='link' href='/genres'>Genres</a>
   </div>
   <div class='mx-auto prose container'>
     {@render children()}
