@@ -1,10 +1,10 @@
 <script lang='ts'>
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
 
   const { tbody, headers, pagination } = $props();
 
   function sort(name: string) {
-    const url = new URL($page.url);
+    const url = new URL(page.url);
     // none -> asc -> desc
     if (url.searchParams.has('sort', name)) {
       if (!url.searchParams.has('order')) {
@@ -26,8 +26,8 @@
   }
 
   function orderIconClass(name: string) {
-    if ($page.url.searchParams.has('sort', name)) {
-      if ($page.url.searchParams.get('order') === 'desc') {
+    if (page.url.searchParams.has('sort', name)) {
+      if (page.url.searchParams.get('order') === 'desc') {
         return 'i-octicon-arrow-down-16 inline-block';
       }
       else {

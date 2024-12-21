@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import { Hero, Nav } from '$lib/components';
   import { i18n } from '$lib/i18n';
   import { ParaglideJS } from '@inlang/paraglide-sveltekit';
@@ -15,7 +15,7 @@
 
 <ParaglideJS {i18n}>
   <Nav {data} />
-  {#if data.user == null && i18n.route($page.url.pathname) === '/'}
+  {#if data.user == null && i18n.route(page.url.pathname) === '/'}
     <!-- show hero only on the top page -->
     <Hero />
   {:else}
