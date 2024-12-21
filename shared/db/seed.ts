@@ -46,6 +46,7 @@ async function main() {
   await Promise.all([
     ...Object.entries(list)
       .map(([code, description]) => insertGenre(code, description)),
+    insertGenre('N/A', 'unknown genre'),
     insertUser('hello@example.com'),
     ...nums(40).map(n => insertUser(`user${n}@example.com`)),
     insertAdmin('admin@example.com', 'super'),

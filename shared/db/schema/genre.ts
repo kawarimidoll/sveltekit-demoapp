@@ -3,6 +3,6 @@ import { cuid } from './_helper';
 
 export const genre = pgTable('genre', {
   id: cuid({ needGenerate: true }).primaryKey(),
-  code: text().notNull(),
+  code: text().notNull().unique(),
   description: text().notNull().default(''),
 });
