@@ -11,10 +11,19 @@ function getValidPageParam(params: URLSearchParams): number {
   return Number.isNaN(page) || page < 1 ? 1 : page;
 }
 
+function getValidPerParam(params: URLSearchParams, options: number[]): number {
+  const per = Number.parseInt(params.get('per') || '1', 10);
+  return Number.isNaN(per) || !options.includes(per) ? options[0] : per;
+}
+
 // this may cause error when `options` is empty but it's ok for now
-function getValidSortParam(params: URLSearchParams, options: string[]): string {
-  const sort = params.get('sort') || '';
-  return options.includes(sort) ? sort : options[0];
+function getValidOptionsParam(
+  params: URLSearchParams,
+  name: string,
+  options: string[],
+): string {
+  const value = params.get(name) || '';
+  return options.includes(value) ? value : options[0];
 }
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
@@ -22,13 +31,12 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
   const params = new URLSearchParams(event.url.search);
 
   const page = getValidPageParam(params);
+  const per = getValidPerParam(params, [10, 20, 50]);
 
   const search = params.get('search') || '';
 
-  const sort = getValidSortParam(params, ['id', 'title']);
-  const order = params.get('order') === 'desc' ? 'desc' : 'asc';
-
-  const per = 2;
+  const sort = getValidOptionsParam(params, 'sort', ['id', 'title']);
+  const order = getValidOptionsParam(params, 'order', ['asc', 'desc']);
 
   const filters: SQL[] = [];
   if (search) {
