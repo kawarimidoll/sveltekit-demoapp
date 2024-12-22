@@ -3,6 +3,7 @@
   import { enhance } from '$app/forms';
   import { Table } from '$lib/components';
   import { Input } from '@shared/components';
+  import { format } from '@std/datetime';
 
   const { data, form }: { data: PageServerData;form: ActionData } = $props();
   const genreAttrs: {
@@ -56,6 +57,8 @@
       <Table headers={[
         { display: 'Code', sort: 'code' },
         { display: 'Description', sort: 'description' },
+        { display: 'Created at' },
+        { display: 'Updated at' },
         { display: data.isSuper ? 'Action' : '' },
       ]} pagination={data.pagination}>
         {#snippet tbody()}
@@ -63,6 +66,14 @@
             <tr class='hover:bg-gray-100 dark:hover:bg-neutral-700'>
               <td>{genre.code}</td>
               <td>{genre.description}</td>
+              <td>
+                {format(genre.createdAt, 'yyyy-MM-dd')}<br>
+                {format(genre.createdAt, 'HH:mm:ss')}
+              </td>
+              <td>
+                {format(genre.updatedAt, 'yyyy-MM-dd')}<br>
+                {format(genre.updatedAt, 'HH:mm:ss')}
+              </td>
               {#if data.isSuper}
                 <td>
                   <button class='btn btn-circle btn-outline drawer-button btn-sm'
