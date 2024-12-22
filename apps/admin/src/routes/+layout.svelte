@@ -14,6 +14,7 @@
     <a class='link' href='/admins'>Admins</a>
     <a class='link' href='/users'>Users</a>
     <a class='link' href='/authors'>Authors</a>
+    <a class='link' href='/publishers'>Publishers</a>
     <a class='link' href='/genres'>Genres</a>
   </div>
   <div class='mx-auto prose container'>
