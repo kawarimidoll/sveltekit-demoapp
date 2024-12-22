@@ -6,6 +6,7 @@ import { bookAuthor } from './book_author';
 export const author = pgTable('author', {
   id: cuid({ needGenerate: true }).primaryKey(),
   name: text().notNull(),
+  description: text().notNull().default(''),
   ...timestamps,
 });
 

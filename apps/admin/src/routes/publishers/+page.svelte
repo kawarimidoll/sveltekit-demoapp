@@ -9,9 +9,11 @@
   const publisherAttrs: {
     id?: string;
     name: string;
+    description: string;
   } = $state({
     id: undefined,
     name: '',
+    description: '',
   });
   let isUpdate = $state(false);
   let checked = $state(false);
@@ -20,6 +22,7 @@
     isUpdate = !!publisher.id;
     publisherAttrs.id = publisher.id;
     publisherAttrs.name = publisher.name ?? '';
+    publisherAttrs.description = publisher.description ?? '';
     if (form) {
       form.message = '';
     }
@@ -53,6 +56,7 @@
       {/if}
       <Table headers={[
         { display: 'Name', sort: 'name' },
+        { display: 'Description', sort: 'description' },
         { display: 'Created at' },
         { display: 'Updated at' },
         { display: data.isSuper ? 'Action' : '' },
@@ -61,6 +65,7 @@
           {#each data.publishers as publisher}
             <tr class='hover:bg-gray-100 dark:hover:bg-neutral-700'>
               <td>{publisher.name}</td>
+              <td>{publisher.description}</td>
               <td>
                 {format(publisher.createdAt, 'yyyy-MM-dd')}<br>
                 {format(publisher.createdAt, 'HH:mm:ss')}
@@ -94,13 +99,13 @@
       <div>
         <label for='drawer' class='btn btn-outline drawer-button'>close</label>
       </div>
-      <!-- TODO: implement force logout -->
       <form class='space-y-2' method='post' action={isUpdate ? '?/update' : '?/create'} use:enhance>
         <div class='mb-4 text-center'>
           <h2 class='my-0'>{isUpdate ? 'Update Publisher' : 'Create Publisher'}</h2>
         </div>
         <input type='hidden' name='id' bind:value={publisherAttrs.id} />
         <Input required name='name' bind:value={publisherAttrs.name} placeholder='Name' icon='i-fluent-building-16-regular' />
+        <Input name='description' bind:value={publisherAttrs.description} placeholder='Description' icon='i-octicon-comment-16' />
         <button class='w-full btn btn-primary'>{isUpdate ? 'Update Publisher' : 'Create Publisher'}</button>
         <p style='color: red'>{form?.message ?? ''}</p>
       </form>
@@ -116,7 +121,7 @@
     <form class='space-y-2' method='get' action='?'>
       <div class='flex space-x-2'>
         <Input type='search' name='search' wrapperClass='w-full'
-               placeholder='Search by Name'
+               placeholder='Search by Name or Description'
                bind:value={data.search} />
       </div>
       <div class='modal-action'>

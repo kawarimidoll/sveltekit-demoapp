@@ -9,9 +9,11 @@
   const authorAttrs: {
     id?: string;
     name: string;
+    description: string;
   } = $state({
     id: undefined,
     name: '',
+    description: '',
   });
   let isUpdate = $state(false);
   let checked = $state(false);
@@ -20,6 +22,7 @@
     isUpdate = !!author.id;
     authorAttrs.id = author.id;
     authorAttrs.name = author.name ?? '';
+    authorAttrs.description = author.description ?? '';
     if (form) {
       form.message = '';
     }
@@ -53,6 +56,7 @@
       {/if}
       <Table headers={[
         { display: 'Name', sort: 'name' },
+        { display: 'Description', sort: 'description' },
         { display: 'Created at' },
         { display: 'Updated at' },
         { display: data.isSuper ? 'Action' : '' },
@@ -61,6 +65,7 @@
           {#each data.authors as author}
             <tr class='hover:bg-gray-100 dark:hover:bg-neutral-700'>
               <td>{author.name}</td>
+              <td>{author.description}</td>
               <td>
                 {format(author.createdAt, 'yyyy-MM-dd')}<br>
                 {format(author.createdAt, 'HH:mm:ss')}
@@ -94,13 +99,13 @@
       <div>
         <label for='drawer' class='btn btn-outline drawer-button'>close</label>
       </div>
-      <!-- TODO: implement force logout -->
       <form class='space-y-2' method='post' action={isUpdate ? '?/update' : '?/create'} use:enhance>
         <div class='mb-4 text-center'>
           <h2 class='my-0'>{isUpdate ? 'Update Author' : 'Create Author'}</h2>
         </div>
         <input type='hidden' name='id' bind:value={authorAttrs.id} />
         <Input required name='name' bind:value={authorAttrs.name} placeholder='Name' icon='i-fluent-people-edit-16-regular' />
+        <Input name='description' bind:value={authorAttrs.description} placeholder='Description' icon='i-octicon-comment-16' />
         <button class='w-full btn btn-primary'>{isUpdate ? 'Update Author' : 'Create Author'}</button>
         <p style='color: red'>{form?.message ?? ''}</p>
       </form>
@@ -116,7 +121,7 @@
     <form class='space-y-2' method='get' action='?'>
       <div class='flex space-x-2'>
         <Input type='search' name='search' wrapperClass='w-full'
-               placeholder='Search by Name'
+               placeholder='Search by Name or Description'
                bind:value={data.search} />
       </div>
       <div class='modal-action'>

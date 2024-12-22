@@ -14,13 +14,14 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 
   const search = params.get('search') || '';
 
-  const sort = getOptionsParam(params, 'sort', ['name']);
+  const sort = getOptionsParam(params, 'sort', ['name', 'description']);
   const order = getOptionsParam(params, 'order', ['asc', 'desc']);
 
   const filters: SQL[] = [];
   if (search) {
     filters.push(or(
       ilike(schema.publisher.name, `%${search}%`),
+      ilike(schema.publisher.description, `%${search}%`),
     )!,
     );
   }
@@ -56,6 +57,7 @@ async function upsert(event: RequestEvent, isUpdate: boolean) {
   const formData = await event.request.formData();
   const id = formData.get('id');
   const name = formData.get('name');
+  const description = formData.get('description') || '';
 
   if (isUpdate && (typeof id !== 'string' || !id)) {
     return fail(400, { message: 'Invalid id' });
@@ -70,13 +72,13 @@ async function upsert(event: RequestEvent, isUpdate: boolean) {
     if (isUpdate) {
       await db
         .update(schema.publisher)
-        .set({ name })
+        .set({ name, description })
         .where(eq(schema.publisher.id, id));
     }
     else {
       await db
         .insert(schema.publisher)
-        .values({ name });
+        .values({ name, description });
     }
   }
   catch (e) {
