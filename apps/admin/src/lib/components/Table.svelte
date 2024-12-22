@@ -46,7 +46,11 @@
           {#if header.display}
             <th>
               {#if header.sort}
-                <a href={sort(header.sort)} class='not-prose block h-full w-full' data-sveltekit-preload-data='tap'>
+                <a
+                  href={sort(header.sort)}
+                  class='not-prose block h-full w-full'
+                  data-sveltekit-preload-data='tap'
+                  title='sort by {header.sort}'>
                   {header.display}
                   <div class={orderIconClass(header.sort)}></div>
                 </a>
