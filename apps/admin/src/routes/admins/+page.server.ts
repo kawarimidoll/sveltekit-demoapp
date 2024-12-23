@@ -1,46 +1,40 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import type { SQL } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
-import { db } from '@shared/db';
-import * as table from '@shared/db/schema';
+import { db, schema } from '@shared/db';
 import { checkAdminEmailAvailability, verifyEmailInput } from '@shared/logic/email';
 import { genPagination } from '@shared/logic/pagination';
+import { getOptionsParam, getPositiveIntParam } from '@shared/logic/params';
 import { hashPassword } from '@shared/logic/password';
 import { generateRandomCode } from '@shared/logic/utils';
 import { fail } from '@sveltejs/kit';
 import { and, eq, ilike, inArray, or } from 'drizzle-orm';
 
-function getValidPageParam(params: URLSearchParams): number {
-  const page = Number.parseInt(params.get('page') || '1', 10);
-  return Number.isNaN(page) || page < 1 ? 1 : page;
-}
-
 export const load: PageServerLoad = async (event: RequestEvent) => {
   const url = new URL(event.url);
   const params = new URLSearchParams(event.url.search);
 
-  const page = getValidPageParam(params);
+  const page = getPositiveIntParam(params, 'page');
+  const per = getOptionsParam(params, 'per', [10, 20, 50]);
 
   const search = params.get('search') || '';
-  const levels = params.has('levels') ? params.getAll('levels') : table.admin.level.enumValues;
+  const levels = params.has('levels') ? params.getAll('levels') : schema.admin.level.enumValues;
   const statuses = params.has('statuses') ? params.getAll('statuses') : ['active'];
 
-  const sort = params.get('sort') || 'id';
-  const order = params.get('order') === 'desc' ? 'desc' : 'asc';
+  const sort = getOptionsParam(params, 'sort', ['id', 'name']);
+  const order = getOptionsParam(params, 'order', ['asc', 'desc']);
 
   const filters: SQL[] = [];
-  filters.push(inArray(table.admin.level, levels));
-  filters.push(inArray(table.admin.status, statuses));
+  filters.push(inArray(schema.admin.level, levels));
+  filters.push(inArray(schema.admin.status, statuses));
   if (search) {
     filters.push(or(
       // TODO: sanitize search input
-      ilike(table.admin.name, `%${search}%`),
-      ilike(table.admin.email, `%${search}%`),
+      ilike(schema.admin.name, `%${search}%`),
+      ilike(schema.admin.email, `%${search}%`),
     )!,
     );
   }
-
-  const per = 10;
 
   // NOTE: order param is confusing for some reason...
   // console.log({ page, per, sort, order });
@@ -52,7 +46,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     limit: per,
     offset: (page - 1) * per,
   });
-  const count = await db.$count(table.admin, and(...filters));
+  const count = await db.$count(schema.admin, and(...filters));
   const maxPage = Math.ceil(count / per);
 
   const pagination = genPagination(url, page, maxPage);
@@ -107,9 +101,9 @@ export const actions: Actions = {
 
     try {
       await db
-        .insert(table.admin)
+        .insert(schema.admin)
         .values({ name, email, passwordHash, level, status })
-        .returning({ id: table.admin.id });
+        .returning({ id: schema.admin.id });
       sendEmail(email, `Your account has been created. Your password is: ${password}`);
     }
     catch (e) {
@@ -131,8 +125,8 @@ export const actions: Actions = {
       return fail(400, { message: 'Invalid id' });
     }
     const [currentAdmin] = await db.select()
-      .from(table.admin)
-      .where(eq(table.admin.id, id))
+      .from(schema.admin)
+      .where(eq(schema.admin.id, id))
       .limit(1);
 
     if (!currentAdmin) {
@@ -168,9 +162,9 @@ export const actions: Actions = {
 
     try {
       await db
-        .update(table.admin)
+        .update(schema.admin)
         .set({ name, email, level, status })
-        .where(eq(table.admin.id, id));
+        .where(eq(schema.admin.id, id));
 
       if (email !== currentEmail) {
         sendEmail(currentEmail, `Your email has been changed. ${currentEmail} -> ${email}`);
@@ -185,12 +179,12 @@ export const actions: Actions = {
   },
 };
 
-function verifyLevelInput(level: unknown): level is typeof table.admin.level.enumValues[number] {
-  return typeof level === 'string' && (table.admin.level.enumValues as string[]).includes(level);
+function verifyLevelInput(level: unknown): level is typeof schema.admin.level.enumValues[number] {
+  return typeof level === 'string' && (schema.admin.level.enumValues as string[]).includes(level);
 };
 
-function verifyStatusInput(status: unknown): status is typeof table.admin.status.enumValues[number] {
-  return typeof status === 'string' && (table.admin.status.enumValues as string[]).includes(status);
+function verifyStatusInput(status: unknown): status is typeof schema.admin.status.enumValues[number] {
+  return typeof status === 'string' && (schema.admin.status.enumValues as string[]).includes(status);
 }
 
 function sendEmail(email: string, text: string) {

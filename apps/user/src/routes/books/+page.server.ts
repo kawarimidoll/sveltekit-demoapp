@@ -3,40 +3,20 @@ import type { SQL } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { db, schema } from '@shared/db';
 import { genPagination } from '@shared/logic/pagination';
+import { getOptionsParam, getPositiveIntParam } from '@shared/logic/params';
 import { error } from '@sveltejs/kit';
 import { and, asc, desc, eq, ilike, or, sql } from 'drizzle-orm';
 
-function getValidPageParam(params: URLSearchParams): number {
-  const page = Number.parseInt(params.get('page') || '1', 10);
-  return Number.isNaN(page) || page < 1 ? 1 : page;
-}
-
-function getValidPerParam(params: URLSearchParams, options: number[]): number {
-  const per = Number.parseInt(params.get('per') || '1', 10);
-  return Number.isNaN(per) || !options.includes(per) ? options[0] : per;
-}
-
-// this may cause error when `options` is empty but it's ok for now
-function getValidOptionsParam(
-  params: URLSearchParams,
-  name: string,
-  options: string[],
-): string {
-  const value = params.get(name) || '';
-  return options.includes(value) ? value : options[0];
-}
-
 export const load: PageServerLoad = async (event: RequestEvent) => {
-  const url = new URL(event.url);
   const params = new URLSearchParams(event.url.search);
 
-  const page = getValidPageParam(params);
-  const per = getValidPerParam(params, [10, 20, 50]);
+  const page = getPositiveIntParam(params, 'page');
+  const per = getOptionsParam(params, 'per', [10, 20, 50]);
 
   const search = params.get('search') || '';
 
-  const sort = getValidOptionsParam(params, 'sort', ['id', 'title']);
-  const order = getValidOptionsParam(params, 'order', ['asc', 'desc']);
+  const sort = getOptionsParam(params, 'sort', ['id', 'title']);
+  const order = getOptionsParam(params, 'order', ['asc', 'desc']);
 
   const filters: SQL[] = [];
   if (search) {
@@ -117,7 +97,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
       {},
     );
 
-  const pagination = genPagination(url, page, maxPage);
+  const pagination = genPagination(event.url, page, maxPage);
 
   return {
     books: Object.values(result),

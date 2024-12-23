@@ -1,38 +1,32 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import type { SQL } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
-import { db } from '@shared/db';
-import * as table from '@shared/db/schema';
+import { db, schema } from '@shared/db';
 import { genPagination } from '@shared/logic/pagination';
+import { getOptionsParam, getPositiveIntParam } from '@shared/logic/params';
 import { and, ilike, or } from 'drizzle-orm';
-
-function getValidPageParam(params: URLSearchParams): number {
-  const page = Number.parseInt(params.get('page') || '1', 10);
-  return Number.isNaN(page) || page < 1 ? 1 : page;
-}
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
   const url = new URL(event.url);
   const params = new URLSearchParams(event.url.search);
 
-  const page = getValidPageParam(params);
+  const page = getPositiveIntParam(params, 'page');
+  const per = getOptionsParam(params, 'per', [10, 20, 50]);
 
   const search = params.get('search') || '';
 
-  const sort = params.get('sort') || 'id';
-  const order = params.get('order') === 'desc' ? 'desc' : 'asc';
+  const sort = getOptionsParam(params, 'sort', ['id', 'username', 'email']);
+  const order = getOptionsParam(params, 'order', ['asc', 'desc']);
 
   const filters: SQL[] = [];
   if (search) {
     filters.push(or(
       // TODO: sanitize search input
-      ilike(table.user.username, `%${search}%`),
-      ilike(table.user.email, `%${search}%`),
+      ilike(schema.user.username, `%${search}%`),
+      ilike(schema.user.email, `%${search}%`),
     )!,
     );
   }
-
-  const per = 10;
 
   const users = await db.query.user.findMany({
     where: and(...filters),
@@ -41,7 +35,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     limit: per,
     offset: (page - 1) * per,
   });
-  const count = await db.$count(table.user, and(...filters));
+  const count = await db.$count(schema.user, and(...filters));
   const maxPage = Math.ceil(count / per);
 
   const pagination = genPagination(url, page, maxPage);
