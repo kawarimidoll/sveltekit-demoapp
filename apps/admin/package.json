@@ -1,5 +1,5 @@
 {
-  "name": "admin",
+  "name": "@apps/admin",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -15,27 +15,27 @@
     "lint": "eslint --cache ."
   },
   "dependencies": {
-    "@inlang/paraglide-sveltekit": "^0.15.0",
-    "@oslojs/crypto": "^1.0.1",
-    "@oslojs/encoding": "^1.1.0",
-    "@std/datetime": "npm:@jsr/std__datetime",
-    "drizzle-orm": "^0.38.2",
-    "std-env": "^3.8.0",
-    "svelte-boring-avatars": "^1.2.6"
+    "@inlang/paraglide-sveltekit": "*",
+    "@oslojs/crypto": "*",
+    "@oslojs/encoding": "*",
+    "@std/datetime": "*",
+    "drizzle-orm": "*",
+    "std-env": "*",
+    "svelte-boring-avatars": "*"
   },
   "devDependencies": {
-    "@iconify-json/fluent": "^1.2.11",
-    "@iconify-json/octicon": "^1.2.2",
-    "@playwright/test": "^1.49.1",
-    "@sveltejs/adapter-auto": "^3.3.1",
-    "@sveltejs/kit": "^2.12.1",
-    "@sveltejs/vite-plugin-svelte": "^5.0.2",
-    "daisyui": "^4.12.22",
-    "mdsvex": "^0.12.3",
-    "svelte": "^5.14.1",
-    "svelte-check": "^4.1.1",
-    "typescript": "^5.7.2",
-    "vite": "^6.0.3",
-    "vitest": "^2.1.8"
+    "@iconify-json/fluent": "*",
+    "@iconify-json/octicon": "*",
+    "@playwright/test": "*",
+    "@sveltejs/adapter-auto": "*",
+    "@sveltejs/kit": "*",
+    "@sveltejs/vite-plugin-svelte": "*",
+    "daisyui": "*",
+    "mdsvex": "*",
+    "svelte": "*",
+    "svelte-check": "*",
+    "typescript": "*",
+    "vite": "*",
+    "vitest": "*"
   }
 }

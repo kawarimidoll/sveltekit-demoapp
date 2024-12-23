@@ -8,6 +8,6 @@
     "lint": "eslint --cache ."
   },
   "devDependencies": {
-    "@sveltejs/kit": "^2.12.1"
+    "@sveltejs/kit": "*"
   }
 }

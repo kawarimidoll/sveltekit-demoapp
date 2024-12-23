@@ -15,26 +15,26 @@
     "lint": "eslint --cache ."
   },
   "dependencies": {
-    "@inlang/paraglide-sveltekit": "^0.15.0",
-    "drizzle-orm": "^0.38.2",
-    "mode-watcher": "^0.5.0",
-    "std-env": "^3.8.0",
-    "svelte-boring-avatars": "^1.2.6"
+    "@inlang/paraglide-sveltekit": "*",
+    "drizzle-orm": "*",
+    "mode-watcher": "*",
+    "std-env": "*",
+    "svelte-boring-avatars": "*"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.2.15",
-    "@iconify-json/fluent": "^1.2.11",
-    "@iconify-json/octicon": "^1.2.2",
-    "@playwright/test": "^1.49.1",
-    "@sveltejs/adapter-auto": "^3.3.1",
-    "@sveltejs/kit": "^2.12.1",
-    "@sveltejs/vite-plugin-svelte": "^5.0.2",
-    "daisyui": "^4.12.22",
-    "mdsvex": "^0.12.3",
-    "svelte": "^5.14.1",
-    "svelte-check": "^4.1.1",
-    "typescript": "^5.7.2",
-    "vite": "^6.0.3",
-    "vitest": "^2.1.8"
+    "@electric-sql/pglite": "*",
+    "@iconify-json/fluent": "*",
+    "@iconify-json/octicon": "*",
+    "@playwright/test": "*",
+    "@sveltejs/adapter-auto": "*",
+    "@sveltejs/kit": "*",
+    "@sveltejs/vite-plugin-svelte": "*",
+    "daisyui": "*",
+    "mdsvex": "*",
+    "svelte": "*",
+    "svelte-check": "*",
+    "typescript": "*",
+    "vite": "*",
+    "vitest": "*"
   }
 }
