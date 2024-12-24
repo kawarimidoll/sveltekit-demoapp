@@ -4,7 +4,9 @@ import type { PageServerLoad } from './$types';
 import { db, schema } from '@shared/db';
 import { genPagination } from '@shared/logic/pagination';
 import { getOptionsParam, getPositiveIntParam } from '@shared/logic/params';
-import { error } from '@sveltejs/kit';
+import { distinct } from '@std/collections/distinct';
+import { parse } from '@std/datetime';
+import { error, fail } from '@sveltejs/kit';
 import { and, asc, desc, eq, ilike, or, sql } from 'drizzle-orm';
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
@@ -107,4 +109,85 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     pagination,
     search,
   };
+};
+
+export const actions: Actions = {
+  create: async (event) => {
+    const formData = await event.request.formData();
+    const title = formData.get('title');
+    const publisherId = formData.get('publisherId');
+    const authorIdsText = formData.get('authorIds');
+    const publishDateText = formData.get('publishDate');
+
+    // check title
+    if (typeof title !== 'string' || !title) {
+      return fail(400, { message: 'Invalid title' });
+    }
+
+    // check publisherId
+    if (!(await verifyPublisherId(publisherId))) {
+      return fail(400, { message: 'Invalid publisherId' });
+    }
+
+    // check authorIds
+    if (typeof authorIdsText !== 'string' || !authorIdsText) {
+      return fail(400, { message: 'Invalid authorIdsText' });
+    }
+    const authorIds = distinct(
+      authorIdsText.split(',').map(id => id.trim()).filter(id => !!id),
+    );
+    if (!authorIds.length || !(await verifyAuthorIds(authorIds))) {
+      return fail(400, { message: 'Invalid authorIds' });
+    }
+
+    // check publishDate
+    if (typeof publishDateText !== 'string' || !publishDateText) {
+      return fail(400, { message: 'Invalid publishDate' });
+    }
+    const publishDate = parse(publishDateText, 'yyyy-MM-dd');
+    if (!publishDate) {
+      return fail(400, { message: 'Invalid publishDate' });
+    }
+
+    console.log({ title, publisherId, authorIds, publishDate });
+
+    try {
+      await db.transaction(async (tx) => {
+        const [insertedBook] = await tx.insert(schema.book)
+          .values({ title, publishDate, publisherId })
+          .returning({ id: schema.book.id });
+        const bookId = insertedBook.id;
+        await tx.insert(schema.bookAuthor)
+          .values(authorIds.map(authorId => ({ bookId, authorId })));
+      });
+    }
+    catch (e) {
+      console.error(e);
+      return fail(500, { message: 'An error has occurred' });
+    }
+    return { message: 'Book created!' };
+  },
+};
+
+async function verifyPublisherId(publisherId: unknown): publisherId is string {
+  if (typeof publisherId !== 'string' || !publisherId) {
+    return false;
+  }
+  const result = await db.query.publisher.findFirst({
+    where: columns => eq(columns.id, publisherId),
+  });
+  console.log({ result });
+  return !!result;
+};
+
+async function verifyAuthorIds(authorIds: string[]): boolean {
+  const result = await Promise.all(
+    authorIds.map(async (authorId) => {
+      return await db.query.author.findFirst({
+        where: columns => eq(columns.id, authorId),
+      });
+    }),
+  );
+  console.log({ result });
+  return result.every(author => !!author);
 };

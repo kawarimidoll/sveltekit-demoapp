@@ -18,6 +18,7 @@
     "@inlang/paraglide-sveltekit": "^0.15.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
+    "@std/collections": "npm:@jsr/std__collections",
     "@std/datetime": "npm:@jsr/std__datetime",
     "drizzle-orm": "^0.38.2",
     "mode-watcher": "^0.5.0",

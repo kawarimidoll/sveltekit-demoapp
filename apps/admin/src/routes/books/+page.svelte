@@ -9,15 +9,15 @@
   const bookAttrs: {
     id?: string;
     title: string;
-    email: string;
-    level?: string;
-    status?: string;
+    publisherId: string;
+    authorIds: string[];
+    publishDate: Date;
   } = $state({
     id: undefined,
     title: '',
-    email: '',
-    level: undefined,
-    status: undefined,
+    publisherId: '',
+    authorIds: [],
+    publishDate: new Date(),
   });
   let isUpdate = $state(false);
   let checked = $state(false);
@@ -26,6 +26,9 @@
     isUpdate = !!book.id;
     bookAttrs.id = book.id;
     bookAttrs.title = book.title ?? '';
+    bookAttrs.publisherId = book.publisherId ?? 'zqd57ak80av0ndp8ugkhmi4n';
+    bookAttrs.authorIds = book.authors?.map(a => a.id) ?? ['zv4pgm1305i1gfks1tp0c8yf'];
+    bookAttrs.publishDate = book.publishDate ?? new Date();
   }
 </script>
 
@@ -64,9 +67,21 @@
           {#each data.books as book}
             <tr class='hover:bg-gray-100 dark:hover:bg-neutral-700'>
               <td>{book.title}</td>
-              <td>{book.publisher?.name || 'no publisher'}</td>
+              <td>
+                {#if book.publisher?.name || 'no publisher'}
+                  {book.publisher.name}
+                  <a href='?search={book.publisher.name}'>Search</a>
+                  <a href='/publishers?search={book.publisher.name}'>Edit</a>
+                {:else}
+                  no publisher
+                {/if}
+              </td>
               {#each book.authors as author}
-                <td>{author.name}</td>
+                <td>
+                  {author.name}
+                  <a href='?search={author.name}'>Search</a>
+                  <a href='/authors?search={author.name}'>Edit</a>
+                </td>
               {/each}
               <td>{format(book.publishDate, 'yyyy-MM-dd')}</td>
               <td>
@@ -109,27 +124,14 @@
           </div>
           <input type='hidden' name='id' bind:value={bookAttrs.id} />
           <Input required type='text' name='title' bind:value={bookAttrs.title} placeholder='Title' icon='i-octicon-person-16' />
+          <Input required type='text' name='publisherId' bind:value={bookAttrs.publisherId} placeholder='Publisher ID' icon='i-fluent-building-16-regular' />
+          <Input required type='text' name='authorIds' bind:value={bookAttrs.authorIds} placeholder='Author IDs' icon='i-octicon-person-16' />
+          <p>Comma separated author ids</p>
+          <input required type='date' name='publishDate' value={format(bookAttrs.publishDate, 'yyyy-MM-dd')} />
           <button class='w-full btn btn-primary'>{isUpdate ? 'Update Book' : 'Create Book'}</button>
           <p style='color: red'>{form?.message ?? ''}</p>
         </form>
       </div>
-      {#if isUpdate}
-        <div class='divider'></div>
-        <div>
-          <!-- TODO: implement force logout -->
-          <form class='space-y-2' method='post' action='/?force_logout' use:enhance>
-            <div class='mb-4 text-center'>
-              <h3 class='my-0'>Force logout</h3>
-            </div>
-            <input type='hidden' name='id' bind:value={bookAttrs.id} />
-            <div>
-              Force log out this book from all devices.
-            </div>
-            <button class='w-full btn btn-primary'>Log out</button>
-            <p style='color: red'>{form?.message ?? ''}</p>
-          </form>
-        </div>
-      {/if}
     </div>
   </div>
 </div>
