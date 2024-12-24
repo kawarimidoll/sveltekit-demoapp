@@ -1,7 +1,7 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import type { SQL } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
-import { db, schema } from '@shared/db';
+import { db, handler, schema } from '@shared/db';
 import { genPagination } from '@shared/logic/pagination';
 import { getOptionsParam, getPositiveIntParam } from '@shared/logic/params';
 import { distinct } from '@std/collections/distinct';
@@ -152,14 +152,7 @@ export const actions: Actions = {
     console.log({ title, publisherId, authorIds, publishDate });
 
     try {
-      await db.transaction(async (tx) => {
-        const [insertedBook] = await tx.insert(schema.book)
-          .values({ title, publishDate, publisherId })
-          .returning({ id: schema.book.id });
-        const bookId = insertedBook.id;
-        await tx.insert(schema.bookAuthor)
-          .values(authorIds.map(authorId => ({ bookId, authorId })));
-      });
+      await handler.insertBook({ title, publisherId, authorId: authorIds, publishDate });
     }
     catch (e) {
       console.error(e);

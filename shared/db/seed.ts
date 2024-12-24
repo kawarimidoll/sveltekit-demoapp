@@ -2,9 +2,8 @@ import { rangeIterator } from '@hugoalh/range-iterator';
 import { hashPassword } from '@shared/logic/password';
 import { sample } from '@std/collections/sample';
 import { reset } from 'drizzle-seed';
-import { db } from './index';
+import { db, handler, schema } from './index';
 import list from './ndc_list.json';
-import * as schema from './schema';
 
 function nums(max: number) {
   return Array.from(rangeIterator(1, max));
@@ -62,22 +61,19 @@ async function main() {
     .returning({ id: schema.author.id });
 
   // set 10 years ago
-  const pastDate = new Date();
-  pastDate.setFullYear(pastDate.getFullYear() - 10);
+  const publishDate = new Date();
+  publishDate.setFullYear(publishDate.getFullYear() - 10);
 
-  const books = await db.insert(schema.book)
-    .values(nums(20).map(n => ({
-      title: `book${n}`,
-      publishDate: pastDate,
-      publisherId: sample(publishers)!.id,
-    })))
-    .returning({ id: schema.book.id });
-
-  await db.insert(schema.bookAuthor)
-    .values(books.map(b => ({
-      bookId: b.id,
-      authorId: sample(authors)!.id,
-    })));
+  const books = await Promise.all(
+    nums(20).map((n) => {
+      const title = `book${n}`;
+      const publisherId = sample(publishers)!.id;
+      const authorId = n < 2
+        ? [sample(authors)!.id, sample(authors)!.id]
+        : sample(authors)!.id;
+      return handler.insertBook({ title, publisherId, authorId, publishDate });
+    }),
+  );
 
   console.log({ publishers, authors, books });
 
