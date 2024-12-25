@@ -24,6 +24,7 @@
     "svelte-boring-avatars": "*"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "*",
     "@iconify-json/fluent": "*",
     "@iconify-json/octicon": "*",
     "@playwright/test": "*",
