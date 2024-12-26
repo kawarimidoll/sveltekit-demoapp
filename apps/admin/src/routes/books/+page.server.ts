@@ -141,10 +141,7 @@ export const actions: Actions = {
     }
 
     // check publishDate
-    if (typeof publishDateText !== 'string' || !publishDateText) {
-      return fail(400, { message: 'Invalid publishDate' });
-    }
-    const publishDate = parse(publishDateText, 'yyyy-MM-dd');
+    const publishDate = parsePublishDate(publishDateText, 'yyyy-MM-dd');
     if (!publishDate) {
       return fail(400, { message: 'Invalid publishDate' });
     }
@@ -184,3 +181,10 @@ async function verifyAuthorIds(authorIds: string[]): boolean {
   console.log({ result });
   return result.every(author => !!author);
 };
+
+function parsePublishDate(publishDateText: string): Date | undefined {
+  if (typeof publishDateText !== 'string' || !publishDateText) {
+    return;
+  }
+  return parse(publishDateText, 'yyyy-MM-dd');
+}

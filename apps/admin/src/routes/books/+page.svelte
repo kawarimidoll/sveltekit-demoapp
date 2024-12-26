@@ -76,13 +76,15 @@
                   no publisher
                 {/if}
               </td>
-              {#each book.authors as author}
-                <td>
-                  {author.name}
-                  <a href='?search={author.name}'>Search</a>
-                  <a href='/authors?search={author.name}'>Edit</a>
-                </td>
-              {/each}
+              <td>
+                {#each book.authors as author}
+                  <div>
+                    {author.name}
+                    <a href='?search={author.name}'>Search</a>
+                    <a href='/authors?search={author.name}'>Edit</a>
+                  </div>
+                {/each}
+              </td>
               <td>{format(book.publishDate, 'yyyy-MM-dd')}</td>
               <td>
                 {format(book.createdAt, 'yyyy-MM-dd')}<br>
