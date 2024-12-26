@@ -157,6 +157,68 @@ export const actions: Actions = {
     }
     return { message: 'Book created!' };
   },
+  update: async (event) => {
+    const formData = await event.request.formData();
+    const id = formData.get('id');
+    const title = formData.get('title');
+    const publisherId = formData.get('publisherId');
+    const authorIdsText = formData.get('authorIds');
+    const publishDateText = formData.get('publishDate');
+
+    // check id
+    if (!(await verifyBookId(id))) {
+      return fail(400, { message: 'Invalid id' });
+    }
+
+    // check title
+    if (typeof title !== 'string' || !title) {
+      return fail(400, { message: 'Invalid title' });
+    }
+
+    // check publisherId
+    if (!(await verifyPublisherId(publisherId))) {
+      return fail(400, { message: 'Invalid publisherId' });
+    }
+
+    // check authorIds
+    if (typeof authorIdsText !== 'string' || !authorIdsText) {
+      return fail(400, { message: 'Invalid authorIdsText' });
+    }
+    const authorIds = distinct(
+      authorIdsText.split(',').map(id => id.trim()).filter(id => !!id),
+    );
+    if (!authorIds.length || !(await verifyAuthorIds(authorIds))) {
+      return fail(400, { message: 'Invalid authorIds' });
+    }
+
+    // check publishDate
+    const publishDate = parsePublishDate(publishDateText, 'yyyy-MM-dd');
+    if (!publishDate) {
+      return fail(400, { message: 'Invalid publishDate' });
+    }
+
+    console.log({ title, publisherId, authorIds, publishDate });
+
+    try {
+      await handler.updateBook({ id, title, publisherId, authorId: authorIds, publishDate });
+    }
+    catch (e) {
+      console.error(e);
+      return fail(500, { message: 'An error has occurred' });
+    }
+    return { message: 'Book updated!' };
+  },
+};
+
+async function verifyBookId(bookId: unknown): bookId is string {
+  if (typeof bookId !== 'string' || !bookId) {
+    return false;
+  }
+  const result = await db.query.book.findFirst({
+    where: columns => eq(columns.id, bookId),
+  });
+  console.log({ result });
+  return !!result;
 };
 
 async function verifyPublisherId(publisherId: unknown): publisherId is string {
