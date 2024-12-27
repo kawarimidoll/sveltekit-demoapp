@@ -16,7 +16,7 @@
     id: undefined,
     title: '',
     publisherId: '',
-    authorIds: [],
+    authorIds: [''],
     publishDate: new Date(),
   });
   let isUpdate = $state(false);
@@ -27,8 +27,15 @@
     bookAttrs.id = book.id;
     bookAttrs.title = book.title ?? '';
     bookAttrs.publisherId = book.publisherId ?? 'zqd57ak80av0ndp8ugkhmi4n';
-    bookAttrs.authorIds = book.authors?.map(a => a.id) ?? ['zv4pgm1305i1gfks1tp0c8yf'];
+    bookAttrs.authorIds = book.authors?.map(a => a.id) ?? [''];
     bookAttrs.publishDate = book.publishDate ?? new Date();
+  }
+
+  function addAuthor() {
+    bookAttrs.authorIds.push('');
+  }
+  function removeAuthor(i: number) {
+    bookAttrs.authorIds.splice(i, 1);
   }
 </script>
 
@@ -127,8 +134,42 @@
           <input type='hidden' name='id' bind:value={bookAttrs.id} />
           <Input required type='text' name='title' bind:value={bookAttrs.title} placeholder='Title' icon='i-octicon-person-16' />
           <Input required type='text' name='publisherId' bind:value={bookAttrs.publisherId} placeholder='Publisher ID' icon='i-fluent-building-16-regular' />
-          <Input required type='text' name='authorIds' bind:value={bookAttrs.authorIds} placeholder='Author IDs' icon='i-octicon-person-16' />
-          <p>Comma separated author ids</p>
+          {#each bookAttrs.authorIds as _, i}
+            <div class='flex'>
+              <Input required type='text' name='authorIds' bind:value={bookAttrs.authorIds[i]} placeholder='Author ID' icon='i-octicon-person-16' />
+              {#if bookAttrs.authorIds.length > 1}
+                <button type='button'
+                        class='btn btn-sm'
+                        aria-label='remove author'
+                        disabled={bookAttrs.authorIds.length === 0}
+                        onclick={() => removeAuthor(i)}>
+                  <span class='i-octicon-x-16'></span>
+                </button>
+              {:else}
+                <div class='dropdown dropdown-end dropdown-bottom dropdown-hover'>
+                  <button type='button'
+                          class='btn btn-sm'
+                          aria-label='remove author'
+                          disabled={true}>
+                    <span class='i-octicon-x-16'></span>
+                  </button>
+                  <div class='dropdown-content'>
+                    At least one author is required
+                  </div>
+                </div>
+              {/if}
+            </div>
+          {/each}
+
+          <div>
+            <button type='button'
+                    class='btn btn-sm'
+                    aria-label='add author'
+                    onclick={addAuthor}>
+              <span class='i-octicon-plus-16'></span>
+              Add author
+            </button>
+          </div>
           <input required type='date' name='publishDate' value={format(bookAttrs.publishDate, 'yyyy-MM-dd')} />
           <button class='w-full btn btn-primary'>{isUpdate ? 'Update Book' : 'Create Book'}</button>
           <p style='color: red'>{form?.message ?? ''}</p>

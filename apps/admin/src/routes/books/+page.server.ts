@@ -72,7 +72,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     .innerJoin(schema.publisher, eq(schema.book.publisherId, schema.publisher.id))
     .innerJoin(schema.bookAuthor, eq(schema.book.id, schema.bookAuthor.bookId))
     .innerJoin(schema.author, eq(schema.author.id, schema.bookAuthor.authorId));
-  console.log({ rows });
+  // console.log({ rows });
 
   const count = rows[0]?.count || 0;
   const maxPage = Math.ceil(count / per);
@@ -162,7 +162,7 @@ export const actions: Actions = {
     const id = formData.get('id');
     const title = formData.get('title');
     const publisherId = formData.get('publisherId');
-    const authorIdsText = formData.get('authorIds');
+    const authorIdTexts = formData.getAll('authorIds');
     const publishDateText = formData.get('publishDate');
 
     // check id
@@ -181,11 +181,8 @@ export const actions: Actions = {
     }
 
     // check authorIds
-    if (typeof authorIdsText !== 'string' || !authorIdsText) {
-      return fail(400, { message: 'Invalid authorIdsText' });
-    }
     const authorIds = distinct(
-      authorIdsText.split(',').map(id => id.trim()).filter(id => !!id),
+      authorIdTexts.map(id => id.trim()).filter(id => !!id),
     );
     if (!authorIds.length || !(await verifyAuthorIds(authorIds))) {
       return fail(400, { message: 'Invalid authorIds' });
