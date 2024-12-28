@@ -5,6 +5,9 @@
   import { Input } from '@shared/components';
   import { format } from '@std/datetime';
 
+  import { columns } from './columns.js';
+  import DataTable from './data-table.svelte';
+
   const { data, form }: { data: PageServerData;form: ActionData } = $props();
   const authorAttrs: {
     id?: string;
@@ -28,6 +31,8 @@
     }
   }
 </script>
+
+<DataTable data={data.authors} {columns} />
 
 <div class='drawer drawer-end'>
   <input id='drawer' type='checkbox' class='drawer-toggle' bind:checked />
