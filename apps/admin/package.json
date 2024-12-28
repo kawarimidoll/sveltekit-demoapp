@@ -19,6 +19,7 @@
     "@oslojs/crypto": "*",
     "@oslojs/encoding": "*",
     "@std/datetime": "*",
+    "@tanstack/table-core": "^8.20.5",
     "drizzle-orm": "*",
     "std-env": "*",
     "svelte-boring-avatars": "*"
