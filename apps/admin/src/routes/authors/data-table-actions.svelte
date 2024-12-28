@@ -1,8 +1,13 @@
 <script lang='ts'>
-  import { Button } from '$lib/components/ui/button/index.js';
-  import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+  import { Button } from '$lib/components/ui/button';
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+  import { toast } from 'svelte-sonner';
 
   const { id }: { id: string } = $props();
+  function copyId() {
+    navigator.clipboard.writeText(id);
+    toast.success('ID copied to clipboard');
+  }
 </script>
 
 <DropdownMenu.Root>
@@ -22,7 +27,7 @@
   <DropdownMenu.Content>
     <DropdownMenu.Group>
       <DropdownMenu.GroupHeading>Actions</DropdownMenu.GroupHeading>
-      <DropdownMenu.Item onclick={() => navigator.clipboard.writeText(id)}>
+      <DropdownMenu.Item onclick={copyId}>
         Copy ID
       </DropdownMenu.Item>
     </DropdownMenu.Group>

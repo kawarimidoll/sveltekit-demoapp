@@ -21,7 +21,6 @@
     "@std/collections": "npm:@jsr/std__collections",
     "@std/datetime": "npm:@jsr/std__datetime",
     "drizzle-orm": "^0.38.3",
-    "mode-watcher": "^0.5.0",
     "std-env": "^3.8.0",
     "svelte-boring-avatars": "^1.2.6"
   },
@@ -46,6 +45,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
     "mdsvex": "^0.12.3",
+    "mode-watcher": "^0.5.0",
     "svelte": "^5.16.0",
     "svelte-check": "^4.1.1",
     "tailwind-merge": "^2.6.0",

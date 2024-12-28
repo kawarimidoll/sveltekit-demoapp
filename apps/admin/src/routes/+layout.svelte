@@ -1,5 +1,6 @@
 <script lang='ts'>
   import SiteHeader from '$lib/components/site-header.svelte';
+  import { Toaster } from '$lib/components/ui/sonner';
   import { i18n } from '$lib/i18n';
   import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 
@@ -10,6 +11,7 @@
 </script>
 
 <ParaglideJS {i18n}>
+  <Toaster closeButton />
   <SiteHeader />
   <div class='mx-auto prose container'>
     {@render children()}

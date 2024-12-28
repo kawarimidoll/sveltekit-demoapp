@@ -38,6 +38,7 @@
     "mdsvex": "*",
     "svelte": "*",
     "svelte-check": "*",
+    "svelte-sonner": "^0.3.28",
     "tailwind-merge": "*",
     "tailwind-variants": "*",
     "typescript": "*",
