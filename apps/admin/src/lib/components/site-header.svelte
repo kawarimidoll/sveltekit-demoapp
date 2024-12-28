@@ -2,6 +2,7 @@
   import { page } from '$app/state';
   import { Button } from '$lib/components/ui/button';
   import { cn } from '$lib/utils';
+  import MobileNav from './mobile-nav.svelte';
 </script>
 
 {#snippet link(href: string, text: string)}
@@ -38,7 +39,7 @@
       </nav>
     </div>
 
-    <!-- Mobile nav here -->
+    <MobileNav />
 
     <div class='flex flex-1 items-center justify-between md:justify-end space-x-2'>
       <div class='w-full flex-1 md:w-auto md:flex-none'>
