@@ -8,7 +8,7 @@ import {
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss';
-
+import presetAnimations from 'unocss-preset-animations';
 import { presetShadcn } from 'unocss-preset-shadcn';
 
 export default defineConfig({
@@ -26,6 +26,7 @@ export default defineConfig({
       darkTheme: 'dracula',
       logs: false,
     }),
+    presetAnimations(),
     presetShadcn(),
   ],
 
@@ -35,7 +36,7 @@ export default defineConfig({
   content: {
     pipeline: {
       include: [
-      // the default
+        // the default
         /\.(vue|svelte|[jt]sx|mdx?|astro|elm|php|phtml|html)($|\?)/,
         // include js/ts files
         '(components|src)/**/*.{js,ts}',
