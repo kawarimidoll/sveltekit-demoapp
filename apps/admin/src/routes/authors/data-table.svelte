@@ -3,6 +3,7 @@
     ColumnDef,
     ColumnFiltersState,
     PaginationState,
+    RowSelectionState,
     SortingState,
     VisibilityState,
   } from '@tanstack/table-core';
@@ -29,6 +30,7 @@
   let sorting = $state<SortingState>([]);
   let columnFilters = $state<ColumnFiltersState>([]);
   let columnVisibility = $state<VisibilityState>({});
+  let rowSelection = $state<RowSelectionState>({});
 
   const table = createSvelteTable({
     get data() {
@@ -47,6 +49,9 @@
       },
       get columnVisibility() {
         return columnVisibility;
+      },
+      get rowSelection() {
+        return rowSelection;
       },
     },
     onPaginationChange: (updater) => {
@@ -79,6 +84,14 @@
       }
       else {
         columnVisibility = updater;
+      }
+    },
+    onRowSelectionChange: (updater) => {
+      if (typeof updater === 'function') {
+        rowSelection = updater(rowSelection);
+      }
+      else {
+        rowSelection = updater;
       }
     },
     getCoreRowModel: getCoreRowModel(),
