@@ -1,12 +1,20 @@
 <script lang='ts' generics='TData, TValue'>
-  import type { ColumnDef, PaginationState } from '@tanstack/table-core';
+  import type {
+    ColumnDef,
+    PaginationState,
+    SortingState,
+  } from '@tanstack/table-core';
   import { Button } from '$lib/components/ui/button';
   import {
     createSvelteTable,
     FlexRender,
   } from '$lib/components/ui/data-table/index.js';
   import * as Table from '$lib/components/ui/table/index.js';
-  import { getCoreRowModel, getPaginationRowModel } from '@tanstack/table-core';
+  import {
+    getCoreRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+  } from '@tanstack/table-core';
 
   type DataTableProps<TData, TValue> = {
     columns: ColumnDef<TData, TValue>[];
@@ -16,6 +24,7 @@
   const { data, columns }: DataTableProps<TData, TValue> = $props();
 
   let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 5 });
+  let sorting = $state<SortingState>([]);
 
   const table = createSvelteTable({
     get data() {
@@ -26,6 +35,9 @@
       get pagination() {
         return pagination;
       },
+      get sorting() {
+        return sorting;
+      },
     },
     onPaginationChange: (updater) => {
       if (typeof updater === 'function') {
@@ -35,8 +47,17 @@
         pagination = updater;
       }
     },
+    onSortingChange: (updater) => {
+      if (typeof updater === 'function') {
+        sorting = updater(sorting);
+      }
+      else {
+        sorting = updater;
+      }
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 </script>
 

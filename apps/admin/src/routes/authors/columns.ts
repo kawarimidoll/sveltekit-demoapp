@@ -3,15 +3,26 @@ import type { ColumnDef } from '@tanstack/table-core';
 import { renderComponent } from '$lib/components/ui/data-table/index.js';
 import { format } from '@std/datetime';
 import DataTableActions from './data-table-actions.svelte';
+import DataTableColumnHeader from './data-table-column-header.svelte';
 
 export const columns: ColumnDef<typeof schema.author.$inferSelect>[] = [
   {
     accessorKey: 'name',
-    header: 'Name',
+    header: ({ column }) => {
+      return renderComponent(DataTableColumnHeader, {
+        column,
+        title: 'Name',
+      });
+    },
   },
   {
     accessorKey: 'description',
-    header: 'Description',
+    header: ({ column }) => {
+      return renderComponent(DataTableColumnHeader, {
+        column,
+        title: 'Description',
+      });
+    },
   },
   {
     accessorKey: 'createdAt',
