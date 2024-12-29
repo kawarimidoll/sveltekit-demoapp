@@ -6,6 +6,8 @@
   import { ModeWatcher } from 'mode-watcher';
 
   import 'uno.css';
+  // Tailwind reset minus the background color override for buttons
+  // add background-color: transparent; when needed
   import '@unocss/reset/tailwind-compat.css';
 
   const { children } = $props();
