@@ -3,6 +3,7 @@
   import { Button } from '$lib/components/ui/button';
   import { cn } from '$lib/utils';
   import MobileNav from './mobile-nav.svelte';
+  import ModeToggle from './mode-toggle.svelte';
 </script>
 
 {#snippet link(href: string, text: string)}
@@ -58,8 +59,7 @@
         </Button>
       </div>
       <nav class='flex items-center'>
-        <!-- Mode toggle here -->
-        <div class='i-lucide-sun-moon'></div>
+        <ModeToggle />
       </nav>
     </div>
   </div>
