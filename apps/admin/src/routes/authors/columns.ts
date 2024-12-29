@@ -51,16 +51,26 @@ export const columns: ColumnDef<typeof schema.author.$inferSelect>[] = [
   },
   {
     accessorKey: 'createdAt',
-    header: 'Created at',
+    header: ({ column }) => {
+      return renderComponent(DataTableColumnHeader, {
+        column,
+        title: 'Created at',
+      });
+    },
     cell: ({ row }) => format(row.getValue('createdAt'), 'yyyy-MM-dd HH:mm:ss'),
   },
   {
     accessorKey: 'updatedAt',
-    header: 'Updated at',
+    header: ({ column }) => {
+      return renderComponent(DataTableColumnHeader, {
+        column,
+        title: 'Updated at',
+      });
+    },
     cell: ({ row }) => format(row.getValue('updatedAt'), 'yyyy-MM-dd HH:mm:ss'),
   },
   {
-    header: 'Actions',
+    id: 'actions',
     cell: ({ row }) => {
       // You can pass whatever you need from `row.original` to the component
       return renderComponent(DataTableActions, { id: row.original.id });
