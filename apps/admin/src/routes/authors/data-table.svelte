@@ -4,12 +4,11 @@
     ColumnFiltersState,
     PaginationState,
     SortingState,
+    VisibilityState,
   } from '@tanstack/table-core';
   import { Button } from '$lib/components/ui/button';
-  import {
-    createSvelteTable,
-    FlexRender,
-  } from '$lib/components/ui/data-table';
+  import { createSvelteTable, FlexRender } from '$lib/components/ui/data-table';
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { Input } from '$lib/components/ui/input';
   import * as Table from '$lib/components/ui/table';
   import {
@@ -29,6 +28,7 @@
   let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 5 });
   let sorting = $state<SortingState>([]);
   let columnFilters = $state<ColumnFiltersState>([]);
+  let columnVisibility = $state<VisibilityState>({});
 
   const table = createSvelteTable({
     get data() {
@@ -44,6 +44,9 @@
       },
       get columnFilters() {
         return columnFilters;
+      },
+      get columnVisibility() {
+        return columnVisibility;
       },
     },
     onPaginationChange: (updater) => {
@@ -70,6 +73,14 @@
         columnFilters = updater;
       }
     },
+    onColumnVisibilityChange: (updater) => {
+      if (typeof updater === 'function') {
+        columnVisibility = updater(columnVisibility);
+      }
+      else {
+        columnVisibility = updater;
+      }
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -89,6 +100,27 @@
     }}
     class='max-w-sm'
   />
+  <DropdownMenu.Root>
+    <DropdownMenu.Trigger>
+      {#snippet child({ props })}
+        <Button {...props} variant='outline' class='ml-auto'>Columns</Button>
+      {/snippet}
+    </DropdownMenu.Trigger>
+    <DropdownMenu.Content align='end'>
+      {#each table
+        .getAllColumns()
+        .filter(col => col.getCanHide()) as column (column.id)}
+        <DropdownMenu.CheckboxItem
+          class='capitalize'
+          controlledChecked
+          checked={column.getIsVisible()}
+          onCheckedChange={value => column.toggleVisibility(!!value)}
+        >
+          {column.id}
+        </DropdownMenu.CheckboxItem>
+      {/each}
+    </DropdownMenu.Content>
+  </DropdownMenu.Root>
 </div>
 <div class='border rounded-md'>
   <Table.Root>
