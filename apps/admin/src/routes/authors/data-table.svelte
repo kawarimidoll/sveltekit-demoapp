@@ -1,6 +1,7 @@
 <script lang='ts' generics='TData, TValue'>
   import type {
     ColumnDef,
+    ColumnFiltersState,
     PaginationState,
     SortingState,
   } from '@tanstack/table-core';
@@ -8,10 +9,12 @@
   import {
     createSvelteTable,
     FlexRender,
-  } from '$lib/components/ui/data-table/index.js';
-  import * as Table from '$lib/components/ui/table/index.js';
+  } from '$lib/components/ui/data-table';
+  import { Input } from '$lib/components/ui/input';
+  import * as Table from '$lib/components/ui/table';
   import {
     getCoreRowModel,
+    getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
   } from '@tanstack/table-core';
@@ -25,6 +28,7 @@
 
   let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 5 });
   let sorting = $state<SortingState>([]);
+  let columnFilters = $state<ColumnFiltersState>([]);
 
   const table = createSvelteTable({
     get data() {
@@ -37,6 +41,9 @@
       },
       get sorting() {
         return sorting;
+      },
+      get columnFilters() {
+        return columnFilters;
       },
     },
     onPaginationChange: (updater) => {
@@ -55,12 +62,34 @@
         sorting = updater;
       }
     },
+    onColumnFiltersChange: (updater) => {
+      if (typeof updater === 'function') {
+        columnFilters = updater(columnFilters);
+      }
+      else {
+        columnFilters = updater;
+      }
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
   });
 </script>
 
+<div class='flex items-center py-4'>
+  <Input
+    placeholder='Filter names...'
+    value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+    onchange={(e) => {
+      table.getColumn('name')?.setFilterValue(e.currentTarget.value);
+    }}
+    oninput={(e) => {
+      table.getColumn('name')?.setFilterValue(e.currentTarget.value);
+    }}
+    class='max-w-sm'
+  />
+</div>
 <div class='border rounded-md'>
   <Table.Root>
     <Table.Header>
