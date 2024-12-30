@@ -1,30 +1,37 @@
 <script lang='ts' generics='TData'>
   import type { Table } from '@tanstack/table-core';
-  import { buttonVariants } from '$lib/components/ui/button';
+  import { Button, buttonVariants } from '$lib/components/ui/button';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { Input } from '$lib/components/ui/input';
 
   const { table }: { table: Table<TData> } = $props();
-  $inspect(
-    table
-      .getAllColumns()
-      .filter(col => col.getCanHide()),
-
-  );
+  const isFiltered = $derived(table.getState().columnFilters.length > 0);
 </script>
 
 <div class='flex items-center justify-between py-4'>
-  <Input
-    placeholder='Filter names...'
-    value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-    onchange={(e) => {
-      table.getColumn('name')?.setFilterValue(e.currentTarget.value);
-    }}
-    oninput={(e) => {
-      table.getColumn('name')?.setFilterValue(e.currentTarget.value);
-    }}
-    class='h-8 max-w-sm'
-  />
+  <div class='flex flex-1 items-center space-x-2'>
+    <Input
+      placeholder='Filter names...'
+      value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+      onchange={(e) => {
+        table.getColumn('name')?.setFilterValue(e.currentTarget.value);
+      }}
+      oninput={(e) => {
+        table.getColumn('name')?.setFilterValue(e.currentTarget.value);
+      }}
+      class='h-8 max-w-sm'
+    />
+    {#if isFiltered}
+      <Button
+        variant='ghost'
+        onclick={() => table.resetColumnFilters()}
+        class='h-8 px-2 lg:px-3'
+      >
+        Reset
+        <span class='i-lucide-x'></span>
+      </Button>
+    {/if}
+  </div>
   <DropdownMenu.Root>
     <DropdownMenu.Trigger
       class={buttonVariants({
