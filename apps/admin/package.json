@@ -36,14 +36,17 @@
     "bits-ui": "^1.0.0-next.74",
     "clsx": "*",
     "daisyui": "*",
+    "formsnap": "^2.0.0",
     "mdsvex": "*",
     "svelte": "*",
     "svelte-check": "*",
     "svelte-sonner": "^0.3.28",
+    "sveltekit-superforms": "^2.22.1",
     "tailwind-merge": "*",
     "tailwind-variants": "*",
     "typescript": "*",
     "vite": "*",
-    "vitest": "*"
+    "vitest": "*",
+    "zod": "^3.24.1"
   }
 }
