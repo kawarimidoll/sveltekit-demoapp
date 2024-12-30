@@ -7,7 +7,6 @@
     SortingState,
     VisibilityState,
   } from '@tanstack/table-core';
-  import { Button } from '$lib/components/ui/button';
   import { createSvelteTable, FlexRender } from '$lib/components/ui/data-table';
   import * as Table from '$lib/components/ui/table';
   import {
@@ -16,6 +15,7 @@
     getPaginationRowModel,
     getSortedRowModel,
   } from '@tanstack/table-core';
+  import DataTablePagination from './data-table-pagination.svelte';
   import DataTableToolbar from './data-table-toolbar.svelte';
 
   type DataTableProps<TData, TValue> = {
@@ -141,22 +141,4 @@
     </Table.Body>
   </Table.Root>
 </div>
-<div class='flex items-center justify-end py-4 space-x-2'>
-  <Button
-    variant='outline'
-    size='sm'
-    onclick={() => table.previousPage()}
-    disabled={!table.getCanPreviousPage()}
-  >
-    Previous
-  </Button>
-  <Button
-    variant='outline'
-    size='sm'
-    onclick={() => table.nextPage()}
-    disabled={!table.getCanNextPage()}
-  >
-    Next
-  </Button>
-
-</div>
+<DataTablePagination {table} />
