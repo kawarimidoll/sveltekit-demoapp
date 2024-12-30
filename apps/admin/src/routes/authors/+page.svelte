@@ -32,7 +32,9 @@
   }
 </script>
 
-<DataTable data={data.authors} {columns} />
+<div class='not-prose'>
+  <DataTable data={data.authors} {columns} />
+</div>
 
 <div class='drawer drawer-end'>
   <input id='drawer' type='checkbox' class='drawer-toggle' bind:checked />

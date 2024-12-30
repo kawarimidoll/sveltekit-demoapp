@@ -8,7 +8,7 @@
   const isFiltered = $derived(table.getState().columnFilters.length > 0);
 </script>
 
-<div class='flex items-center justify-between py-4'>
+<div class='flex items-center justify-between'>
   <div class='flex flex-1 items-center space-x-2'>
     <Input
       placeholder='Filter names...'

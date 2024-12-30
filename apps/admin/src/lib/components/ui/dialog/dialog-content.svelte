@@ -28,9 +28,9 @@
   >
     {@render children?.()}
     <DialogPrimitive.Close
-      class='absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity disabled:pointer-events-none hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring'
+      class='absolute right-4 top-4 rounded-sm bg-transparent opacity-70 ring-offset-background transition-opacity disabled:pointer-events-none hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring'
     >
-      <span class='i-lucide-x size-4'></span>
+      <div class='i-lucide-x size-4'></div>
       <span class='sr-only'>Close</span>
     </DialogPrimitive.Close>
   </DialogPrimitive.Content>

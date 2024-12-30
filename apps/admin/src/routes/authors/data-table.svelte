@@ -61,6 +61,7 @@
         pagination = updater;
       }
     },
+    enableRowSelection: true,
     onSortingChange: (updater) => {
       if (typeof updater === 'function') {
         sorting = updater(sorting);
@@ -101,13 +102,14 @@
 </script>
 
 <DataTableToolbar {table} />
-<div class='border rounded-md'>
+
+<div class='my-4 border rounded-md'>
   <Table.Root>
     <Table.Header>
       {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
         <Table.Row>
           {#each headerGroup.headers as header (header.id)}
-            <Table.Head>
+            <Table.Head colspan={header.colSpan}>
               {#if !header.isPlaceholder}
                 <FlexRender
                   content={header.column.columnDef.header}
@@ -141,4 +143,5 @@
     </Table.Body>
   </Table.Root>
 </div>
+
 <DataTablePagination {table} />
