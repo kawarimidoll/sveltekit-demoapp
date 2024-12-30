@@ -1,3 +1,8 @@
+<script lang='ts' module>
+  type TData = unknown;
+  type TValue = unknown;
+</script>
+
 <script lang='ts' generics='TData, TValue'>
   import type {
     ColumnDef,
@@ -11,6 +16,8 @@
   import * as Table from '$lib/components/ui/table';
   import {
     getCoreRowModel,
+    getFacetedRowModel,
+    getFacetedUniqueValues,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
@@ -18,12 +25,7 @@
   import DataTablePagination from './data-table-pagination.svelte';
   import DataTableToolbar from './data-table-toolbar.svelte';
 
-  type DataTableProps<TData, TValue> = {
-    columns: ColumnDef<TData, TValue>[];
-    data: TData[];
-  };
-
-  const { data, columns }: DataTableProps<TData, TValue> = $props();
+  const { columns, data }: { columns: ColumnDef<TData, TValue>[]; data: TData[] } = $props();
 
   let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 5 });
   let sorting = $state<SortingState>([]);
@@ -98,6 +100,8 @@
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 </script>
 
