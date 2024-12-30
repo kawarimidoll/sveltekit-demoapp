@@ -9,8 +9,6 @@
   } from '@tanstack/table-core';
   import { Button } from '$lib/components/ui/button';
   import { createSvelteTable, FlexRender } from '$lib/components/ui/data-table';
-  import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-  import { Input } from '$lib/components/ui/input';
   import * as Table from '$lib/components/ui/table';
   import {
     getCoreRowModel,
@@ -18,6 +16,7 @@
     getPaginationRowModel,
     getSortedRowModel,
   } from '@tanstack/table-core';
+  import DataTableToolbar from './data-table-toolbar.svelte';
 
   type DataTableProps<TData, TValue> = {
     columns: ColumnDef<TData, TValue>[];
@@ -101,40 +100,7 @@
   });
 </script>
 
-<div class='flex items-center py-4'>
-  <Input
-    placeholder='Filter names...'
-    value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-    onchange={(e) => {
-      table.getColumn('name')?.setFilterValue(e.currentTarget.value);
-    }}
-    oninput={(e) => {
-      table.getColumn('name')?.setFilterValue(e.currentTarget.value);
-    }}
-    class='max-w-sm'
-  />
-  <DropdownMenu.Root>
-    <DropdownMenu.Trigger>
-      {#snippet child({ props })}
-        <Button {...props} variant='outline' class='ml-auto'>Columns</Button>
-      {/snippet}
-    </DropdownMenu.Trigger>
-    <DropdownMenu.Content align='end'>
-      {#each table
-        .getAllColumns()
-        .filter(col => col.getCanHide()) as column (column.id)}
-        <DropdownMenu.CheckboxItem
-          class='capitalize'
-          controlledChecked
-          checked={column.getIsVisible()}
-          onCheckedChange={value => column.toggleVisibility(!!value)}
-        >
-          {column.id}
-        </DropdownMenu.CheckboxItem>
-      {/each}
-    </DropdownMenu.Content>
-  </DropdownMenu.Root>
-</div>
+<DataTableToolbar {table} />
 <div class='border rounded-md'>
   <Table.Root>
     <Table.Header>
