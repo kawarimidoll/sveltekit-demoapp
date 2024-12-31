@@ -21,6 +21,7 @@
     "@std/datetime": "*",
     "@tanstack/table-core": "^8.20.5",
     "drizzle-orm": "*",
+    "drizzle-zod": "^0.6.1",
     "mode-watcher": "*",
     "std-env": "*",
     "svelte-boring-avatars": "*"
