@@ -1,11 +1,13 @@
 <script lang='ts'>
   import type { schema } from '@shared/db';
-  import { Button } from '$lib/components/ui/button';
+  import { Button, buttonVariants } from '$lib/components/ui/button';
   import * as Dialog from '$lib/components/ui/dialog';
+  import * as Drawer from '$lib/components/ui/drawer';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import * as Form from '$lib/components/ui/form';
   import { Input } from '$lib/components/ui/input';
   import { toast } from 'svelte-sonner';
+  import { MediaQuery } from 'svelte/reactivity';
   import { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import { updateSchema, type UpdateSchema } from './schema';
@@ -27,12 +29,15 @@
     toast.success('ID copied to clipboard');
   }
 
-  let dialogOpen = $state(false);
+  let open = $state(false);
 
-  function open() {
+  function openEditor() {
     formData.set(data);
-    dialogOpen = true;
+    open = true;
   }
+
+  const isDesktop = new MediaQuery('(min-width: 768px)');
+  const Component = $derived(isDesktop.current ? Dialog : Drawer);
 </script>
 
 <DropdownMenu.Root>
@@ -57,24 +62,24 @@
       </DropdownMenu.Item>
     </DropdownMenu.Group>
     <DropdownMenu.Separator />
-    <DropdownMenu.Item onclick={open}>
+    <DropdownMenu.Item onclick={openEditor}>
       Edit
     </DropdownMenu.Item>
     <DropdownMenu.Item>View books</DropdownMenu.Item>
   </DropdownMenu.Content>
 </DropdownMenu.Root>
 
-<Dialog.Root bind:open={dialogOpen}>
-  <Dialog.Content>
-    <Dialog.Header>
-      <Dialog.Title>Edit author</Dialog.Title>
-      <Dialog.Description>
+<Component.Root bind:open>
+  <Component.Content>
+    <Component.Header>
+      <Component.Title>Edit author</Component.Title>
+      <Component.Description>
         Make changes to author here. Click save when you're done.
-      </Dialog.Description>
-    </Dialog.Header>
+      </Component.Description>
+    </Component.Header>
     <form method='POST' action='?/update' use:enhance>
       <input type='hidden' name='id' bind:value={$formData.id} />
-      <Form.Field {form} name='name'>
+      <Form.Field {form} name='name' class={isDesktop.current ? '' : 'px-4'}>
         <Form.Control>
           {#snippet children({ props })}
             <Form.Label>Name</Form.Label>
@@ -84,7 +89,7 @@
         <Form.Description>This is author's display name.</Form.Description>
         <Form.FieldErrors />
       </Form.Field>
-      <Form.Field {form} name='description'>
+      <Form.Field {form} name='description' class={isDesktop.current ? '' : 'px-4'}>
         <Form.Control>
           {#snippet children({ props })}
             <Form.Label>Description</Form.Label>
@@ -94,9 +99,12 @@
         <Form.Description>This is author's description.</Form.Description>
         <Form.FieldErrors />
       </Form.Field>
-      <Dialog.Footer>
+      <Component.Footer>
         <Form.Button>Save changes</Form.Button>
-      </Dialog.Footer>
+        <Component.Close
+          class={buttonVariants({ variant: 'outline' })}
+        >Cancel</Component.Close>
+      </Component.Footer>
     </form>
-  </Dialog.Content>
-</Dialog.Root>
+  </Component.Content>
+</Component.Root>

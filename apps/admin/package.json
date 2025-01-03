@@ -34,7 +34,7 @@
     "@sveltejs/adapter-auto": "*",
     "@sveltejs/kit": "*",
     "@sveltejs/vite-plugin-svelte": "*",
-    "bits-ui": "^1.0.0-next.74",
+    "bits-ui": "^1.0.0-next.76",
     "clsx": "*",
     "daisyui": "*",
     "formsnap": "^2.0.0",
@@ -46,6 +46,7 @@
     "tailwind-merge": "*",
     "tailwind-variants": "*",
     "typescript": "*",
+    "vaul-svelte": "^1.0.0-next.3",
     "vite": "*",
     "vitest": "*",
     "zod": "^3.24.1"
