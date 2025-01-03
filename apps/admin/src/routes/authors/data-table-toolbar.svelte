@@ -6,18 +6,18 @@
 
   const { table }: { table: Table<TData> } = $props();
   const isFiltered = $derived(table.getState().columnFilters.length > 0);
+
+  let globalFilterValue = $state('');
+  table.setGlobalFilter('');
 </script>
 
 <div class='flex items-center justify-between'>
   <div class='flex flex-1 items-center space-x-2'>
     <Input
-      placeholder='Filter names...'
-      value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-      onchange={(e) => {
-        table.getColumn('name')?.setFilterValue(e.currentTarget.value);
-      }}
-      oninput={(e) => {
-        table.getColumn('name')?.setFilterValue(e.currentTarget.value);
+      placeholder='Filter...'
+      bind:value={globalFilterValue}
+      onkeyup={(e) => {
+        table.setGlobalFilter(String(e.currentTarget.value));
       }}
       class='h-8 max-w-sm'
     />

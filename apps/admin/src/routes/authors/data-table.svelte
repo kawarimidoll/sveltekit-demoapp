@@ -7,6 +7,7 @@
   import type {
     ColumnDef,
     ColumnFiltersState,
+    GlobalFilterTableState,
     PaginationState,
     RowSelectionState,
     SortingState,
@@ -32,6 +33,7 @@
   let columnFilters = $state<ColumnFiltersState>([]);
   let columnVisibility = $state<VisibilityState>({});
   let rowSelection = $state<RowSelectionState>({});
+  let globalFilter = $state<GlobalFilterTableState>({ globalFilter: '' });
 
   const table = createSvelteTable({
     get data() {
@@ -53,6 +55,9 @@
       },
       get rowSelection() {
         return rowSelection;
+      },
+      get globalFilter() {
+        return globalFilter;
       },
     },
     onPaginationChange: (updater) => {
@@ -96,12 +101,21 @@
         rowSelection = updater;
       }
     },
+    onGlobalFilterChange: (updater) => {
+      if (typeof updater === 'function') {
+        globalFilter = updater(globalFilter);
+      }
+      else {
+        globalFilter = updater;
+      }
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    globalFilterFn: 'includesString',
   });
 </script>
 
