@@ -18,8 +18,20 @@
   };
   const { form: formSrc, data }: Props = $props();
 
+  let open = $state(false);
+
   const form = superForm(formSrc, {
     validators: zodClient(updateSchema),
+    onUpdated: ({ form: f }) => {
+      if (f.valid) {
+        toast.success(`${f.data.name} is updated.`);
+        // TODO this doesn't work well
+        open = false;
+      }
+      else {
+        toast.error('Please fix the errors in the form.');
+      }
+    },
   });
 
   const { form: formData, enhance } = form;
@@ -28,8 +40,6 @@
     navigator.clipboard.writeText(data.id);
     toast.success('ID copied to clipboard');
   }
-
-  let open = $state(false);
 
   function openEditor() {
     formData.set(data);

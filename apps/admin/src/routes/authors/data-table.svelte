@@ -28,6 +28,7 @@
     getPaginationRowModel,
     getSortedRowModel,
   } from '@tanstack/table-core';
+  import { toast } from 'svelte-sonner';
   import { MediaQuery } from 'svelte/reactivity';
   import { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
 
@@ -133,17 +134,30 @@
     globalFilterFn: 'includesString',
   });
 
+  let open = $state(false);
+
   const form = superForm(formSrc, {
     validators: zodClient(insertSchema),
+    onUpdated: ({ form: f }) => {
+      if (f.valid) {
+        toast.success(`${f.data.name} is created.`);
+        // TODO this doesn't work well
+        open = false;
+      }
+      else {
+        toast.error('Please fix the errors in the form.');
+      }
+    },
   });
   const { form: formData, enhance } = form;
-  let open = $state(false);
+
   function openEditor() {
     open = true;
   }
 
   const isDesktop = new MediaQuery('(min-width: 768px)');
   const Component = $derived(isDesktop.current ? Dialog : Drawer);
+  const formPadding = $derived(isDesktop.current ? '' : 'px-4');
 </script>
 
 <DataTableToolbar {table} addFn={openEditor} />
@@ -200,7 +214,7 @@
       </Component.Description>
     </Component.Header>
     <form method='POST' action='?/create' use:enhance>
-      <Form.Field {form} name='name' class={isDesktop.current ? '' : 'px-4'}>
+      <Form.Field {form} name='name' class={formPadding}>
         <Form.Control>
           {#snippet children({ props })}
             <Form.Label>Name</Form.Label>
@@ -210,7 +224,7 @@
         <Form.Description>This is author's display name.</Form.Description>
         <Form.FieldErrors />
       </Form.Field>
-      <Form.Field {form} name='description' class={isDesktop.current ? '' : 'px-4'}>
+      <Form.Field {form} name='description' class={formPadding}>
         <Form.Control>
           {#snippet children({ props })}
             <Form.Label>Description</Form.Label>

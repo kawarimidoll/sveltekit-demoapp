@@ -5,6 +5,7 @@
 
   const { data }: { data: PageServerData } = $props();
   const columns = genColumns(data.updateForm);
+  $inspect(data);
 </script>
 
 <div>
