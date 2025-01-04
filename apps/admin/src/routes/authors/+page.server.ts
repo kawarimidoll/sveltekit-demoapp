@@ -1,100 +1,79 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import type { SQL } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { db, schema } from '@shared/db';
-import { genPagination } from '@shared/logic/pagination';
-import { getOptionsParam, getPositiveIntParam } from '@shared/logic/params';
 import { fail } from '@sveltejs/kit';
-import { and, eq, ilike, or } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { insertSchema, updateSchema } from './schema';
 
-export const load: PageServerLoad = async (event: RequestEvent) => {
-  const params = new URLSearchParams(event.url.search);
-
-  const page = getPositiveIntParam(params, 'page');
-
-  const search = params.get('search') || '';
-
-  const sort = getOptionsParam(params, 'sort', ['name', 'description']);
-  const order = getOptionsParam(params, 'order', ['asc', 'desc']);
-
-  const filters: SQL[] = [];
-  if (search) {
-    filters.push(or(
-      ilike(schema.author.name, `%${search}%`),
-      ilike(schema.author.description, `%${search}%`),
-    )!,
-    );
-  }
-
-  const per = 10;
-
-  const authors = await db.query.author.findMany({
-    where: and(...filters),
-    orderBy: (columns, { asc, desc }) =>
-      [order === 'desc' ? desc(columns[sort]) : asc(columns[sort])],
-    limit: per,
-    offset: (page - 1) * per,
-    extras: (author, { sql }) => ({
-      count: (sql<number>`count(${author.id}) over()`).as('count'),
-    }),
-  });
-  const count = authors[0]?.count || 0;
-  const maxPage = Math.ceil(count / per);
-
-  const pagination = genPagination(event.url, page, maxPage);
-
+export const load: PageServerLoad = async () => {
+  const authors = await db.query.author.findMany();
   return {
     authors,
-    page,
-    per,
-    count,
-    pagination,
-    search,
+    insertForm: await superValidate(zod(insertSchema)),
+    updateForm: await superValidate(zod(updateSchema)),
   };
 };
 
-async function upsert(event: RequestEvent, isUpdate: boolean) {
-  const formData = await event.request.formData();
-  const id = formData.get('id');
-  const name = formData.get('name');
-  const description = formData.get('description') || '';
+export const actions: Actions = {
+  create: async (event: RequestEvent) => {
+    const formData = await event.request.formData();
+    console.log(formData);
 
-  if (isUpdate && (typeof id !== 'string' || !id)) {
-    return fail(400, { message: 'Invalid id' });
-  }
+    const form = await superValidate(formData, zod(insertSchema));
+    console.log(form);
 
-  // check name
-  if (typeof name !== 'string' || !name) {
-    return fail(400, { message: 'Invalid name' });
-  }
+    if (!form.valid) {
+      return fail(400, { form });
+    }
 
-  try {
-    if (isUpdate) {
+    const { name, description } = form.data;
+
+    try {
+      await db
+        .insert(schema.author)
+        .values({ name, description });
+    }
+    catch (e) {
+      console.error(e);
+      form.errors.push({ message: 'An error has occurred' });
+      return fail(500, { form });
+    }
+
+    return { form };
+  },
+  update: async (event: RequestEvent) => {
+    console.log('update');
+    console.log(event);
+
+    const formData = await event.request.formData();
+    console.log(formData);
+
+    const form = await superValidate(formData, zod(updateSchema));
+    console.log(form);
+
+    if (!form.valid) {
+      console.log('invalid form');
+      return fail(400, { form });
+    }
+
+    const { id, name, description } = form.data;
+
+    try {
       await db
         .update(schema.author)
         .set({ name, description })
         .where(eq(schema.author.id, id));
     }
-    else {
-      await db
-        .insert(schema.author)
-        .values({ name, description });
+    catch (e) {
+      console.error(e);
+      form.errors.push({ message: 'An error has occurred' });
+      return fail(500, { form });
     }
-  }
-  catch (e) {
-    console.error(e);
-    return fail(500, { message: 'An error has occurred' });
-  }
 
-  return { message: isUpdate ? 'Author updated!' : 'Author created!' };
-}
+    console.log('Author updated!');
 
-export const actions: Actions = {
-
-  create: async (event) => {
-    return upsert(event, false);
-  },
-  update: async (event) => {
-    return upsert(event, true);
+    return { form };
   },
 };

@@ -19,7 +19,10 @@
     "@oslojs/crypto": "*",
     "@oslojs/encoding": "*",
     "@std/datetime": "*",
+    "@tanstack/table-core": "^8.20.5",
     "drizzle-orm": "*",
+    "drizzle-zod": "^0.6.1",
+    "mode-watcher": "*",
     "std-env": "*",
     "svelte-boring-avatars": "*"
   },
@@ -31,12 +34,21 @@
     "@sveltejs/adapter-auto": "*",
     "@sveltejs/kit": "*",
     "@sveltejs/vite-plugin-svelte": "*",
+    "bits-ui": "^1.0.0-next.76",
+    "clsx": "*",
     "daisyui": "*",
+    "formsnap": "^2.0.0",
     "mdsvex": "*",
     "svelte": "*",
     "svelte-check": "*",
+    "svelte-sonner": "^0.3.28",
+    "sveltekit-superforms": "^2.22.1",
+    "tailwind-merge": "*",
+    "tailwind-variants": "*",
     "typescript": "*",
+    "vaul-svelte": "^1.0.0-next.3",
     "vite": "*",
-    "vitest": "*"
+    "vitest": "*",
+    "zod": "^3.24.1"
   }
 }
