@@ -1,10 +1,10 @@
 <script lang='ts' generics='TData'>
   import type { Table } from '@tanstack/table-core';
-  import { buttonVariants } from '$lib/components/ui/button';
+  import { Button, buttonVariants } from '$lib/components/ui/button';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { Input } from '$lib/components/ui/input';
 
-  const { table }: { table: Table<TData> } = $props();
+  const { table, addFn }: { table: Table<TData>;addFn?: () => void } = $props();
 
   let globalFilterValue = $state('');
   $effect(() => {
@@ -53,4 +53,11 @@
       </DropdownMenu.Group>
     </DropdownMenu.Content>
   </DropdownMenu.Root>
+
+  {#if addFn}
+    <Button class='ml-4 h-8' onclick={addFn}>
+      <span class='i-lucide-plus'></span>
+      Add
+    </Button>
+  {/if}
 </div>

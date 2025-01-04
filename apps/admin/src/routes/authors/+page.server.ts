@@ -18,24 +18,30 @@ export const load: PageServerLoad = async () => {
 
 export const actions: Actions = {
   create: async (event: RequestEvent) => {
-    const form = await superValidate(event, zod(insertSchema));
+    const formData = await event.request.formData();
+    console.log(formData);
+
+    const form = await superValidate(formData, zod(insertSchema));
+    console.log(form);
+
     if (!form.valid) {
       return fail(400, { form });
     }
 
-    const { name, description } = form.values;
+    const { name, description } = form.data;
 
     try {
       await db
         .insert(schema.author)
-        .set({ name, description });
+        .values({ name, description });
     }
     catch (e) {
       console.error(e);
-      return fail(500, { message: 'An error has occurred' });
+      form.errors.push({ message: 'An error has occurred' });
+      return fail(500, { form });
     }
 
-    return { message: 'Author created!' };
+    return { form };
   },
   update: async (event: RequestEvent) => {
     console.log('update');
@@ -62,11 +68,12 @@ export const actions: Actions = {
     }
     catch (e) {
       console.error(e);
-      return fail(500, { message: 'An error has occurred' });
+      form.errors.push({ message: 'An error has occurred' });
+      return fail(500, { form });
     }
 
     console.log('Author updated!');
 
-    return { message: 'Author updated!' };
+    return { form };
   },
 };

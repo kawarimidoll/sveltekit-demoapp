@@ -13,7 +13,12 @@
     SortingState,
     VisibilityState,
   } from '@tanstack/table-core';
+  import { buttonVariants } from '$lib/components/ui/button';
   import { createSvelteTable, FlexRender } from '$lib/components/ui/data-table';
+  import * as Dialog from '$lib/components/ui/dialog';
+  import * as Drawer from '$lib/components/ui/drawer';
+  import * as Form from '$lib/components/ui/form';
+  import { Input } from '$lib/components/ui/input';
   import * as Table from '$lib/components/ui/table';
   import {
     getCoreRowModel,
@@ -23,10 +28,20 @@
     getPaginationRowModel,
     getSortedRowModel,
   } from '@tanstack/table-core';
+  import { MediaQuery } from 'svelte/reactivity';
+  import { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
+
+  import { zodClient } from 'sveltekit-superforms/adapters';
   import DataTablePagination from './data-table-pagination.svelte';
   import DataTableToolbar from './data-table-toolbar.svelte';
+  import { insertSchema, type InsertSchema } from './schema';
 
-  const { columns, data }: { columns: ColumnDef<TData, TValue>[]; data: TData[] } = $props();
+  type Props = {
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
+    form: SuperValidated<Infer<InsertSchema>>;
+  };
+  const { columns, data, form: formSrc }: Props = $props();
 
   let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 5 });
   let sorting = $state<SortingState>([]);
@@ -117,9 +132,21 @@
     getFacetedUniqueValues: getFacetedUniqueValues(),
     globalFilterFn: 'includesString',
   });
+
+  const form = superForm(formSrc, {
+    validators: zodClient(insertSchema),
+  });
+  const { form: formData, enhance } = form;
+  let open = $state(false);
+  function openEditor() {
+    open = true;
+  }
+
+  const isDesktop = new MediaQuery('(min-width: 768px)');
+  const Component = $derived(isDesktop.current ? Dialog : Drawer);
 </script>
 
-<DataTableToolbar {table} />
+<DataTableToolbar {table} addFn={openEditor} />
 
 <div class='my-4 border rounded-md'>
   <Table.Root>
@@ -163,3 +190,42 @@
 </div>
 
 <DataTablePagination {table} />
+
+<Component.Root bind:open>
+  <Component.Content>
+    <Component.Header>
+      <Component.Title>Edit author</Component.Title>
+      <Component.Description>
+        Make changes to author here. Click save when you're done.
+      </Component.Description>
+    </Component.Header>
+    <form method='POST' action='?/create' use:enhance>
+      <Form.Field {form} name='name' class={isDesktop.current ? '' : 'px-4'}>
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Name</Form.Label>
+            <Input {...props} bind:value={$formData.name} />
+          {/snippet}
+        </Form.Control>
+        <Form.Description>This is author's display name.</Form.Description>
+        <Form.FieldErrors />
+      </Form.Field>
+      <Form.Field {form} name='description' class={isDesktop.current ? '' : 'px-4'}>
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Description</Form.Label>
+            <Input {...props} bind:value={$formData.description} />
+          {/snippet}
+        </Form.Control>
+        <Form.Description>This is author's description.</Form.Description>
+        <Form.FieldErrors />
+      </Form.Field>
+      <Component.Footer>
+        <Form.Button>Save changes</Form.Button>
+        <Component.Close
+          class={buttonVariants({ variant: 'outline' })}
+        >Cancel</Component.Close>
+      </Component.Footer>
+    </form>
+  </Component.Content>
+</Component.Root>
